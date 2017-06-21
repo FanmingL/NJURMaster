@@ -1,0 +1,39 @@
+#ifndef __MAIN_H__
+#define __MAIN_H__
+
+#include "stm32f4xx.h"
+#include "driver.h"
+#include "duty.h"
+#include "delay.h"
+#include "led.h"
+#include "can.h"
+#include "usart3.h"
+#include "imu.h"
+#include "rc.h"
+#include "usart2.h"
+#include "laser.h"
+#include "timer.h"
+#include "common.h"
+#include "fifo.h"
+#include "LostCounter.h"
+#include "pid_regulator.h"
+#include "ramp.h"
+#include "MF_CRC16.h"
+#include "protocal.h"
+#include "datatransfer.h"
+#include "ControlTask.h"
+#include "CanBusTask.h"
+#include "DataExchange.h"
+#include "IOTask.h"
+#include "SuperviseTask.h"
+#include "bsp_flash.h"
+#include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <math.h>
+#include "pwm.h"
+#include "mpu6500.h"
+#include "mpu6500_spi.h"
+#include "RemoteTask.h"
+
+#endif 
