@@ -513,6 +513,11 @@
               <FileType>1</FileType>
               <FilePath>.\drivers\mpu6500.c</FilePath>
             </File>
+            <File>
+              <FileName>ist8310.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\ist8310.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -557,6 +562,11 @@
               <FileName>parameters.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\applications\parameters.c</FilePath>
+            </File>
+            <File>
+              <FileName>imu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\imu.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -3,7 +3,7 @@
 #include "stm32f4xx.h"
 
 
-#define SELF_CHECK_ITEM_NUM 10u
+#define SELF_CHECK_ITEM_NUM 11u
 
 #define DEVICE_INDEX_RC                        0u   //green:green:green 1:1:1
 #define DEVICE_INDEX_IMU                       1u    //red always on
@@ -15,6 +15,7 @@
 #define DEVICE_INDEX_MOTOR5                    7u    //green:red:green 1 5 1 
 #define DEVICE_INDEX_MOTOR6                    8u    //green:red:green 1 6 1 
 #define DEVICE_INDEX_NOCALI            		 9u    //red:red:red 1:1:1
+#define DEVICE_INDEX_TIMEOUT            		 10u    //red:red:red 1:1:1
 
 #define LOST_ERROR_RC									(1<<DEVICE_INDEX_RC)		//rc lost 
 #define LOST_ERROR_IMU									(1<<DEVICE_INDEX_IMU)		//mpu6050 error
@@ -26,7 +27,7 @@
 #define LOST_ERROR_MOTOR5								(1<<DEVICE_INDEX_MOTOR5)		//
 #define LOST_ERROR_MOTOR6								(1<<DEVICE_INDEX_MOTOR6)		//
 #define LOST_ERROR_NOCALI  						        (1<<DEVICE_INDEX_NOCALI)		//nocali error
-
+#define LOST_ERROR_TIMEOUT 						        (1<<DEVICE_INDEX_TIMEOUT)		
 
 void DogInit(void);
 void FeedDog(u8 _dog_index);

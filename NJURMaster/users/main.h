@@ -28,4 +28,6 @@
 #include "parameters.h"
 #include "spi.h"
 #include "mpu6500.h"
+#include "ist8310.h"
+#include "imu.h"
 #endif 
