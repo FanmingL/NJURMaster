@@ -8,16 +8,27 @@
 void All_Init(void)
 {
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);  
-	Rc_Init();
-	Usart2_Init(115200);
-
-	DogInit();
-
+		
 	TIM6_Configuration();
-	TIM6_Start();
+	TIM5_Configuration();
 	InnerLoopInit();
 	Led_Configuration();
-	PWM_Init();
 	
-	TIM5_Configuration();
+	Rc_Init();
+	Usart2_Init(115200);
+	Usart3_Init(115200);
+	Usart6_Init(115200);
+
+	PWM_Init();
+	EncoderInit();
+	
+	delay_ms(100);
+	SPI5_Init();
+	delay_ms(100);
+	
+
+
+	
+	
+	TIM6_Start();
 }

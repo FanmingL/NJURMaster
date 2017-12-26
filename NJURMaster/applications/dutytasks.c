@@ -9,7 +9,7 @@ static void Duty_1ms(u32 _time)
 {
 	//u32 loop_time = GetInnerLoop(Task_1ms_Time);
 	DatatransferTask(_time);
-	CheckDog();
+	
 }
 
 /**
@@ -30,8 +30,10 @@ static void Duty_2ms(u32 _time)
   */
 static void Duty_5ms(u32 _time)
 {
-	//u32 loop_time = GetInnerLoop(Task_5ms_Time);
-
+	u32 loop_time = GetInnerLoop(Task_5ms_Time);
+	CheckDog();
+	ChassisControl(loop_time/1000000.0f);
+	GimbalControl(loop_time/1000000.0f);
 }
 
 /**
@@ -41,8 +43,8 @@ static void Duty_5ms(u32 _time)
   */
 static void Duty_10ms(u32 _time)
 {
-	//u32 loop_time = GetInnerLoop(Task_10ms_Time);
-
+	u32 loop_time = GetInnerLoop(Task_10ms_Time);
+	FireControl(loop_time/1000000.0f);
 }
 
 /**

@@ -21,4 +21,10 @@
 #include "mymath.h"
 #include "filter.h"
 #include "pid.h"
+#include "controltask.h"
+#include "cantask.h"
+#include "encoder.h"
+#include "appinit.h"
+#include "parameters.h"
+#include "spi.h"
 #endif 

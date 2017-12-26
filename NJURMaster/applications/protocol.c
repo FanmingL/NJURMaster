@@ -17,6 +17,16 @@ void BasicProtocolAnalysis(u8 *_item,int _len)
 }
 
 /**
+  * @brief 对遥控器解析结果进行反应
+  * @param None
+  * @retval None
+  */
+void RcDataAnalysis(RC_Ctrl_t *rc)
+{
+
+}
+
+/**
   * @brief 遥控器解析函数
   * @param pData	完整一帧接收机发来的数据
   * @param _len		帧总长
@@ -48,8 +58,6 @@ void RcProtocolAnalysis(u8 *pData,int _len)
  
     RC_CtrlData.key.v = ((int16_t)pData[15] << 8)|((int16_t)pData[14]);// | ((int16_t)pData[15] << 8);
 		
-
-
 }
 
 /**
@@ -64,3 +72,14 @@ void RefereeProtocolAnalysis(u8 *_item,int _len)
 
 }
 
+/**
+  * @brief CAN数据解析
+  * @param None
+  * @retval None
+  */
+void CanProtocolAnalysis(CanRxMsg * msg)
+{
+
+
+
+}
