@@ -62,7 +62,7 @@ void Delay_ms(uint32_t ms)
   * @brief TIM6初始化
   * @param None
   * @retval None
-	*	@details	TIM6用于产生1ms中断
+  * @details	TIM6用于产生1ms中断
   */
 void TIM6_Configuration(void)							
 {
@@ -88,7 +88,7 @@ void TIM6_Configuration(void)
   * @brief 使能TIM6中断
   * @param None
   * @retval None
-	*	@details	TIM6中断由此开始
+  * @details	TIM6中断由此开始
   */
 void TIM6_Start(void)
 {

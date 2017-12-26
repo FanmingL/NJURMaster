@@ -17,7 +17,7 @@ void DatatransferTask(u32 _time_sys)
   * @brief 串口2数据预解析
   * @param data	从DR寄存器中读取到的数据
   * @retval None
-	*	@details 若解析成功则跳转到BasicProtocolAnalysis进行处理
+  * @details 若解析成功则跳转到BasicProtocolAnalysis进行处理
   */
 void Usart2_DataPrepare(u8 data)
 {
@@ -70,7 +70,7 @@ void Usart2_DataPrepare(u8 data)
   * @brief 串口3数据预解析
   * @param data	从DR寄存器中读取到的数据
   * @retval None
-	*	@details 若解析成功则跳转到BasicProtocolAnalysis进行处理
+  * @details 若解析成功则跳转到BasicProtocolAnalysis进行处理
   */
 void Usart3_DataPrepare(u8 data)
 {
@@ -124,7 +124,7 @@ void Usart3_DataPrepare(u8 data)
   * @brief 串口6数据预解析
   * @param data	从DR寄存器中读取到的数据
   * @retval None
-	*	@details 若解析成功则跳转到BasicProtocolAnalysis进行处理
+  * @details 若解析成功则跳转到BasicProtocolAnalysis进行处理
   */
 void Usart6_DataPrepare(u8 data)
 {

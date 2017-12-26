@@ -4,7 +4,7 @@
   * @brief CAN1初始化
   * @param None
   * @retval None
-	* @details 	CAN1_TX PD1
+  * @details 	CAN1_TX PD1
 	*						CAN1_RX PD0
   */
 void Can1_Init(void)
@@ -70,7 +70,7 @@ void Can1_Init(void)
   * @brief 指南针模块初始化
   * @param None
   * @retval None
-	*	@details 搬运自官方板
+  * @details 搬运自官方板
   */
 void GYRO_RST(void)
 {
@@ -111,7 +111,7 @@ void CAN1_TX_IRQHandler(void) //CAN TX
   * @brief CAN1接收中断
   * @param None
   * @retval None
-	* @details 进入CAN解析函数
+  * @details 进入CAN解析函数
   */
 void CAN1_RX0_IRQHandler(void)
 {   
@@ -131,7 +131,7 @@ void CAN1_RX0_IRQHandler(void)
   * @brief CAN2初始化
   * @param None
   * @retval None
-	* @details 	CAN2_TX PB13
+  * @details 	CAN2_TX PB13
 	*						CAN2_RX PB12
   */
 void Can2_Init(void)

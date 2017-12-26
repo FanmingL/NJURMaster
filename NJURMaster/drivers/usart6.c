@@ -4,7 +4,7 @@
   * @brief 串口6初始化 
   * @param BaudRate
   * @retval None
-	*	@details DMA发送，RXNE接收中断
+  * @details DMA发送，RXNE接收中断
   */
 void Usart6_Init(u32 br_num)
 { 
