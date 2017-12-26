@@ -31,7 +31,7 @@ void forecast_calculate_II(float T,								//周期（单位：秒）
 /*=====================================================================================================================
 						 *****
 =====================================================================================================================*/
-typedef struct
+typedef __packed struct
 {
 	float kp;			 //比例系数
 	float ki;			 //积分系数
@@ -45,7 +45,7 @@ typedef struct
 }_PID_arg_st;
 
 
-typedef struct
+typedef  struct
 {
 	float err;
 	float err_old;

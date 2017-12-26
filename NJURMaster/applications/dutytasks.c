@@ -73,16 +73,9 @@ static void Duty_50ms(u32 _time)
 //	char buffer[200];
 //	j = sprintf(buffer," Hello World !\nthis time is %d\nj=%d\n\n",Get_Time_Micros(),j);
 //		Usart2_Send((u8*)buffer,j);
-	if (!IsDeviceLost(DEVICE_INDEX_RC)){
-			if (RC_CtrlData.rc.ch0>1200)
-			{
-				BOTH_LED_TOGGLE();
-			}
-			else if(RC_CtrlData.rc.ch0<1200)
-			{
-				RED_LED_TOGGLE();
-				GREEN_LED_OFF();
-			}
+	if (IsDeviceLost(DEVICE_INDEX_NOCALI))
+	{
+		BOTH_LED_TOGGLE();
 	}
 }
 

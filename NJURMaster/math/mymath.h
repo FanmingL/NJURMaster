@@ -51,7 +51,7 @@ double To_180_degrees_db(double x);
 //float safe_div(float numerator ,float denominator,float sv);
 float linear_interpolation_5(float range[5],float interpolation[5],float in);//range 必须从小到大
 
-typedef struct
+typedef __packed struct
 {
 	float kp;
 	float kd;
@@ -60,14 +60,14 @@ typedef struct
 
 }pid_t;
 
-typedef struct 
+typedef __packed struct 
 {
   float x;
 	float y;
 	float z;
 }xyz_f_t;
 
-typedef struct 
+typedef __packed struct 
 {
   s16 x;
 	s16 y;

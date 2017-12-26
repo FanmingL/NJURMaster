@@ -2,16 +2,151 @@
 
 
 RC_Ctrl_t RC_CtrlData;   //remote control data
-
+u8 checkdata_to_send,checksum_to_send,send_check=0;
+u8 send_pid1=0,send_pid2=0,send_pid3=0;
 /**
   * @brief 基本串口通讯协议解析
-  * @param _item	包含完整一帧数据的数组的指针
+  * @param data_buf	包含完整一帧数据的数组的指针
 	* @param _len		帧总长
   * @retval None
   * @details 上层硬件发来的信号或是地面站发来的信号的解析函数
   */
-void BasicProtocolAnalysis(u8 *_item,int _len)
+void BasicProtocolAnalysis(u8 *data_buf,int _len)
 {
+	u8 sum = 0;
+	u8 i;
+	for(i=0;i<(_len-1);i++)														//求和校验
+		sum += *(data_buf+i);
+	if(!(sum==*(data_buf+_len-1)))		return;						//校验不成功则return
+	if(!(*(data_buf)==0xAA && *(data_buf+1)==0xAF))		return;	//帧头校验不成功则return
+	if(*(data_buf+2)==0X01)														//分析帧类型
+	{
+		if(*(data_buf+4)==0X01)
+		{
+			IMU_ACCERDataCali();
+			
+		}
+		else if(*(data_buf+4)==0X02)
+		{
+			IMU_GYRODataCali();
+		}
+		else if(*(data_buf+4)==0X03)
+		{
+			IMU_ACCERDataCali();	
+			IMU_GYRODataCali();	
+		}
+		else if(*(data_buf+4)==0X04)
+		{
+			IMU_MAGDataCali();
+
+		}
+		else if (*(data_buf+4)==0X05)
+		{
+			ParaSavingFlag=1;
+		}
+		else if((*(data_buf+4)>=0X021)&&(*(data_buf+4)<=0X26))
+		{
+		}
+		else if(*(data_buf+4)==0X20)
+		{
+		}
+	}
+	if(*(data_buf+2)==0X22){
+			//NS=(enum PendulumMode)(*(data_buf+4));
+		}
+			if(*(data_buf+2)==0X21){
+			//NS=Stop;
+		}
+if(*(data_buf+2)==0X02)
+	{
+		if(*(data_buf+4)==0X01)
+		{
+			send_pid1 = 1;
+			send_pid2 = 1;
+		}
+		if(*(data_buf+4)==0XA1)	
+		{
+			ParametersInit();
+		}
+	}
+		if(*(data_buf+2)==0X10)								//PID1
+    {
+        PID_arg[0].kp  = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+        PID_arg[0].ki  = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+        PID_arg[0].kd  = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+        PID_arg[1].kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+        PID_arg[1].ki = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+        PID_arg[1].kd = 0.001*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+        PID_arg[2].kp 	= 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
+        PID_arg[2].ki 	= 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
+        PID_arg[2].kd 	= 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
+				if(send_check == 0)
+				{
+					send_check = 1;
+					checkdata_to_send = *(data_buf+2);
+					checksum_to_send = sum;
+				}
+    }
+		 if(*(data_buf+2)==0X11)								//PID2
+    {
+        PID_arg[3].kp  = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+        PID_arg[3].ki  = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+        PID_arg[3].kd  = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+        PID_arg[4].kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+        PID_arg[4].ki = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+        PID_arg[4].kd = 0.001*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+				PID_arg[5].kp 	= 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
+        PID_arg[5].ki 	= 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
+        PID_arg[5].kd 	= 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
+						if(send_check == 0)
+				{
+					send_check = 1;
+					checkdata_to_send = *(data_buf+2);
+					checksum_to_send = sum;
+				}
+    }
+	
+    	if(*(data_buf+2)==0X03)
+	{
+
+		
+	}
+    if(*(data_buf+2)==0X12)								//PID3
+    {	
+       	if(send_check == 0)
+				{
+					send_check = 1;
+					checkdata_to_send = *(data_buf+2);
+					checksum_to_send = sum;
+				}
+    }
+	if(*(data_buf+2)==0X13)								//PID4
+	{
+		   				if(send_check == 0)
+				{
+					send_check = 1;
+					checkdata_to_send = *(data_buf+2);
+					checksum_to_send = sum;
+				}
+	}
+	if(*(data_buf+2)==0X14)								//PID5
+	{
+						if(send_check == 0)
+				{
+					send_check = 1;
+					checkdata_to_send = *(data_buf+2);
+					checksum_to_send = sum;
+				}
+	}
+	if(*(data_buf+2)==0X15)								//PID6
+	{
+						if(send_check == 0)
+				{
+					send_check = 1;
+					checkdata_to_send = *(data_buf+2);
+					checksum_to_send = sum;
+				}
+	}
 
 
 }

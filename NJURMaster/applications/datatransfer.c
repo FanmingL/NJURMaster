@@ -1,16 +1,37 @@
 #include "main.h"
-
+u8 data_to_send[50];
 /**
   * @brief 串口通讯task
   * @param 系统从开机到现在运行的毫秒数
   * @retval None
   * @details 在这里向上位机或者上层硬件发送当前机器人的状态或传感器的数据
   */
-void DatatransferTask(u32 _time_sys)
+void DatatransferTask(u32 sys_time)
 {
+	if (sys_time%10==0)
+	{
+		
+	}
+	else if((sys_time+1)%10==0)
+	{
+	
+	}
+	else if((sys_time+2)%10==0)
+	{
 
-
-
+	}
+	else if ((sys_time+5)%10==0)
+	{
+		
+	}
+	else
+	{
+		if (send_check)
+		{
+			send_check = 0;
+			ANO_DT_Send_Check(checkdata_to_send,checksum_to_send);
+		}
+	}
 }
 
 /**
@@ -174,3 +195,28 @@ void Usart6_DataPrepare(u8 data)
 
 }
 
+/**
+  * @brief 发送attack
+  * @param head 帧类型
+  * @param check_sum 校验位
+  * @retval None
+  */
+void ANO_DT_Send_Check(u8 head, u8 check_sum)
+{
+	u8 sum = 0;
+	u8 i;
+	data_to_send[0]=0xAA;
+	data_to_send[1]=0xAA;
+	data_to_send[2]=0xEF;
+	data_to_send[3]=2;
+	data_to_send[4]=head;
+	data_to_send[5]=check_sum;
+	
+	
+
+	for(i=0;i<6;i++)
+		sum += data_to_send[i];
+	data_to_send[6]=sum;
+
+	Usart2_Send(data_to_send, 7);
+}

@@ -27,4 +27,5 @@
 #include "appinit.h"
 #include "parameters.h"
 #include "spi.h"
+#include "mpu6500.h"
 #endif 

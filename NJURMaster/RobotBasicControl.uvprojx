@@ -508,6 +508,11 @@
               <FileType>1</FileType>
               <FilePath>.\drivers\spi.c</FilePath>
             </File>
+            <File>
+              <FileName>mpu6500.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\mpu6500.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

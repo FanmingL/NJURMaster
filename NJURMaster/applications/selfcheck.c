@@ -46,6 +46,11 @@ void CheckDog(void)
 			SelfCheckValue[i]=0;
 		}
 	}
+	if (ParamSavedFlag)
+	{
+		FeedDog(DEVICE_INDEX_NOCALI);
+	}
+
 }
 
 /**
