@@ -1,12 +1,5 @@
 #include "main.h"
-#include "stdio.h"
-/***********************************
 
-PD5  TX
-PD6  RX
-
-
-*************************************/
 /*******串口2变量*********************/
 u8 Rx_2_Buf[256];	
 u8 Tx2Buffer[256];
@@ -15,6 +8,15 @@ u8 count2=0;
 u8 Tx2DMABuffer[256]={0};
 /***********************************/
 
+/**
+  * @brief 串口2初始化
+  * @param BaudRate
+  * @retval None
+  * @details	BaudRate	115200
+	*						使能DMA发送，RXNE接收中断
+	*						TX	PD5
+	*						RX	PD6
+  */
 void Usart2_Init(u32 br_num)
 {
 	USART_InitTypeDef USART_InitStructure;
@@ -92,14 +94,15 @@ void Usart2_Init(u32 br_num)
 	
 }
 
-
+/**
+  * @brief 串口2中断程序
+  * @param None
+  * @retval None
+  * @details RXNE中断，每接收到一个字节即进入一次中断，随后进入解析函数
+  */
 void USART2_IRQHandler(void)
 {
 	u8 com_data;
-//		if(USART2->SR & USART_SR_ORE)
-//	{
-//		com_data = USART2->DR;
-//	}
 	if( USART_GetITStatus(USART2,USART_IT_RXNE) )				//接收中断
 	{
 		USART_ClearITPendingBit(USART2,USART_IT_RXNE);
@@ -110,7 +113,12 @@ void USART2_IRQHandler(void)
 
 }
 
-
+/**
+  * @brief 串口2的DMA发送函数，发送一组数据
+  * @param DataToSend 要发送数据的数组的指针
+	* @param data_num 要发送的数据的个数
+  * @retval None
+  */
 void Usart2_Send(unsigned char *DataToSend ,u8 data_num)
 {
 	u8 i;
@@ -136,34 +144,6 @@ void Usart2_Send(unsigned char *DataToSend ,u8 data_num)
 	while (DMA_GetCmdStatus(DMA1_Stream6) != DISABLE){}	//确保DMA可以被设置  
 	DMA1_Stream6->NDTR = (uint16_t)(num+data_num);          //数据传输量  
 	DMA_Cmd(DMA1_Stream6, ENABLE);       
-
-
-
 }
 
 
-
-//int fputc(int ch, FILE *f)
-//{
-//		Usart3_Send_Byte((uint8_t)ch);
-//    return ch;
-//}
-//void Usart2_SendByte(unsigned char DataToSend)
-//{
-
-//		Tx2Buffer[count2++] = DataToSend;
-
-
-//	if(!(USART2->CR1 & USART_CR1_TXEIE))
-//	{
-//		USART_ITConfig(USART2, USART_IT_TXE, ENABLE); 
-//	}
-
-//}
-
-
-//int fputc(int ch, FILE *f)
-//{
-//		Usart2_SendByte((uint8_t)ch);
-//    return ch;
-//}

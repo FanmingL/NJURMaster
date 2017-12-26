@@ -3,7 +3,11 @@ u32 SelfCheckErrorFlag=0x0000;
 
 const u16 SelfCheckInitValue[SELF_CHECK_ITEM_NUM]={200u,200u,200u,200u,200u,200u,200u,200u,200u,100u};
 u16 SelfCheckValue[SELF_CHECK_ITEM_NUM];
-
+/**
+  * @brief 看门狗初始化
+  * @param None
+  * @retval None
+  */
 void DogInit(void)
 {
 	int i=0;
@@ -14,12 +18,22 @@ void DogInit(void)
 	SelfCheckErrorFlag=0x0000;
 }
 
+/**
+  * @brief 喂狗
+  * @param None
+  * @retval None
+  */
 void FeedDog(u8 _dog_index)
 {
 	SelfCheckValue[_dog_index]=0;
 	SelfCheckErrorFlag &= (~(u32)(1<<_dog_index));
 }
 
+/**
+  * @brief 判断系统有哪些设备掉线（失去连接）
+  * @param None
+  * @retval None
+  */
 void CheckDog(void)
 {
 	u8 i=0;
@@ -34,7 +48,11 @@ void CheckDog(void)
 	}
 }
 
-
+/**
+  * @brief 检查某设备当前的状态
+  * @param 设备名，可在头文件找到
+  * @retval 若设备掉线，返回1，否则返回0
+  */
 u8 IsDeviceLost(int _dog_index)
 {
 	return (((u32)(1<<_dog_index))==(SelfCheckErrorFlag&((u32)(1<<_dog_index))));

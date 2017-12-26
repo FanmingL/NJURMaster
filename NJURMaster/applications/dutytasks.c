@@ -1,5 +1,10 @@
 #include "main.h"
 
+/**
+  * @brief 1ms任务
+  * @param 系统从开机到现在经过的毫秒数
+  * @retval None
+  */
 static void Duty_1ms(u32 _time)
 {
 	//u32 loop_time = GetInnerLoop(Task_1ms_Time);
@@ -7,30 +12,55 @@ static void Duty_1ms(u32 _time)
 	CheckDog();
 }
 
+/**
+  * @brief 2ms任务
+  * @param 系统从开机到现在经过的毫秒数
+  * @retval None
+  */
 static void Duty_2ms(u32 _time)
 {
 	//u32 loop_time = GetInnerLoop(Task_2ms_Time);
 	
 }
 
+/**
+  * @brief 5ms任务
+  * @param 系统从开机到现在经过的毫秒数
+  * @retval None
+  */
 static void Duty_5ms(u32 _time)
 {
 	//u32 loop_time = GetInnerLoop(Task_5ms_Time);
 
 }
 
+/**
+  * @brief 10ms任务
+  * @param 系统从开机到现在经过的毫秒数
+  * @retval None
+  */
 static void Duty_10ms(u32 _time)
 {
 	//u32 loop_time = GetInnerLoop(Task_10ms_Time);
 
 }
 
+/**
+  * @brief 20ms任务
+  * @param 系统从开机到现在经过的毫秒数
+  * @retval None
+  */
 static void Duty_20ms(u32 _time)
 {
 	u32 loop_time = GetInnerLoop(Task_20ms_Time);
 
 }
 
+/**
+  * @brief 50ms任务
+  * @param 系统从开机到现在经过的毫秒数
+  * @retval None
+  */
 static void Duty_50ms(u32 _time)
 {
 
@@ -54,6 +84,12 @@ static void Duty_50ms(u32 _time)
 	}
 }
 
+/**
+  * @brief 系统主任务循环
+  * @param None
+  * @retval None
+  * @details 由定时器每毫秒准时调用，由这里进入各种task
+  */
 void Duty_loop(void)
 {
 	static u32 systime_ms=0;

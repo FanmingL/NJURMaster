@@ -1,9 +1,12 @@
 #include "pwm.h"
 
-/*-LEFT---(PH6---TIM12_CH1)--*/
-/*-RIGHT--(PH9--TIM12_CH2)--*/
-/*-----------90MHz----------*/
-
+/**
+  * @brief Ä¦²ÁÂÖµÄPWM³õÊ¼»¯
+  * @param None
+  * @retval None
+  * @details	PH6	TIM12_CH1
+	*						ph9	TIM12_CH2
+  */
 void PWM_Init(void)
 {
     GPIO_InitTypeDef          gpio;

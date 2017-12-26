@@ -1,4 +1,10 @@
 #include "main.h"
+
+/**
+  * @brief µ×²ãÇý¶¯³õÊ¼»¯
+  * @param None
+  * @retval None
+  */
 void All_Init(void)
 {
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);  

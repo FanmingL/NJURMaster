@@ -1,5 +1,11 @@
 #include "main.h"
-/*----GREEN LED----PG13-----'0' is off,'1' is on */
+
+/**
+  * @brief º§π‚≥ı ºªØ
+  * @param None
+  * @retval None
+  * @details PG13
+  */
 void Laser_Configuration(void)
 {
 	GPIO_InitTypeDef gpioInitStruct;

@@ -1,7 +1,13 @@
 #include "main.h"
-/*----USART1----PB7-----RX */
-/*----BaudRate------ 100000*/
-/*----------RC-------------*/
+
+/**
+  * @brief 串口1初始化
+  * @param None
+  * @retval None
+  * @details	Rx	PB7
+	*						Usart1	BaudRate	100000
+	*						使能DMA接收,双缓冲,使能IDLE中断，接收完一帧数据后的一个字节空闲后进入中断
+  */
 u8 _USART1_DMA_RX_BUF[2][USART1_DMA_RX_LEN];
 void Usart1_Init(void)
 {  
@@ -75,6 +81,12 @@ void Usart1_Init(void)
 
 }
 
+/**
+  * @brief 串口1中断函数
+  * @param None
+  * @retval None
+  * @details 已经使能IDLE中断，由此进入遥控器通讯协议解析
+  */
 void USART1_IRQHandler(void)
 {
 	static uint32_t this_time_rx_len = 0;
@@ -112,6 +124,12 @@ void USART1_IRQHandler(void)
 		}
 	}       
 }
+
+/**
+  * @brief 遥控器初始化
+  * @param None
+  * @retval None
+  */
 void Rc_Init(void)
 {
 	Usart1_Init();

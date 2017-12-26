@@ -13,6 +13,7 @@
 #include "timer.h"
 #include "usart2.h"
 #include "usart3.h"
+#include "usart6.h"
 #include "protocol.h"
 #include "datatransfer.h"
 #include "dutytasks.h"

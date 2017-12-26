@@ -1,8 +1,12 @@
 #include "main.h"
 
-/*----GREEN LED----PF14-----'0' is on,'1' is off */
-/*----RED LED----PE7-----'0' is on,'1' is off */
-
+/**
+  * @brief LED≥ı ºªØ
+  * @param None
+  * @retval None
+  * @details 	REDLED 		PF14
+	* 					GREENLED 	PE7
+  */
 void Led_Configuration(void)
 {
   GPIO_InitTypeDef  GPIO_InitStructure;

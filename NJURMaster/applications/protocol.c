@@ -3,17 +3,25 @@
 
 RC_Ctrl_t RC_CtrlData;   //remote control data
 
-
-
-
-
+/**
+  * @brief 基本串口通讯协议解析
+  * @param _item	包含完整一帧数据的数组的指针
+	* @param _len		帧总长
+  * @retval None
+	* @details 上层硬件发来的信号或是地面站发来的信号的解析函数
+  */
 void BasicProtocolAnalysis(u8 *_item,int _len)
 {
 
 
 }
 
-
+/**
+  * @brief 遥控器解析函数
+  * @param pData	完整一帧接收机发来的数据
+  * @param _len		帧总长
+  * @retval None
+  */
 void RcProtocolAnalysis(u8 *pData,int _len)
 {
 	//BOTH_LED_TOGGLE();
@@ -44,6 +52,12 @@ void RcProtocolAnalysis(u8 *pData,int _len)
 
 }
 
+/**
+  * @brief 裁判系统解析
+  * @param _item	完整一帧裁判系统的数据
+	* @param _len		帧总长
+  * @retval None
+  */
 void RefereeProtocolAnalysis(u8 *_item,int _len)
 {
 
