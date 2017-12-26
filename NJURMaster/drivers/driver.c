@@ -25,7 +25,11 @@ void All_Init(void)
 	delay_ms(100);
 	SPI5_Init();
 	delay_ms(100);
-	
+	while(MPU6500_Init())
+	{
+		delay_ms(100);
+	}
+
 
 
 	

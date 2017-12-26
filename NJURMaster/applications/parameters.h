@@ -31,9 +31,9 @@ extern u8 CALIFLAG;
 
 typedef __packed struct 
 {
-	xyz_s16_t GYRO_Offset;
-	xyz_s16_t ACCER_Offset;
-	xyz_s16_t MAG_Offset;
+	xyz_f_t GYRO_Offset;
+	xyz_f_t ACCER_Offset;
+	xyz_f_t MAG_Offset;
 }IMUSensor_OffSet__;
 
 typedef __packed struct

@@ -8,6 +8,13 @@ u8 data_to_send[50];
   */
 void DatatransferTask(u32 sys_time)
 {
+	int j=0;
+	char buff[200];
+	
+	if(sys_time%200==0){
+	j=sprintf(buff,"%.2f  %.2f  %.2f  %.2f  %.2f  %.2f\n",MPU6500_Acc.x,MPU6500_Acc.y,MPU6500_Acc.z,MPU6500_Gyro.x,MPU6500_Gyro.y,MPU6500_Gyro.z);
+	Usart2_Send((u8*)buff,j);
+	}
 	if (sys_time%10==0)
 	{
 		

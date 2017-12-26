@@ -20,6 +20,7 @@ static void Duty_1ms(u32 _time)
 static void Duty_2ms(u32 _time)
 {
 	//u32 loop_time = GetInnerLoop(Task_2ms_Time);
+	MPU6500_Data_Prepare();
 	
 }
 

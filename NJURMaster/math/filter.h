@@ -1,6 +1,6 @@
 #ifndef __FILTER_H
 #define __FILTER_H
-
+#include "stm32f4xx.h"
 
 #define LPF_1_(hz,t,in,out) ((out) += ( 1 / ( 1 + 1 / ( (hz) *6.28f *(t) ) ) ) *( (in) - (out) ))
 
