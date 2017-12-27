@@ -1,5 +1,10 @@
 #include "main.h"
 u8 data_to_send[50];
+
+#define BYTE0(dwTemp)       ( *( (char *)(&dwTemp)		) )
+#define BYTE1(dwTemp)       ( *( (char *)(&dwTemp) + 1) )
+#define BYTE2(dwTemp)       ( *( (char *)(&dwTemp) + 2) )
+#define BYTE3(dwTemp)       ( *( (char *)(&dwTemp) + 3) )
 /**
   * @brief 串口通讯task
   * @param 系统从开机到现在运行的毫秒数
@@ -8,23 +13,25 @@ u8 data_to_send[50];
   */
 void DatatransferTask(u32 sys_time)
 {
-	int j=0;
-	char buff[200];
+	//int j=0;
+	//char buff[200];
 	
-	if(sys_time%30==0)
-	{
+	//if(sys_time%30==0)
+	//{
 	//j=sprintf(buff,"%.2f  %.2f  %.2f  %.2f  %.2f  %.2f\n",MPU6500_Acc.x,MPU6500_Acc.y,MPU6500_Acc.z,MPU6500_Gyro.x,MPU6500_Gyro.y,MPU6500_Gyro.z);
 	//	j+=sprintf(j+buff,"%x\n",MPU6500_Read_Reg(USER_CTRL));
-		j=sprintf(j+buff,"%.2f\t%.2f\t%.2f\n",Pitch,Roll,Yaw);
-		Usart2_Send((u8*)buff,j);
-	}
+		//j=sprintf(j+buff,"%.2f\t%.2f\t%.2f\n",Pitch,Roll,Yaw);
+		//Usart2_Send((u8*)buff,j);
+	//}
 	if (sys_time%10==0)
 	{
-		
+		ANO_DT_Send_Status(Roll,Pitch,Yaw,0,0,0);
 	}
 	else if((sys_time+1)%10==0)
 	{
-	
+		ANO_DT_Send_Senser((vs16)MPU6500_Acc.x,(vs16)MPU6500_Acc.y,(vs16)MPU6500_Acc.z,
+												(vs16)MPU6500_Gyro.x,(vs16)MPU6500_Gyro.y,(vs16)MPU6500_Gyro.z,
+											(vs16)MagValue.x,(vs16)MagValue.y,(vs16)MagValue.z);
 	}
 	else if((sys_time+2)%10==0)
 	{
@@ -229,4 +236,106 @@ void ANO_DT_Send_Check(u8 head, u8 check_sum)
 	data_to_send[6]=sum;
 
 	Usart2_Send(data_to_send, 7);
+}
+
+
+/**
+  * @brief 向上位机发送三个欧拉角
+  * @param 三个欧拉角，
+  * @retval None
+  */
+void ANO_DT_Send_Status(float angle_rol, float angle_pit, float angle_yaw, s32 alt, u8 fly_model, u8 armed)
+{
+	u8 _cnt=0;
+	vs16 _temp;
+	vs32 _temp2 = alt;
+	u8 sum = 0;
+	u8 i;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0x01;
+	data_to_send[_cnt++]=0;
+	
+	_temp = (int)(angle_rol*100);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = (int)(angle_pit*100);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = (int)(angle_yaw*100);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	data_to_send[_cnt++]=BYTE3(_temp2);
+	data_to_send[_cnt++]=BYTE2(_temp2);
+	data_to_send[_cnt++]=BYTE1(_temp2);
+	data_to_send[_cnt++]=BYTE0(_temp2);
+	
+	data_to_send[_cnt++] = fly_model;
+	
+	data_to_send[_cnt++] = armed;
+	
+	data_to_send[3] = _cnt-4;
+	
+
+	for(i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+	data_to_send[_cnt++]=sum;
+	
+	Usart2_Send(data_to_send, _cnt);
+}
+
+void ANO_DT_Send_Senser(s16 a_x,s16 a_y,s16 a_z,s16 g_x,s16 g_y,s16 g_z,s16 m_x,s16 m_y,s16 m_z)
+{
+	u8 _cnt=0;
+	vs16 _temp;
+		u8 sum = 0;
+	u8 i;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0x02;
+	data_to_send[_cnt++]=0;
+	
+	_temp = a_x;
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = a_y;
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = a_z;	
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	_temp = g_x;	
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = g_y;	
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = g_z;	
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	_temp = m_x;	
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = m_y;	
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = m_z;	
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+/////////////////////////////////////////
+	_temp = 0;	
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);	
+	
+	data_to_send[3] = _cnt-4;
+	
+
+	for(i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+	data_to_send[_cnt++] = sum;
+	
+	Usart2_Send(data_to_send, _cnt);
 }

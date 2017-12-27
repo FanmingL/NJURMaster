@@ -3,7 +3,6 @@
 #include "stm32f4xx.h"
 #include "mymath.h"
 u8 IST8310_Init(void);
-void IST8310_getRaw(void);
 void IST8310_getRawEX(void);
 void IST8310_CALI(void);
 void IST8310_Data_Prepare(void);

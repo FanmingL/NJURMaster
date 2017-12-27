@@ -116,6 +116,11 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>DLGUARM</Key>
+          <Name></Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>ARMRTXEVENTFLAGS</Key>
           <Name>-L70 -Z18 -C0 -M0 -T1</Name>
         </SetRegEntry>
@@ -146,6 +151,11 @@
           <count>0</count>
           <WinNumber>1</WinNumber>
           <ItemText>((USART_TypeDef *) ((((uint32_t)0x40000000) + 0x00010000) + 0x1000))</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>IMUSensor_Offset</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>

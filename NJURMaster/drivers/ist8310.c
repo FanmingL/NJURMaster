@@ -28,12 +28,12 @@
   uint8_t data;
   
   MPU6500_Write_Reg(MPU6500_I2C_SLV4_REG, addr);
-  delay_us(200);
+  delay_ms(2);
   MPU6500_Write_Reg(MPU6500_I2C_SLV4_CTRL, 0x80);
-  delay_us(200);
+  delay_ms(2);
   data = MPU6500_Read_Reg(MPU6500_I2C_SLV4_DI);
   MPU6500_Write_Reg(MPU6500_I2C_SLV4_CTRL, 0x00);
-	delay_us(200);
+	delay_ms(2);
   return data;
 }
 
@@ -46,28 +46,28 @@
  static void MPU_Auto_Read_IST_config(uint8_t device_address, uint8_t reg_base_addr, uint8_t data_num)
 {
   MPU6500_Write_Reg(MPU6500_I2C_SLV1_ADDR, device_address);
-  Delay_ms(10);
+  Delay_ms(40);
   MPU6500_Write_Reg(MPU6500_I2C_SLV1_REG, IST8310_R_CONFA);
-  Delay_ms(10);
+  Delay_ms(40);
   MPU6500_Write_Reg(MPU6500_I2C_SLV1_DO, IST8310_ODR_MODE);
-  Delay_ms(10);
+  Delay_ms(40);
   
   MPU6500_Write_Reg(MPU6500_I2C_SLV0_ADDR, 0x80 | device_address);
-  Delay_ms(10);
+  Delay_ms(40);
   MPU6500_Write_Reg(MPU6500_I2C_SLV0_REG, reg_base_addr);
-  Delay_ms(10);
+  Delay_ms(40);
   
-  MPU6500_Write_Reg(MPU6500_I2C_SLV4_CTRL, 0x03);
- Delay_ms(10);
+  MPU6500_Write_Reg(MPU6500_I2C_SLV4_CTRL, 0x04);
+ Delay_ms(40);
   
   MPU6500_Write_Reg(MPU6500_I2C_MST_DELAY_CTRL, 0x01 | 0x02);
-  Delay_ms(10);
+  Delay_ms(40);
   
   MPU6500_Write_Reg(MPU6500_I2C_SLV1_CTRL, 0x80 | 0x01);
-  Delay_ms(10);
+  Delay_ms(40);
   
   MPU6500_Write_Reg(MPU6500_I2C_SLV0_CTRL, 0x80 | data_num);
-  Delay_ms(10);
+  Delay_ms(40);
 }
 
 /**
@@ -79,44 +79,44 @@
 u8 IST8310_Init(void)
 {
 	MPU6500_Write_Reg(USER_CTRL, 0x30);
-  Delay_ms(10);
+  Delay_ms(40);
   MPU6500_Write_Reg(MPU6500_I2C_MST_CTRL, 0x0d);
-  Delay_ms(10);
+  Delay_ms(40);
   
   MPU6500_Write_Reg(MPU6500_I2C_SLV1_ADDR, IST8310_ADDRESS);
-  Delay_ms(10);
+  Delay_ms(40);
   MPU6500_Write_Reg(MPU6500_I2C_SLV4_ADDR, 0x80 | IST8310_ADDRESS);
-  Delay_ms(10);
+  Delay_ms(40);
   
   IST_Reg_Write_By_MPU(IST8310_R_CONFB, 0x01);
   if(IST8310_DEVICE_ID_A != IST_Reg_Read_By_MPU(IST8310_WHO_AM_I))
     return 1; //error
-  Delay_ms(10);
+  Delay_ms(40);
   
   IST_Reg_Write_By_MPU(IST8310_R_CONFA, 0x00);
   if(IST_Reg_Read_By_MPU(IST8310_R_CONFA) != 0x00)
     return 2;
-  Delay_ms(10);
+  Delay_ms(40);
   
   IST_Reg_Write_By_MPU(IST8310_R_CONFB, 0x00);
   if(IST_Reg_Read_By_MPU(IST8310_R_CONFB) != 0x00)
     return 3;
-  Delay_ms(10);
+  Delay_ms(40);
   
   IST_Reg_Write_By_MPU(IST8310_AVGCNTL, 0x24);
   if(IST_Reg_Read_By_MPU(IST8310_AVGCNTL) != 0x24)
     return 4;
-	Delay_ms(10);
+	Delay_ms(40);
   
   IST_Reg_Write_By_MPU(IST8310_PDCNTL, 0xc0);
   if(IST_Reg_Read_By_MPU(IST8310_PDCNTL) != 0xc0)
     return 5;
- Delay_ms(10);
+ Delay_ms(40);
   
   MPU6500_Write_Reg(MPU6500_I2C_SLV1_CTRL, 0x00);
-  Delay_ms(10);
+  Delay_ms(40);
   MPU6500_Write_Reg(MPU6500_I2C_SLV4_CTRL, 0x00);
-  Delay_ms(10);
+  Delay_ms(40);
   
   MPU_Auto_Read_IST_config(IST8310_ADDRESS, IST8310_R_XL, 0x06);
   Delay_ms(100);
@@ -129,39 +129,19 @@ xyz_f_t IST_Raw;
   * @param None
   * @retval None
   */
-
+uint8_t temp_ist_buff[6];
 void IST8310_getRawEX(void)
 {
 	int i=0;
-	uint8_t ist_buff[6];
-	static u8 ADDR_BASE_EXTER = 73;
+	
+	static u8 ADDR_BASE_EXTER = 0x49;
 	for(i=0;i<6;i++)
 	{
-		ist_buff[i]=MPU6500_Read_Reg(ADDR_BASE_EXTER+i);
+		temp_ist_buff[i]=MPU6500_Read_Reg(ADDR_BASE_EXTER+i);
 	}
-	IST_Raw.x = BYTE16(s16, ist_buff[0],ist_buff[1]);
-	IST_Raw.y	= BYTE16(s16, ist_buff[2],ist_buff[3]);
-	IST_Raw.z = BYTE16(s16, ist_buff[4],ist_buff[5]); 
-}
-
-
-/**
-  * @brief 得到IST8310的原始数据
-  * @param None
-  * @retval None
-  */
- void IST8310_getRaw(void)
-{
-	uint8_t ist_buff[6];
-	ist_buff[0] = IST_Reg_Read_By_MPU(IST8310_R_XL);//Delay_ms(3);
-	ist_buff[1] = IST_Reg_Read_By_MPU(IST8310_R_XM);//Delay_ms(3);
-	ist_buff[2] = IST_Reg_Read_By_MPU(IST8310_R_YL);//Delay_ms(3);
-	ist_buff[3] = IST_Reg_Read_By_MPU(IST8310_R_YM);//Delay_ms(3);
-	ist_buff[4] = IST_Reg_Read_By_MPU(IST8310_R_ZL);//Delay_ms(3);
-	ist_buff[5] = IST_Reg_Read_By_MPU(IST8310_R_ZM);
-	IST_Raw.x = BYTE16(s16, ist_buff[0],ist_buff[1]);
-	IST_Raw.y	= BYTE16(s16, ist_buff[2],ist_buff[3]);
-	IST_Raw.z = BYTE16(s16, ist_buff[4],ist_buff[5]); 
+	IST_Raw.x = BYTE16(s16, temp_ist_buff[0],temp_ist_buff[1]);
+	IST_Raw.y	= BYTE16(s16, temp_ist_buff[2],temp_ist_buff[3]);
+	IST_Raw.z = BYTE16(s16, temp_ist_buff[4],temp_ist_buff[5]); 
 }
 
 /**
@@ -221,7 +201,7 @@ xyz_f_t MagValue;
   */
 void IST8310_Data_Prepare(void)
 {
-	IST8310_getRaw();
+	IST8310_getRawEX();
 	IST8310_CALI();
 	MagValue.x = (IST_Raw.x - IMUSensor_Offset.MAG_Offset.x) ;
 	MagValue.y = (IST_Raw.y - IMUSensor_Offset.MAG_Offset.y) ;

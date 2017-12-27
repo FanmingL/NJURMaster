@@ -9,9 +9,6 @@ u8 MPU6500_Init(void)
 {
 	if( MPU6500_Read_Reg(WHO_AM_I)== 0x70)			//正确读取到6500的地址
 	{		
-		
- 		
-		
 		delay_ms(100);
 		MPU6500_Write_Reg(PWR_MGMT_1,0X80);   		//电源管理,复位MPU6500
 		delay_ms(100);
