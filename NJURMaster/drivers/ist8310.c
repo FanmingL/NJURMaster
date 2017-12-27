@@ -132,16 +132,17 @@ xyz_f_t IST_Raw;
 uint8_t temp_ist_buff[6];
 void IST8310_getRawEX(void)
 {
-	int i=0;
+	u8 i=0;
 	
 	static u8 ADDR_BASE_EXTER = 0x49;
 	for(i=0;i<6;i++)
 	{
 		temp_ist_buff[i]=MPU6500_Read_Reg(ADDR_BASE_EXTER+i);
+		delay_us(1);
 	}
-	IST_Raw.x = BYTE16(s16, temp_ist_buff[0],temp_ist_buff[1]);
-	IST_Raw.y	= BYTE16(s16, temp_ist_buff[2],temp_ist_buff[3]);
-	IST_Raw.z = BYTE16(s16, temp_ist_buff[4],temp_ist_buff[5]); 
+	IST_Raw.x = BYTE16(s16, temp_ist_buff[1],temp_ist_buff[0]);
+	IST_Raw.y	= BYTE16(s16, temp_ist_buff[3],temp_ist_buff[2]);
+	IST_Raw.z = BYTE16(s16, temp_ist_buff[5],temp_ist_buff[4]); 
 }
 
 /**
@@ -158,7 +159,7 @@ void IST8310_CALI(void)
 	if (CALIFLAG & IMU_MAGCALING)
 	{
 		BOTH_LED_TOGGLE();
-		if(ABS(IST_Raw.x)<400&&ABS(IST_Raw.y)<800&&ABS(IST_Raw.z)<800)
+		if(ABS(IST_Raw.x)<800&&ABS(IST_Raw.y)<800&&ABS(IST_Raw.z)<800)
 		{
 			MagMAX.x = _MAX(IST_Raw.x, MagMAX.x);
 			MagMAX.y = _MAX(IST_Raw.y, MagMAX.y);
@@ -203,8 +204,8 @@ void IST8310_Data_Prepare(void)
 {
 	IST8310_getRawEX();
 	IST8310_CALI();
-	MagValue.x = (IST_Raw.x - IMUSensor_Offset.MAG_Offset.x) ;
-	MagValue.y = (IST_Raw.y - IMUSensor_Offset.MAG_Offset.y) ;
-	MagValue.z = (IST_Raw.z - IMUSensor_Offset.MAG_Offset.z) ;
+	MagValue.x = -(IST_Raw.x - IMUSensor_Offset.MAG_Offset.x);
+	MagValue.y = -(IST_Raw.y - IMUSensor_Offset.MAG_Offset.y);
+	MagValue.z = (IST_Raw.z - IMUSensor_Offset.MAG_Offset.z);
 
 }

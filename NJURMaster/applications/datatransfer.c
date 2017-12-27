@@ -13,16 +13,17 @@ u8 data_to_send[50];
   */
 void DatatransferTask(u32 sys_time)
 {
-	//int j=0;
-	//char buff[200];
-	
-	//if(sys_time%30==0)
-	//{
-	//j=sprintf(buff,"%.2f  %.2f  %.2f  %.2f  %.2f  %.2f\n",MPU6500_Acc.x,MPU6500_Acc.y,MPU6500_Acc.z,MPU6500_Gyro.x,MPU6500_Gyro.y,MPU6500_Gyro.z);
-	//	j+=sprintf(j+buff,"%x\n",MPU6500_Read_Reg(USER_CTRL));
-		//j=sprintf(j+buff,"%.2f\t%.2f\t%.2f\n",Pitch,Roll,Yaw);
-		//Usart2_Send((u8*)buff,j);
-	//}
+//	int j=0;
+//	char buff[200];
+//	
+//	if(sys_time%60==0)
+//	{
+//	//j=sprintf(buff,"%.2f  %.2f  %.2f  %.2f  %.2f  %.2f\n",MPU6500_Acc.x,MPU6500_Acc.y,MPU6500_Acc.z,MPU6500_Gyro.x,MPU6500_Gyro.y,MPU6500_Gyro.z);
+//	//	j+=sprintf(j+buff,"%d\t%d\t%d\t%d\t%d\t%d\t\n",temp_ist_buff[0],temp_ist_buff[1],temp_ist_buff[2],temp_ist_buff[3],temp_ist_buff[4],temp_ist_buff[5]);
+//	//	j=sprintf(j+buff,"%.2f\t%.2f\t%.2f\n",Pitch,Roll,Yaw);
+//	//	j+=sprintf(j+buff,"0x%x\n",MPU6500_Read_Reg(MPU6500_I2C_SLV0_CTRL));
+//	//	Usart2_Send((u8*)buff,j);
+//	}
 	if (sys_time%10==0)
 	{
 		ANO_DT_Send_Status(Roll,Pitch,Yaw,0,0,0);

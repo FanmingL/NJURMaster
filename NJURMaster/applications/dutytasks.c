@@ -49,7 +49,7 @@ static void Duty_5ms(u32 _time)
 static void Duty_10ms(u32 _time)
 {
 	u32 loop_time = GetInnerLoop(Task_10ms_Time);
-
+	
 	FireControl(loop_time/1000000.0f);
 	
 }

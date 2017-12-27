@@ -68,6 +68,7 @@ void IMUupdate(float half_T,float gx, float gy, float gz, float ax, float ay, fl
 	此函数可在一定范围内做近似转换，让结果逼近实际角度，减小飞机倾斜的影响。
 	注意：该函数内的计算并不是正确也不是准确的，正确的计算相对复杂，这里不给出，在未来的版本中会再更新。
 	*/
+	//mag_sim_3d=mag_tmp;
 	simple_3d_trans(&reference_v,&mag_tmp,&mag_sim_3d); 
 	
 	mag_norm = my_sqrt(mag_sim_3d.x * mag_sim_3d.x + mag_sim_3d.y *mag_sim_3d.y);
