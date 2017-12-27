@@ -7,9 +7,13 @@
   */
 static void Duty_1ms(u32 _time)
 {
-	//u32 loop_time = GetInnerLoop(Task_1ms_Time);
+	u32 loop_time = GetInnerLoop(Task_1ms_Time);
 	DatatransferTask(_time);
 	WorkStateFSM(_time);
+	MPU6500_Data_Prepare();
+	IMUupdate((float)(loop_time/2000000.0f),MPU6500_Gyro.x,MPU6500_Gyro.y,MPU6500_Gyro.z,
+						MPU6500_Acc.x,MPU6500_Acc.y,MPU6500_Acc.z,
+						&Roll,&Pitch,&Yaw);
 }
 
 /**
@@ -20,10 +24,7 @@ static void Duty_1ms(u32 _time)
 static void Duty_2ms(u32 _time)
 {
 	u32 loop_time = GetInnerLoop(Task_2ms_Time);
-	MPU6500_Data_Prepare();
-	IMUupdate(loop_time/2000000.0f,MPU6500_Gyro.x,MPU6500_Gyro.y,MPU6500_Gyro.z,
-						MPU6500_Acc.x,MPU6500_Acc.y,MPU6500_Acc.z,
-						&Roll,&Pitch,&Yaw);
+
 	
 }
 

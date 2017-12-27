@@ -1,7 +1,7 @@
 #include "main.h"
 #include "math.h"
 #define Kp 0.3f                	// proportional gain governs rate of convergence to accelerometer/magnetometer
-#define Ki 0.000f                	// 0.001  integral gain governs rate of convergence of gyroscope biases
+#define Ki 0.001f                	// 0.001  integral gain governs rate of convergence of gyroscope biases
 
 #define IMU_INTEGRAL_LIM  ( 2.0f *ANGLE_TO_RADIAN )
 #define NORM_ACC_LPF_HZ 10  		//(Hz)
@@ -207,8 +207,8 @@ void IMUupdate(float half_T,float gx, float gy, float gz, float ax, float ay, fl
 	ref_q[3] = ref_q[3] / norm_q;
 	
 
-	*rol = fast_atan2(2*(ref_q[0]*ref_q[1] + ref_q[2]*ref_q[3]),1 - 2*(ref_q[1]*ref_q[1] + ref_q[2]*ref_q[2])) *57.3f;
-	*pit = asin(2*(ref_q[1]*ref_q[3] - ref_q[0]*ref_q[2])) *57.3f;
+	*pit = fast_atan2(2*(ref_q[0]*ref_q[1] + ref_q[2]*ref_q[3]),1 - 2*(ref_q[1]*ref_q[1] + ref_q[2]*ref_q[2])) *57.3f;
+	*rol = asin(2*(ref_q[1]*ref_q[3] - ref_q[0]*ref_q[2])) *57.3f;
 	*yaw = fast_atan2(2*(-ref_q[1]*ref_q[2] - ref_q[0]*ref_q[3]), 2*(ref_q[0]*ref_q[0] + ref_q[1]*ref_q[1]) - 1) *57.3f  ;// 
 	FeedDog(DEVICE_INDEX_IMU);
 	//*yaw = yaw_mag;

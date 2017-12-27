@@ -21,7 +21,7 @@ u8 MPU6500_Init(void)
 		delay_ms(100);
 		MPU6500_Write_Reg(SMPLRT_DIV,0X00);				//采样率1000/(1+0)=1000HZ
 		delay_ms(100);
-		MPU6500_Write_Reg(GYRO_CONFIG,0X18);  		//陀螺仪测量范围 0X18 正负2000度
+		MPU6500_Write_Reg(GYRO_CONFIG,0X10);  		//陀螺仪测量范围 0X10 正负1000度
 		delay_ms(100);
 		MPU6500_Write_Reg(CONFIG,0X04);						//低通滤波器 0x02 20hz (9.9ms delay) fs=1khz
 		delay_ms(100);
@@ -191,9 +191,9 @@ void MPU6500_Data_Prepare(void)
 		MPU6500_Gyro.y=mpu_fil_tmp[G_Y];
 		MPU6500_Gyro.z=mpu_fil_tmp[G_Z];
 		
-		MPU6500_Gyro.x=0.06103f*MPU6500_Gyro.x;
-		MPU6500_Gyro.y=0.06103f*MPU6500_Gyro.y;
-		MPU6500_Gyro.z=0.06103f*MPU6500_Gyro.z;
+		MPU6500_Gyro.x=0.0610351563f*MPU6500_Gyro.x*0.5f;
+		MPU6500_Gyro.y=0.0610351563f*MPU6500_Gyro.y*0.5f;
+		MPU6500_Gyro.z=0.0610351563f*MPU6500_Gyro.z*0.5f;
 }
 
 
