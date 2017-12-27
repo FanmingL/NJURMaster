@@ -1,7 +1,7 @@
 #include "main.h"
 #include "math.h"
 #define Kp 0.3f                	// proportional gain governs rate of convergence to accelerometer/magnetometer
-#define Ki 0.0f                	// 0.001  integral gain governs rate of convergence of gyroscope biases
+#define Ki 0.000f                	// 0.001  integral gain governs rate of convergence of gyroscope biases
 
 #define IMU_INTEGRAL_LIM  ( 2.0f *ANGLE_TO_RADIAN )
 #define NORM_ACC_LPF_HZ 10  		//(Hz)
@@ -164,15 +164,16 @@ void IMUupdate(float half_T,float gx, float gy, float gz, float ax, float ay, fl
 	
 	if( reference_v.z > 0.0f )
 	{
-//		if( NS!=Stop )
-//		{
-//			yaw_correct = Kp *0.2f *To_180_degrees(yaw_mag - Yaw);
-//			//已经解锁，只需要低速纠正。
-//		}
-//		else
+		if( SysMode == SYS_PREPARESTATE )
 		{
-			yaw_correct = Kp *1.5f *To_180_degrees(yaw_mag - Yaw);
-			//没有解锁，视作开机时刻，快速纠正
+			yaw_correct = Kp *2.5f *To_180_degrees(yaw_mag - Yaw);
+			//开机时刻，快速纠正
+
+		}
+		else
+		{
+			yaw_correct = Kp *0.2f *To_180_degrees(yaw_mag - Yaw);
+			//已经解锁，只需要低速纠正。
 		}
 // 		if( yaw_correct>360 || yaw_correct < -360  )
 // 		{

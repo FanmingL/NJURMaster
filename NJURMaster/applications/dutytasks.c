@@ -9,7 +9,7 @@ static void Duty_1ms(u32 _time)
 {
 	//u32 loop_time = GetInnerLoop(Task_1ms_Time);
 	DatatransferTask(_time);
-	
+	WorkStateFSM(_time);
 }
 
 /**
@@ -72,18 +72,16 @@ static void Duty_20ms(u32 _time)
   */
 static void Duty_50ms(u32 _time)
 {
-
-	//u32 loop_time = GetInnerLoop(Task_50ms_Time);
-//	if (IsDeviceLost(DEVICE_INDEX_RC))
-//	BOTH_LED_TOGGLE();
 //	int j=0;
-//	char buffer[200];
-//	j = sprintf(buffer," Hello World !\nthis time is %d\nj=%d\n\n",Get_Time_Micros(),j);
-//		Usart2_Send((u8*)buffer,j);
+//	char buff[200];
+
 	if (IsDeviceLost(DEVICE_INDEX_TIMEOUT))
 	{
 		BOTH_LED_TOGGLE();
 	}
+//		j+=sprintf(j+buff,"%d\n",GetInnerLoop(DutyLoop_Time));
+//		Usart2_Send((u8*)buff,j);
+	
 }
 
 /**

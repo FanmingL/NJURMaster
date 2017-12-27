@@ -32,7 +32,7 @@ void All_Init(void)
 	delay_ms(200);
 	while (IST8310_Init())
 	{
-		delay_ms(100);
+		delay_ms(200);
 	}
 
 

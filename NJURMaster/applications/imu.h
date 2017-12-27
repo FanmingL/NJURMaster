@@ -14,5 +14,5 @@ void IMUupdate(float half_T,float gx, float gy, float gz, float ax, float ay, fl
 extern float Roll,Pitch,Yaw;
 extern float ref_q[4];
 #define ANGLE_TO_RADIAN 0.01745329f
-#define IMU_INTEGRAL_LIM  ( 2.0f *ANGLE_TO_RADIAN )
+
 #endif

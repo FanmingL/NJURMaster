@@ -30,4 +30,5 @@
 #include "mpu6500.h"
 #include "ist8310.h"
 #include "imu.h"
+#include "modeduty.h"
 #endif 
