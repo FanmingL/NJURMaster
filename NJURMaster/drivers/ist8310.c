@@ -41,6 +41,7 @@
   * @brief MPU_Auto_Read配置
   * @param None
   * @retval None
+  * @details SLV1写 SLV0读
   */
  static void MPU_Auto_Read_IST_config(uint8_t device_address, uint8_t reg_base_addr, uint8_t data_num)
 {
@@ -73,6 +74,7 @@
   * @brief IST8310初始化
   * @param None
   * @retval 初始化成功则返回0
+  * @details SLV4读取 SLV1写入
   */
 u8 IST8310_Init(void)
 {
@@ -120,7 +122,29 @@ u8 IST8310_Init(void)
   Delay_ms(100);
   return 0;
 }
+
 xyz_f_t IST_Raw;
+/**
+  * @brief 通过SLV0去自动读取ist8310
+  * @param None
+  * @retval None
+  */
+
+void IST8310_getRawEX(void)
+{
+	int i=0;
+	uint8_t ist_buff[6];
+	static u8 ADDR_BASE_EXTER = 73;
+	for(i=0;i<6;i++)
+	{
+		ist_buff[i]=MPU6500_Read_Reg(ADDR_BASE_EXTER+i);
+	}
+	IST_Raw.x = BYTE16(s16, ist_buff[0],ist_buff[1]);
+	IST_Raw.y	= BYTE16(s16, ist_buff[2],ist_buff[3]);
+	IST_Raw.z = BYTE16(s16, ist_buff[4],ist_buff[5]); 
+}
+
+
 /**
   * @brief 得到IST8310的原始数据
   * @param None
