@@ -14,8 +14,8 @@ u8 Tx2DMABuffer[256]={0};
   * @retval None
   * @details	BaudRate	115200
 	*						使能DMA发送，RXNE接收中断
-	*						TX	PD5
-	*						RX	PD6
+	*						TX	PD5			PA2
+	*						RX	PD6			PA3
   */
 void Usart2_Init(u32 br_num)
 {
@@ -26,7 +26,7 @@ void Usart2_Init(u32 br_num)
 	DMA_InitTypeDef DMA_InitStructure;
 	
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD,ENABLE);	
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);	
 		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1,ENABLE);
 	NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
@@ -34,23 +34,23 @@ void Usart2_Init(u32 br_num)
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);	
 
-	GPIO_PinAFConfig(GPIOD, GPIO_PinSource5, GPIO_AF_USART2);
-  GPIO_PinAFConfig(GPIOD, GPIO_PinSource6, GPIO_AF_USART2);
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_USART2);
 	
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5; 
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2; 
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP ;
-  GPIO_Init(GPIOD, &GPIO_InitStructure); 
+  GPIO_Init(GPIOA, &GPIO_InitStructure); 
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6 ; 
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 ; 
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;
-  GPIO_Init(GPIOD, &GPIO_InitStructure); 
+  GPIO_Init(GPIOA, &GPIO_InitStructure); 
 
 	USART_InitStructure.USART_BaudRate = br_num;     
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b; 

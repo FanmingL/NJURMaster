@@ -9,7 +9,7 @@ void IST8310_Data_Prepare(void);
 extern xyz_f_t IST_Raw,MagValue;
 extern uint8_t temp_ist_buff[6];
 //IST8310 REG address
-#define CALIBRATING_MAG_CYCLES 4000
+#define CALIBRATING_MAG_CYCLES 6000
 #define IST8310_ADDRESS           0x0E
 #define IST8310_DEVICE_ID_A       0x10
 
