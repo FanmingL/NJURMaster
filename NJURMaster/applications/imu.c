@@ -299,7 +299,7 @@ void AHRSInit(float ax,float ay,float az,float mx,float my,float mz)
 }
 
 /**
-  * @brief AHRS姿态解算
+  * @brief 姿态解算
   * @param None
   * @retval None
   * @details copy from PX4
@@ -312,38 +312,113 @@ void AHRSUpdate(float dt,float ax,float ay,float az,float gx,float gy,float gz,f
 	gx*=ANGLE_TO_RADIAN;
 	gy*=ANGLE_TO_RADIAN;
 	gz*=ANGLE_TO_RADIAN;
-	// Make filter converge to initial solution faster
-	// This function assumes you are in static position.
-	// WARNING : in case air reboot, this can cause problem. But this is very unlikely happen.
+	//开始时刻初始化，初始化20次是因为一开始磁力计的数据可能还没更新，这个函数1ms调用一次，磁力计5ms更新一次
 	if(StartFlag<20) {
 		AHRSInit(ax,ay,az,mx,my,mz);
 		StartFlag++;
 	}
         	
-	//! If magnetometer measurement is available, use it.
+	//如果磁力计数据正常就计算磁力计
 	if(!((mx == 0.0f) && (my == 0.0f) && (mz == 0.0f))) {
 		float hx, hy, hz, bx, bz;
 		float halfwx, halfwy, halfwz;
-	
-		// Normalise magnetometer measurement
-		// Will sqrt work better? PX4 system is powerful enough?
+			//归一化
     	recipNorm = invSqrt(mx * mx + my * my + mz * mz);
     	mx *= recipNorm;
     	my *= recipNorm;
     	mz *= recipNorm;
     
-    	// Reference direction of Earth's magnetic field
+    	/*
+			这里就要补补课了
+		|mx|
+		|my|  是机体坐标系b系下磁力分量
+		|mz|
+		而b系向参考系R系的变换矩阵为C1
+				|	q0^2+q1^2-q2^2-q3^2			2(q1q2-q0q3)    					2(q1q3+q0q2)				|
+				|																																				|
+		C1=	|	2(q1q2+q0q3)						q0^2-q1^2+q2^2-q3^2				2(q0q1-q2q3)				|
+				|																																				|
+				|	2(q1q3-q0q2)						2(q2q3+q0q1)							q0^2-q1^2-q2^2+q3^2	|				
+		四元数的基本性质有q0^2+q1^2+q2^2+q3^2=1
+		
+		C1可以简化为
+		
+				|	1-2q2^2-2q3^2						2(q1q2-q0q3)    					2(q1q3+q0q2)				|
+				|																																				|
+		C1=	|	2(q1q2+q0q3)						1-2q1^2-2q3^2							2(q0q1-q2q3)				|
+				|																																				|
+				|	2(q1q3-q0q2)						2(q2q3+q0q1)							1-2q1^2-2q2^2				|
+				
+		
+		可以验证C1还是个正交矩阵那么可以得到C1的逆矩阵为C2
+		
+				|	1-2q2^2-2q3^2						2(q1q2+q0q3)    					2(q1q3-q0q2)				|
+				|																																				|
+		C2=	|	2(q1q2-q0q3)						1-2q1^2-2q3^2							2(q0q1+q2q3)				|
+				|																																				|
+				|	2(q1q3+q0q2)						2(q2q3-q0q1)							1-2q1^2-2q2^2				|
+				
+		C2便是从参考坐标系R变换到机体坐标系b系的矩阵
+		所以下面
+		|hx|
+		|hy|是参考坐标系下的磁力分量
+		|hz|
+		
+					|	1-2q2^2-2q3^2						2(q1q2-q0q3)    					2(q1q3+q0q2)		|
+		|hx|	|																																		|	|mx|
+		|hy|=	|	2(q1q2+q0q3)						1-2q1^2-2q3^2							2(q0q1-q2q3)		|	|my|
+		|hz|	|																																		|	|mz|
+					|	2(q1q3-q0q2)						2(q2q3+q0q1)							1-2q1^2-2q2^2		|
+
+				
+		|hx|	|(1-2q2^2-2q3^2)*mx+2(q1q2-q0q3)*my+2(q1q3+q0q2)*mz|
+		|hy|=	|2(q1q2+q0q3)*mx+(1-2q1^2-2q3^2)*my+2(q0q1-q2q3)*mz|
+		|hz|	|2(q1q3-q0q2)*mx+2(q2q3+q0q1)*my+(1-2q1^2-2q2^2)*mz|
+		**/
     	hx = 2.0f * (mx * (0.5f - q2q2 - q3q3) + my * (q1q2 - q0q3) + mz * (q1q3 + q0q2));
     	hy = 2.0f * (mx * (q1q2 + q0q3) + my * (0.5f - q1q1 - q3q3) + mz * (q2q3 - q0q1));
-		hz = 2.0f * mx * (q1q3 - q0q2) + 2.0f * my * (q2q3 + q0q1) + 2.0f * mz * (0.5f - q1q1 - q2q2);
-    	bx = sqrt(hx * hx + hy * hy);
+			hz = 2.0f * mx * (q1q3 - q0q2) + 2.0f * my * (q2q3 + q0q1) + 2.0f * mz * (0.5f - q1q1 - q2q2);
+    /*
+		假设磁场的水平方向的分量的方向为x轴竖直方向为y轴
+		可把
+		|bx|	|sqrt(hx*hx+hy*hy)|
+		|by|=	|				0					|
+		|bz|	|				hz				|
+
+		**/
+			
+			bx = sqrt(hx * hx + hy * hy);
     	bz = hz;
-    
+    /*
+					|bx|
+		再把	|by|	转到机体坐标系b系下
+					|bz|
+		
+		|wx|			|bx|
+		|wy| = C2 |by|
+		|wz|			|bz|
+		
+		
+						|	1-2q2^2-2q3^2						2(q1q2+q0q3)    					2(q1q3-q0q2)	|
+		|wx|		|																																	|		|bx|
+		|wy|	=	|	2(q1q2-q0q3)						1-2q1^2-2q3^2							2(q0q1+q2q3)	|		|by|
+		|wz|		|																																	|		|bz|
+						|	2(q1q3+q0q2)						2(q2q3-q0q1)							1-2q1^2-2q2^2	|
+	
+		|wx|		|(1-2q2^2-2q3^2)*bx+2(q1q2+q0q3)*by+2(q1q3-q0q2)*bz|
+		|wy|	=	|2(q1q2-q0q3)*bx+(1-2q1^2-2q3^2)*by+2(q0q1+q2q3)*bz|
+		|wz|		|2(q1q3+q0q2)*bx+2(q2q3-q0q1)*by+(1-2q1^2+2q2^2)*bz|
+		*/
     	// Estimated direction of magnetic field
     	halfwx = bx * (0.5f - q2q2 - q3q3) + bz * (q1q3 - q0q2);
     	halfwy = bx * (q1q2 - q0q3) + bz * (q0q1 + q2q3);
     	halfwz = bx * (q0q2 + q1q3) + bz * (0.5f - q1q1 - q2q2);
-    
+    /*
+			|wx|		|mx|
+			|wy| x 	|my|
+			|wz|		|mz|
+			叉乘角度误差越大，叉乘结果越大
+		**/
     	// Error is sum of cross product between estimated direction and measured direction of field vectors
     	halfex +=(my * halfwz - mz * halfwy);
     	halfey +=(mz * halfwx - mx * halfwz);
@@ -354,24 +429,47 @@ void AHRSUpdate(float dt,float ax,float ay,float az,float gx,float gy,float gz,f
 	if(!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
 		float halfvx, halfvy, halfvz;
 	
-		// Normalise accelerometer measurement
+		// 归一化
 		recipNorm = invSqrt(ax * ax + ay * ay + az * az);
 		ax *= recipNorm;
 		ay *= recipNorm;
 		az *= recipNorm;
 
-		// Estimated direction of gravity and magnetic field
+		/*
+		这里不用像磁力计那边一样先把机体坐标系转到世界坐标系再转到地磁坐标系
+		重力加速度为
+		|0|
+		|0|
+		|1|
+		那么
+			
+		|vx|			|0|
+		|vy| = C2 |0|
+		|vz|			|0|
+		
+		
+						|	1-2q2^2-2q3^2						2(q1q2+q0q3)    					2(q1q3-q0q2)	|
+		|vx|		|																																	|		|0|
+		|vy|	=	|	2(q1q2-q0q3)						1-2q1^2-2q3^2							2(q0q1+q2q3)	|		|0|
+		|vz|		|																																	|		|1|
+						|	2(q1q3+q0q2)						2(q2q3-q0q1)							1-2q1^2-2q2^2	|
+	
+		|vx|		|	2(q1q3-q0q2)	|
+		|vy|	=	|	2(q0q1+q2q3)	|
+		|vz|		|(1-2q1^2+2q2^2)|
+
+		**/
 		halfvx = q1q3 - q0q2;
 		halfvy = q0q1 + q2q3;
 		halfvz = q0q0 - 0.5f + q3q3;
 	
-		// Error is sum of cross product between estimated direction and measured direction of field vectors
+		// 叉乘求误差
 		halfex += ay * halfvz - az * halfvy;
 		halfey += az * halfvx - ax * halfvz;
 		halfez += ax * halfvy - ay * halfvx;
 	}
 
-	// Apply feedback only when valid data has been gathered from the accelerometer or magnetometer
+	// 对误差进行PI计算
 	if(halfex != 0.0f && halfey != 0.0f && halfez != 0.0f) {
 		// Compute and apply integral feedback if enabled
 		if(twoKi > 0.0f) {
@@ -402,28 +500,45 @@ void AHRSUpdate(float dt,float ax,float ay,float az,float gx,float gy,float gz,f
 	gy *= (0.5f * dt);
 	gz *= (0.5f * dt);
 #endif 
+	/**
+		四元数微分方程如下
+	
+	|dq0/dt|				|q0	-q1	-q2	-q3	|	|0 |
+	|dq1/dt|		1		|q1	q0	-q3	q2	|	|gx|
+	|dq2/dt|=		- *	|q2	q3	q0	-q1	|	|gy|
+	|dq3/dt|		2		|q3	-q2	q1	q0	|	|gz|
+	
+	|dq0/dt|			|-q1*gx-q2*gy-q3*gz	|	
+	|dq1/dt|	1		|q0*gx-q3*gy+q2*gz	|
+	|dq2/dt|=	—	*	|q3*gx+q0*gy-q1*gz	|	
+	|dq3/dt|	2		|-q2*gx+q1*gy+q0*gz	|	
 
-	// Time derivative of quaternion. q_dot = 0.5*q\otimes omega.
-	//! q_k = q_{k-1} + dt*\dot{q}
-	//! \dot{q} = 0.5*q \otimes P(\omega)
+	*/
+	
 	dq0 = 0.5f*(-q1 * gx - q2 * gy - q3 * gz);
 	dq1 = 0.5f*(q0 * gx + q2 * gz - q3 * gy);
 	dq2 = 0.5f*(q0 * gy - q1 * gz + q3 * gx);
 	dq3 = 0.5f*(q0 * gz + q1 * gy - q2 * gx); 
-
+	/*
+		一阶龙哥库塔
+	q0 = q0 + dq0/dt * T
+	q1 = q1 + dq1/dt * T
+	q2 = q2 + dq2/dt * T
+	q3 = q3 + dq3/dt * T
+	**/
 	q0 += dt*dq0;
 	q1 += dt*dq1;
 	q2 += dt*dq2;
 	q3 += dt*dq3;
 	
-	// Normalise quaternion
+	// 归一化
 	recipNorm = invSqrt(q0 * q0 + q1 * q1 + q2 * q2 + q3 * q3);
 	q0 *= recipNorm;
 	q1 *= recipNorm;
 	q2 *= recipNorm;
 	q3 *= recipNorm;
 
-	// Auxiliary variables to avoid repeated arithmetic
+	// 更新一些变量
     q0q0 = q0 * q0;
     q0q1 = q0 * q1;
     q0q2 = q0 * q2;
@@ -434,10 +549,9 @@ void AHRSUpdate(float dt,float ax,float ay,float az,float gx,float gy,float gz,f
     q2q2 = q2 * q2;
     q2q3 = q2 * q3;
     q3q3 = q3 * q3;   
-		//1-2-3 Representation.
-		//Equation (290) 
-		//Representing Attitude: Euler Angles, Unit Quaternions, and Rotation Vectors, James Diebel.
-		// Existing PX4 EKF code was generated by MATLAB which uses coloum major order matrix.
+/**
+		化为角度
+**/
 		*rol = atan2f(2.f * (q2*q3 + q0*q1), q0q0 - q1q1 - q2q2 + q3q3)*57.3f;	//! Roll
 		*pit = -asinf(2.f * (q1*q3 - q0*q2))*57.3f;	//! Pitch
 		*yaw = atan2f(2.f * (q1*q2 + q0*q3), q0q0 + q1q1 - q2q2 - q3q3)*57.3f;		//! Yaw
