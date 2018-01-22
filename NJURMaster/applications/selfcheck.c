@@ -1,7 +1,7 @@
 #include "main.h"
 u32 SelfCheckErrorFlag=0x0000;
 
-const u16 SelfCheckInitValue[SELF_CHECK_ITEM_NUM]={200u,200u,200u,200u,200u,200u,200u,200u,200u,100u,100u};
+const u16 SelfCheckInitValue[SELF_CHECK_ITEM_NUM]={200u,200u,200u,200u,200u,200u,200u,200u,200u,2u,100u};
 u16 SelfCheckValue[SELF_CHECK_ITEM_NUM];
 /**
   * @brief 看门狗初始化

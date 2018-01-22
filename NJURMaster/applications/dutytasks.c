@@ -85,7 +85,7 @@ static void Duty_50ms(u32 _time)
 //	int j=0;
 //	char buff[200];
 
-	if (IsDeviceLost(DEVICE_INDEX_TIMEOUT))
+	if (SysMode==SYS_PREPARESTATE&&(ParamSavedFlag==1))
 	{
 		BOTH_LED_TOGGLE();
 	}

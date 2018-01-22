@@ -102,7 +102,7 @@ void USART1_IRQHandler(void)
 			DMA2_Stream2->NDTR = (uint16_t)USART1_DMA_RX_LEN;     //relocate the dma memory pointer to the beginning position
 			DMA2_Stream2->CR |= (uint32_t)(DMA_SxCR_CT);                  //enable the current selected memory is Memory 1
 			DMA_Cmd(DMA2_Stream2, ENABLE);
-            if(this_time_rx_len == RC_FRAME_LENGTH)
+      if(this_time_rx_len == RC_FRAME_LENGTH)
 			{
 				RcProtocolAnalysis(_USART1_DMA_RX_BUF[0],RC_FRAME_LENGTH);
 				FeedDog(DEVICE_INDEX_RC);
@@ -135,3 +135,18 @@ void Rc_Init(void)
 	Usart1_Init();
 }
 
+/**
+  * @brief 遥控器模式反馈函数
+  * @param None
+  * @retval 当前遥控器模式播码指示的模式，RC_KEY_STOP\RC_KEY_REMOTE\RC_KEY_KEYBOARD
+  * @details None
+  */
+u8 GetRcMode(void)
+{
+	if (IsDeviceLost(DEVICE_INDEX_RC))
+	{
+		return RC_KEY_STOP;
+	}
+	return RC_CtrlData.key.v;
+
+}
