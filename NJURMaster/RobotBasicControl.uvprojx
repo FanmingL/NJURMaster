@@ -518,11 +518,6 @@
               <FileType>1</FileType>
               <FilePath>.\drivers\ist8310.c</FilePath>
             </File>
-            <File>
-              <FileName>modeduty.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\applications\modeduty.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -532,6 +527,11 @@
               <FileName>protocol.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\applications\protocol.c</FilePath>
+            </File>
+            <File>
+              <FileName>modeduty.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\modeduty.c</FilePath>
             </File>
             <File>
               <FileName>datatransfer.c</FileName>
@@ -757,6 +757,11 @@
               <FileName>pid.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\math\pid.c</FilePath>
+            </File>
+            <File>
+              <FileName>ramp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\math\ramp.c</FilePath>
             </File>
           </Files>
         </Group>

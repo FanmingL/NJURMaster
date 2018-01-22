@@ -6,6 +6,8 @@ float GimbalPitchPosRef=0.0f;
 float GimbalPitchGyrRef=0.0f;
 float GimbalYawPosRef=0.0f;
 float GimbalYawGyrRef=0.0f;
+float ChassisGoToward=0.0f;
+float ChassisGoLeftRight=0.0f;
 
 
 /**

@@ -9,7 +9,7 @@
 
 void Rc_Init(void);
 void Usart1_Init(void);
-
+u8 GetRcMode(void);
 
 #endif
 

@@ -5,10 +5,11 @@ enum
 {
 	SYS_STOPSTATE=0,
 	SYS_PREPARESTATE,
-	SYS_REMOTESTATE,
-	SYS_UPPERSTATE
+	SYS_NORMALSTATE,
+	SYS_CALISTATE
 };
 #define SYS_PREPARETIME 5000
 extern u8 SysMode;
 void WorkStateFSM(u32 sys);
+u8 GetWSCurrent(void);
 #endif
