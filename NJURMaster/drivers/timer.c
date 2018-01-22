@@ -72,8 +72,8 @@ void TIM6_Configuration(void)
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6,ENABLE);
     
     nvic.NVIC_IRQChannel = TIM6_DAC_IRQn;
-    nvic.NVIC_IRQChannelPreemptionPriority = 1;
-    nvic.NVIC_IRQChannelSubPriority = 0;
+    nvic.NVIC_IRQChannelPreemptionPriority = 3;
+    nvic.NVIC_IRQChannelSubPriority = 3;
     nvic.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init(&nvic);
 

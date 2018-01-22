@@ -158,7 +158,27 @@ if(*(data_buf+2)==0X02)
   */
 void RcDataAnalysis(RC_Ctrl_t *rc)
 {
+	float __temp;
+	if (GetRcMode()==RC_KEY_RCMODE)
+	{
+		__temp=GimbalPitchPosRef+rc->rc.ch2;
+		GimbalPitchPosRef=LIMIT(__temp,-10.0f,10.0f);
+		__temp=GimbalYawPosRef+rc->rc.ch3;
+		GimbalYawPosRef=LIMIT(__temp,-0.1f+Yaw,0.1f+Yaw);
+		
+		ChassisGoToward=LIMIT(rc->rc.ch0,-100,100);
+		ChassisGoLeftRight=LIMIT(rc->rc.ch1,-100,100);
+		
+	}
+	else if (GetRcMode()==RC_KEY_RCMODE)
+	{
 
+	}
+	else if (GetRcMode()==RC_KEY_STOP)
+	{
+	
+	
+	}
 }
 
 /**
@@ -169,7 +189,6 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
   */
 void RcProtocolAnalysis(u8 *pData,int _len)
 {
-	//BOTH_LED_TOGGLE();
 	if(pData == 0)
     {
         return;

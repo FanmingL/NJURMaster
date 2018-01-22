@@ -147,6 +147,6 @@ u8 GetRcMode(void)
 	{
 		return RC_KEY_STOP;
 	}
-	return RC_CtrlData.key.v;
+	return RC_CtrlData.rc.s1;
 
 }

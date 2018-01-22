@@ -31,4 +31,5 @@
 #include "ist8310.h"
 #include "imu.h"
 #include "modeduty.h"
+#include "ramp.h"
 #endif 
