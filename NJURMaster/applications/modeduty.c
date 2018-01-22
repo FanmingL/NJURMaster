@@ -39,7 +39,13 @@ void WorkStateFSM(u32 sys)
 	}
 }
 
- u8 GetWSCurrent(void)
+/**
+  * @brief 返回当前模式
+  * @param None
+  * @retval 当前模式
+  * @details None
+  */
+u8 GetWSCurrent(void)
 {
 	return SysMode;
 }
