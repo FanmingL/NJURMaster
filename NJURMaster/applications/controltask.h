@@ -4,4 +4,6 @@
 void ChassisControl(float _T);
 void GimbalControl(float _T);
 void FireControl(float _T);
+
+extern float GimbalPitchPosRef,GimbalPitchGyrRef,GimbalYawPosRef,GimbalYawGyrRef;
 #endif

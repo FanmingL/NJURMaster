@@ -1,5 +1,13 @@
 #include "main.h"
 
+
+//values for PID Calculate.
+float GimbalPitchPosRef=0.0f;
+float GimbalPitchGyrRef=0.0f;
+float GimbalYawPosRef=0.0f;
+float GimbalYawGyrRef=0.0f;
+
+
 /**
   * @brief 底盘控制程序
   * @param _T程序调用周期(s)

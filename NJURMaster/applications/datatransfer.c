@@ -98,7 +98,6 @@ void Usart2_DataPrepare(u8 data)
 		state = 0;
 		RxBuffer[4+_data_cnt]=data;
 		BasicProtocolAnalysis(RxBuffer,_data_cnt+5);
-		
 	}
 	else
 		state = 0;

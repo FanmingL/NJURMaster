@@ -3,11 +3,13 @@
 #include "stm32f4xx.h"
 #include "mymath.h"
 #include "pid.h"
-#define PIDGROUPLEN 6
+#define PIDGROUPLEN 8
 #define Chassis_Pos_PID_arg ( *PID_arg )
 #define Chassis_Vec_PID_arg ( *(PID_arg+1) )
-#define Gimbal_Pos_PID_arg ( *(PID_arg+2) )
-#define Gimbal_Vec_PID_arg ( *(PID_arg+3) )
+#define GimbalPitch_Pos_PID_arg ( *(PID_arg+2) )
+#define GimbalPitch_Vec_PID_arg ( *(PID_arg+3) )
+#define GimbalYaw_Pos_PID_arg ( *(PID_arg+2) )
+#define GimbalYaw_Vec_PID_arg ( *(PID_arg+3) )
 #define Slibing_Pos_PID_arg ( *(PID_arg+4) )
 #define Slibing_Vec_PID_arg ( *(PID_arg+5) )
 
