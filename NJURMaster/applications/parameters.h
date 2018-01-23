@@ -39,8 +39,8 @@ extern u8 CALIFLAG;
 #define IMU_GYROCALING 0x01
 #define IMU_ACCERCALING 0x02
 #define IMU_MAGCALING 0x04
-#define GIMBALCALING 0x08
-
+#define GIMBALYAWCALING 0x08
+#define GIMBALPITCHCALING 0x10
 
 
 typedef __packed struct 
