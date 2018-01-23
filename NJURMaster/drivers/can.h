@@ -15,8 +15,8 @@ typedef struct{
 	int32_t ecd_raw_rate;									//通过编码器计算得到的速度原始值
 	int32_t rate_buf[RATE_BUF_SIZE];	//buf，for filter
 	int32_t round_cnt;										//圈数
-	int32_t filter_rate;											//速度
-	float ecd_angle;											//角度
+	int32_t filter_rate;											//速度				***
+	float ecd_angle;											//角度360					***
 }Encoder;
 
 void Can1_Init(void);

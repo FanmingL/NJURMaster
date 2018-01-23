@@ -131,5 +131,5 @@ void IMU_MAGDataCali(void)
   */
 void GimbalDataCali(void)
 {
-	CALIFLAG |= GIMBALCALING;
+	CALIFLAG |= (GIMBALPITCHCALING|GIMBALYAWCALING);
 }
