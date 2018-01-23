@@ -50,6 +50,11 @@ void DatatransferTask(u32 sys_time)
 	{
 		ANO_DT_Send_RCData(RC_CtrlData.rc.ch0,RC_CtrlData.rc.ch1,RC_CtrlData.rc.ch2,RC_CtrlData.rc.ch3,RC_CtrlData.rc.s1*300+1000,RC_CtrlData.rc.s2*300+1000,RC_CtrlData.mouse.x+1000,RC_CtrlData.mouse.y+1000,RC_CtrlData.mouse.z+1000,RC_CtrlData.key.v);
 	}
+	else if((sys_time+6)%20==0)
+	{
+		ANO_DT_Send_MotoPWM(ABS(CM1Encoder.filter_rate),ABS(CM2Encoder.filter_rate),ABS(CM3Encoder.filter_rate),
+												ABS(CM4Encoder.filter_rate),ABS(GMPitchEncoder.filter_rate),ABS(GMYawEncoder.filter_rate),0,0);
+	}
 	if (send_check)
 	{
 		send_check = 0;
@@ -468,5 +473,45 @@ void ANO_DT_Send_PID(u8 group,float p1_p,float p1_i,float p1_d,float p2_p,float 
 
 	Usart2_Send(data_to_send, _cnt);
 }
-
-
+/**
+  * @brief 发送电机转速
+  * @param None
+  * @retval None
+  */
+void ANO_DT_Send_MotoPWM(u16 m_1,u16 m_2,u16 m_3,u16 m_4,u16 m_5,u16 m_6,u16 m_7,u16 m_8)
+{
+	u8 _cnt=0;
+	u8 sum = 0;
+	u8 i=0;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0x06;
+	data_to_send[_cnt++]=0;
+	
+	data_to_send[_cnt++]=BYTE1(m_1);
+	data_to_send[_cnt++]=BYTE0(m_1);
+	data_to_send[_cnt++]=BYTE1(m_2);
+	data_to_send[_cnt++]=BYTE0(m_2);
+	data_to_send[_cnt++]=BYTE1(m_3);
+	data_to_send[_cnt++]=BYTE0(m_3);
+	data_to_send[_cnt++]=BYTE1(m_4);
+	data_to_send[_cnt++]=BYTE0(m_4);
+	data_to_send[_cnt++]=BYTE1(m_5);
+	data_to_send[_cnt++]=BYTE0(m_5);
+	data_to_send[_cnt++]=BYTE1(m_6);
+	data_to_send[_cnt++]=BYTE0(m_6);
+	data_to_send[_cnt++]=BYTE1(m_7);
+	data_to_send[_cnt++]=BYTE0(m_7);
+	data_to_send[_cnt++]=BYTE1(m_8);
+	data_to_send[_cnt++]=BYTE0(m_8);
+	
+	data_to_send[3] = _cnt-4;
+	
+	
+	for(i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+	
+	data_to_send[_cnt++]=sum;
+	
+	Usart2_Send(data_to_send, _cnt);
+}
