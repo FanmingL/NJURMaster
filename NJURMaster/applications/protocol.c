@@ -1,8 +1,10 @@
 #include "main.h"
-
+#define caliMaxTime 100
 uint16_t can_encoder_flag;
-
-
+u8 yaw_cali_count = 0;
+u8 pitch_cali_count = 0;
+uint32_t yaw_cali_sum;
+uint32_t pitch_cali_sum;
 volatile Encoder CM1Encoder = {0,0,0,0,0,0,0,0,0};
 volatile Encoder CM2Encoder = {0,0,0,0,0,0,0,0,0};
 volatile Encoder CM3Encoder = {0,0,0,0,0,0,0,0,0};
@@ -305,7 +307,21 @@ void CanProtocolAnalysis(CanRxMsg * msg)
 				case CAN_BUS2_MOTOR5_FEEDBACK_MSG_ID:
 				{
 					FeedDog(DEVICE_INDEX_MOTOR5);
-					if(((can_encoder_flag>>DEVICE_INDEX_MOTOR5) & 0x0001) == 0)
+					if((CALIFLAG & GIMBALYAWCALING) == GIMBALYAWCALING)
+					{
+						if(yaw_cali_count < caliMaxTime)
+						{
+							yaw_cali_sum += ((msg->Data[0]<<8)|msg->Data[1]);
+							yaw_cali_count++;
+						}
+						else
+						{
+							AllDataUnion.AllData.GimbalYawOffset = yaw_cali_sum/caliMaxTime;
+							yaw_cali_count = 0;
+							CALIFLAG &=~ GIMBALYAWCALING;
+						}
+					}
+					else if(((can_encoder_flag>>DEVICE_INDEX_MOTOR5) & 0x0001) == 0)
 					{
 				   GMYawEncoder.ecd_bias =AllDataUnion.AllData.GimbalYawOffset;
 					 can_encoder_flag |= (1<<DEVICE_INDEX_MOTOR5);
@@ -328,7 +344,21 @@ void CanProtocolAnalysis(CanRxMsg * msg)
 				case CAN_BUS2_MOTOR6_FEEDBACK_MSG_ID:
 				{
           FeedDog(DEVICE_INDEX_MOTOR6);
-					if(((can_encoder_flag>>DEVICE_INDEX_MOTOR6) & 0x0001) == 0)
+					if((CALIFLAG & GIMBALPITCHCALING) == GIMBALPITCHCALING)
+					{
+						if(pitch_cali_count < caliMaxTime)
+						{
+							pitch_cali_sum += ((msg->Data[0]<<8)|msg->Data[1]);
+							pitch_cali_count++;
+						}
+						else
+						{
+							AllDataUnion.AllData.GimbalPitchOffset = pitch_cali_sum/caliMaxTime;
+							pitch_cali_count = 0;
+							CALIFLAG &=~ GIMBALPITCHCALING;
+						}
+					}
+					else if(((can_encoder_flag>>DEVICE_INDEX_MOTOR6) & 0x0001) == 0)
 					{
 				   GMPitchEncoder.ecd_bias =AllDataUnion.AllData.GimbalPitchOffset;
 					 can_encoder_flag |= (1<<DEVICE_INDEX_MOTOR6);
