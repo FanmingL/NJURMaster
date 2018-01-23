@@ -8,7 +8,7 @@
 static void Duty_1ms(u32 _time)
 {
 	u32 loop_time = GetInnerLoop(Task_1ms_Time);
-	DatatransferTask(_time);
+	//DatatransferTask(_time);
 	WorkStateFSM(_time);
 	MPU6500_Data_Prepare();
 #if 0
@@ -82,16 +82,15 @@ static void Duty_20ms(u32 _time)
   */
 static void Duty_50ms(u32 _time)
 {
-//	int j=0;
-//	char buff[200];
+	int j=0;
+	char buff[200];
 
 	if (SysMode==SYS_PREPARESTATE&&(ParamSavedFlag==1))
 	{
 		BOTH_LED_TOGGLE();
 	}
-//		j+=sprintf(j+buff,"%d\n",GetInnerLoop(DutyLoop_Time));
-//		Usart2_Send((u8*)buff,j);
-	
+		j+=sprintf(j+buff,"%d\n",CM1Encoder.filter_rate);
+		Usart2_Send((u8*)buff,j);
 }
 
 /**

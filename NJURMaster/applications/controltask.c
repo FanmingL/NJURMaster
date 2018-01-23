@@ -19,9 +19,7 @@ float ChassisGoLeftRight=0.0f;
   */
 void ChassisControl(float _T)
 {
-
-
-
+    ChassisSpeedSet(CAN1, 0, 0, 0, 0);
 }
 
 /**

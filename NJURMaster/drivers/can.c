@@ -122,7 +122,7 @@ void CAN1_RX0_IRQHandler(void)
 		    CAN_ClearFlag(CAN1, CAN_FLAG_FF0); 
 		
 		    CAN_Receive(CAN1, CAN_FIFO0, &rx_message);
-			//	CanReceiveMsgProcess(&rx_message);
+				CanProtocolAnalysis(&rx_message);
     }
 }
 
