@@ -1,8 +1,8 @@
 #include "main.h"
 u32 SelfCheckErrorFlag=0x0000;
 
-const u16 SelfCheckInitValue[SELF_CHECK_ITEM_NUM]={200u,200u,200u,200u,200u,200u,200u,200u,200u,2u,100u};
-u16 SelfCheckValue[SELF_CHECK_ITEM_NUM];
+const u16 SelfCheckInitValue[SELF_CHECK_ITEM_NUM]={200u,200u,200u,200u,200u,200u,200u,200u,200u,200u,100u};
+u16 SelfCheckValue[SELF_CHECK_ITEM_NUM]={200u,200u,200u,200u,200u,200u,200u,200u,200u,200u,100u};;
 /**
   * @brief 看门狗初始化
   * @param None
@@ -46,7 +46,7 @@ void CheckDog(void)
 			SelfCheckValue[i]=0;
 		}
 	}
-	if (ParamSavedFlag)
+	if (ParamSavedFlag==1)
 	{
 		FeedDog(DEVICE_INDEX_NOCALI);
 	}
