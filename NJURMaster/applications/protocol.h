@@ -55,8 +55,8 @@ extern u8 send_pid1,send_pid2,send_pid3;
 #define KEY_V 0x4000
 #define KEY_B 0x8000
 
-#define RC_KEY_STOP (0)
-#define RC_KEY_RCMODE (1)
-#define RC_KEY_KEYBOARD (2)
+#define RC_KEY_STOP (2)
+#define RC_KEY_RCMODE (3)
+#define RC_KEY_KEYBOARD (1)
 
 #endif

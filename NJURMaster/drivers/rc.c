@@ -145,8 +145,8 @@ u8 GetRcMode(void)
 {
 	if (IsDeviceLost(DEVICE_INDEX_RC))
 	{
-		return RC_KEY_STOP;
+		return RC_KEY_RCMODE;
 	}
-	return RC_CtrlData.rc.s1;
+	return RC_CtrlData.rc.s2;
 
 }
