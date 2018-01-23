@@ -1,10 +1,18 @@
 #ifndef _PROTOCOL_H_
-
-#include "stm32f4xx.h"
+#define  _PROTOCOL_H_
+#include "main.h"
 void BasicProtocolAnalysis(u8 *_item,int _len);
 void RcProtocolAnalysis(u8 *_item,int _len);
 void RefereeProtocolAnalysis(u8 *_item,int _len);
 void CanProtocolAnalysis(CanRxMsg * msg);
+
+extern volatile Encoder CM1Encoder;
+extern volatile Encoder CM2Encoder;
+extern volatile Encoder CM3Encoder;
+extern volatile Encoder CM4Encoder;
+extern volatile Encoder GMYawEncoder;
+extern volatile Encoder GMPitchEncoder;
+
 typedef __packed struct
 {
 	int16_t ch0;

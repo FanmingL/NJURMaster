@@ -1,5 +1,15 @@
 #include "main.h"
 
+uint16_t can_encoder_flag;
+
+
+volatile Encoder CM1Encoder = {0,0,0,0,0,0,0,0,0};
+volatile Encoder CM2Encoder = {0,0,0,0,0,0,0,0,0};
+volatile Encoder CM3Encoder = {0,0,0,0,0,0,0,0,0};
+volatile Encoder CM4Encoder = {0,0,0,0,0,0,0,0,0};
+volatile Encoder GMYawEncoder = {0,0,0,0,0,0,0,0,0};
+volatile Encoder GMPitchEncoder = {0,0,0,0,0,0,0,0,0};
+
 
 RC_Ctrl_t RC_CtrlData;   //remote control data
 u8 checkdata_to_send,checksum_to_send,send_check=0;
@@ -240,7 +250,97 @@ void RefereeProtocolAnalysis(u8 *_item,int _len)
   */
 void CanProtocolAnalysis(CanRxMsg * msg)
 {
-
-
-
+  switch(msg->StdId)
+		{
+				case CAN_BUS2_MOTOR1_FEEDBACK_MSG_ID:
+				{
+					FeedDog(DEVICE_INDEX_MOTOR1);
+					if(((can_encoder_flag>>DEVICE_INDEX_MOTOR1) & 0x0001) == 0)//对应位为0代表未获取编码器初始值
+					{
+				   GetEncoderBias(&CM1Encoder ,msg);
+					 can_encoder_flag |= (1<<DEVICE_INDEX_MOTOR1);//获取初始值后将对应位置1
+					}
+					else
+					EncoderProcess(&CM1Encoder ,msg);                      
+				}break;
+				case CAN_BUS2_MOTOR2_FEEDBACK_MSG_ID:
+				{
+					FeedDog(DEVICE_INDEX_MOTOR2);
+					if(((can_encoder_flag>>DEVICE_INDEX_MOTOR2) & 0x0001) == 0)
+					{
+				   GetEncoderBias(&CM2Encoder ,msg);
+					 can_encoder_flag |= (1<<DEVICE_INDEX_MOTOR2);
+					}
+					else
+					EncoderProcess(&CM2Encoder ,msg); 
+				}break;
+				case CAN_BUS2_MOTOR3_FEEDBACK_MSG_ID:
+				{
+					FeedDog(DEVICE_INDEX_MOTOR3);
+					if(((can_encoder_flag>>DEVICE_INDEX_MOTOR3) & 0x0001) == 0)
+					{
+				   GetEncoderBias(&CM3Encoder ,msg);
+					 can_encoder_flag |= (1<<DEVICE_INDEX_MOTOR3);
+					}
+					else
+					EncoderProcess(&CM3Encoder ,msg);   
+				}break;
+				case CAN_BUS2_MOTOR4_FEEDBACK_MSG_ID:
+				{
+					FeedDog(DEVICE_INDEX_MOTOR4);
+					if(((can_encoder_flag>>DEVICE_INDEX_MOTOR4) & 0x0001) == 0)
+					{
+				   GetEncoderBias(&CM4Encoder ,msg);
+					 can_encoder_flag |= (1<<DEVICE_INDEX_MOTOR4);
+					}
+					else
+					EncoderProcess(&CM4Encoder ,msg); 
+				}break;
+				case CAN_BUS2_MOTOR5_FEEDBACK_MSG_ID:
+				{
+					FeedDog(DEVICE_INDEX_MOTOR5);
+					if(((can_encoder_flag>>DEVICE_INDEX_MOTOR5) & 0x0001) == 0)
+					{
+				   GMYawEncoder.ecd_bias =AllDataUnion.AllData.GimbalYawOffset;
+					 can_encoder_flag |= (1<<DEVICE_INDEX_MOTOR5);
+					}
+					else
+					EncoderProcess(&GMYawEncoder,msg); 
+						// 比较保存编码器的值和偏差值，如果编码器的值和初始偏差之间差距超过阈值，将偏差值做处理，防止出现云台反方向运动
+					if(GetWSCurrent() == SYS_PREPARESTATE)   //准备阶段要求二者之间的差值一定不能大于阈值，否则肯定是出现了临界切换
+					 {
+							 if((GMYawEncoder.ecd_bias - GMYawEncoder.ecd_value) <-4000)
+							 {
+								  GMYawEncoder.ecd_bias =AllDataUnion.AllData.GimbalYawOffset  + 8192;
+							 }
+							 else if((GMYawEncoder.ecd_bias - GMYawEncoder.ecd_value) > 4000)
+							 {
+								  GMYawEncoder.ecd_bias = AllDataUnion.AllData.GimbalYawOffset - 8192;
+							 }
+					 }
+				}break;
+				case CAN_BUS2_MOTOR6_FEEDBACK_MSG_ID:
+				{
+          FeedDog(DEVICE_INDEX_MOTOR6);
+					if(((can_encoder_flag>>DEVICE_INDEX_MOTOR6) & 0x0001) == 0)
+					{
+				   GMPitchEncoder.ecd_bias =AllDataUnion.AllData.GimbalPitchOffset;
+					 can_encoder_flag |= (1<<DEVICE_INDEX_MOTOR6);
+					}
+					else
+					EncoderProcess(&GMPitchEncoder,msg); 	
+					if(GetWSCurrent() == SYS_PREPARESTATE)  
+					 {
+							 if((GMPitchEncoder.ecd_bias - GMPitchEncoder.ecd_value) <-4000)
+							 {
+								  GMPitchEncoder.ecd_bias =AllDataUnion.AllData.GimbalPitchOffset  + 8192;
+							 }
+							 else if((GMPitchEncoder.ecd_bias - GMPitchEncoder.ecd_value) > 4000)
+							 {
+								  GMPitchEncoder.ecd_bias = AllDataUnion.AllData.GimbalPitchOffset - 8192;
+							 }
+					 }
+				}break;		
+			}				
+			FeedDog(DEVICE_INDEX_TIMEOUT);
 }
