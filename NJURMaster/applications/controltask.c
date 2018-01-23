@@ -58,7 +58,7 @@ void ChassisControl(float _T)
 	ChassisMotorSpeed2=ChassisGoToward*0.075f+ChassisGoLeftRight*0.075f+ChassisRotateOut;
 	ChassisMotorSpeed3=ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
 	ChassisMotorSpeed4=-ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
-	CMOutput1=PID_calculate( _T,            //周期（单位：秒）
+	CMOutput1=PID_calculate( 			_T,            //周期（单位：秒）
 																0,				//前馈值
 																0,				//期望值（设定值）
 																0,			//反馈值（）
@@ -66,7 +66,7 @@ void ChassisControl(float _T)
 																&Chassis_Vec_PID_val1,	//PID数据结构体
 															 	0.2		//integration limit，积分限幅
 																 );
-	CMOutput2=PID_calculate( _T,            //周期（单位：秒）
+	CMOutput2=PID_calculate( 			_T,            //周期（单位：秒）
 																0,				//前馈值
 																0,				//期望值（设定值）
 																0,			//反馈值（）
@@ -74,7 +74,7 @@ void ChassisControl(float _T)
 																&Chassis_Vec_PID_val2,	//PID数据结构体
 																0.2		//integration limit，积分限幅
 																 );
-	CMOutput3=PID_calculate( _T,            //周期（单位：秒）
+	CMOutput3=PID_calculate( 			_T,            //周期（单位：秒）
 																0,				//前馈值
 																0,				//期望值（设定值）
 																0,			//反馈值（）
@@ -82,7 +82,7 @@ void ChassisControl(float _T)
 																&Chassis_Vec_PID_val3,	//PID数据结构体
 																0.2		//integration limit，积分限幅
 																 );
-	CMOutput4=PID_calculate( _T,            //周期（单位：秒）
+	CMOutput4=PID_calculate( 			_T,            //周期（单位：秒）
 																0,				//前馈值
 																0,				//期望值（设定值）
 																0,			//反馈值（）

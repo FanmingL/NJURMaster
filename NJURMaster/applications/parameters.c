@@ -111,6 +111,7 @@ void IMU_GYRODataCali(void)
 void IMU_ACCERDataCali(void)
 {
 	CALIFLAG |= IMU_ACCERCALING;
+	GimbalDataCali();
 }
 
 /**
@@ -121,7 +122,6 @@ void IMU_ACCERDataCali(void)
 void IMU_MAGDataCali(void)
 {
 	CALIFLAG |= IMU_MAGCALING;
-
 }
 
 /**
