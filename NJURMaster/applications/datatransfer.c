@@ -46,11 +46,11 @@ void DatatransferTask(u32 sys_time)
 	{
 
 	}
-	if ((sys_time+5)%20==0)
+	if ((sys_time+5)%50==0)
 	{
 		ANO_DT_Send_RCData(RC_CtrlData.rc.ch0,RC_CtrlData.rc.ch1,RC_CtrlData.rc.ch2,RC_CtrlData.rc.ch3,RC_CtrlData.rc.s1*300+1000,RC_CtrlData.rc.s2*300+1000,RC_CtrlData.mouse.x+1000,RC_CtrlData.mouse.y+1000,RC_CtrlData.mouse.z+1000,RC_CtrlData.key.v);
 	}
-	else if((sys_time+6)%20==0)
+	else if((sys_time+6)%50==0)
 	{
 		ANO_DT_Send_MotoPWM(ABS(CM1Encoder.filter_rate),ABS(CM2Encoder.filter_rate),ABS(CM3Encoder.filter_rate),
 												ABS(CM4Encoder.filter_rate),ABS(GMPitchEncoder.filter_rate),ABS(GMYawEncoder.filter_rate),0,0);

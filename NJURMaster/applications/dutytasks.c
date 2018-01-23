@@ -82,15 +82,15 @@ static void Duty_20ms(u32 _time)
   */
 static void Duty_50ms(u32 _time)
 {
-	int j=0;
-	char buff[200];
+	//int j=0;
+	//char buff[200];
 
 	if (SysMode==SYS_PREPARESTATE&&(ParamSavedFlag==1))
 	{
 		BOTH_LED_TOGGLE();
 	}
-		j+=sprintf(j+buff,"%d\n",CM1Encoder.filter_rate);
-		Usart2_Send((u8*)buff,j);
+	//	j+=sprintf(j+buff,"%d\n",CM1Encoder.filter_rate);
+	//	Usart2_Send((u8*)buff,j);
 }
 
 /**

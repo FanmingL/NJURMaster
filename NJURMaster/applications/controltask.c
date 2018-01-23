@@ -99,6 +99,7 @@ void ChassisControl(float _T)
 	{
 		ChassisSpeedSet(CAN1,0,0,0,0);
 	}
+	//ChassisSpeedSet(CAN1,600,0,0,0);
 }
 
 /**
