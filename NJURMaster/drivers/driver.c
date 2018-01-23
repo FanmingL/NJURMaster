@@ -7,6 +7,7 @@
   */
 void All_Init(void)
 {
+	int i=0;
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);  
 		
 	TIM6_Configuration();
@@ -35,7 +36,11 @@ void All_Init(void)
 		delay_ms(200);
 	}
 
-
+	for (i=0;i<100;i++)
+	{
+		CheckDog();
+		delay_ms(5);
+	}
 
 	
 	

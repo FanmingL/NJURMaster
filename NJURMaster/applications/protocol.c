@@ -73,6 +73,7 @@ if(*(data_buf+2)==0X02)
 		{
 			send_pid1 = 1;
 			send_pid2 = 1;
+			send_pid3 = 1;
 		}
 		if(*(data_buf+4)==0XA1)	
 		{
@@ -123,6 +124,12 @@ if(*(data_buf+2)==0X02)
 	}
     if(*(data_buf+2)==0X12)								//PID3
     {	
+			  PID_arg[6].kp  = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+        PID_arg[6].ki  = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+        PID_arg[6].kd  = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+        PID_arg[7].kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+        PID_arg[7].ki = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+        PID_arg[7].kd = 0.001*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
        	if(send_check == 0)
 				{
 					send_check = 1;
@@ -132,7 +139,7 @@ if(*(data_buf+2)==0X02)
     }
 	if(*(data_buf+2)==0X13)								//PID4
 	{
-		   				if(send_check == 0)
+		   	if(send_check == 0)
 				{
 					send_check = 1;
 					checkdata_to_send = *(data_buf+2);
@@ -171,18 +178,18 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 	float __temp;
 	if (GetRcMode()==RC_KEY_RCMODE)
 	{
-		__temp=GimbalPitchPosRef+rc->rc.ch2;
+		__temp=GimbalPitchPosRef+rc->rc.ch1;
 		GimbalPitchPosRef=LIMIT(__temp,-10.0f,10.0f);
-		__temp=GimbalYawPosRef+rc->rc.ch3;
+		__temp=GimbalYawPosRef+rc->rc.ch0;
 		GimbalYawPosRef=LIMIT(__temp,-0.1f+Yaw,0.1f+Yaw);
 		
-		ChassisGoToward=LIMIT(rc->rc.ch0,-100,100);
-		ChassisGoLeftRight=LIMIT(rc->rc.ch1,-100,100);
+		ChassisGoToward=(rc->rc.ch3-1024)*0.5f;
+		ChassisGoLeftRight=(rc->rc.ch2-1024)*0.5f;
 		
 	}
 	else if (GetRcMode()==RC_KEY_RCMODE)
 	{
-
+		
 	}
 	else if (GetRcMode()==RC_KEY_STOP)
 	{
