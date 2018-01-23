@@ -1,6 +1,6 @@
 #include "main.h"
 ////////////////////////////		kp		ki		kd		k_pre_d		inc_hz		k_inc_d_norm		k_ff
-#define CHASSIS_Pos_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define CHASSIS_Rot_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
 #define CHASSIS_Vec_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
 #define GIMBALP_Pos_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
 #define GIMBALP_Vec_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
@@ -15,7 +15,7 @@ u8 ParamSavedFlag=0;
 u8 ParaSavingFlag=0;
 IMUSensor_OffSet__ IMUSensor_Offset;
 AllDataUnion__ AllDataUnion; 
-_PID_arg_st PID_arg[PIDGROUPLEN]={CHASSIS_Pos_PID_OFF,
+_PID_arg_st PID_arg[PIDGROUPLEN]={CHASSIS_Rot_PID_OFF,
 																	CHASSIS_Vec_PID_OFF,
 																	GIMBALP_Pos_PID_OFF,
 																	GIMBALP_Vec_PID_OFF,
@@ -23,7 +23,7 @@ _PID_arg_st PID_arg[PIDGROUPLEN]={CHASSIS_Pos_PID_OFF,
 																	GIMBALY_Vec_PID_OFF,
 																	SLIBLIN_Pos_PID_OFF,
 																	SLIBLIN_Vec_PID_OFF};
-
+_PID_val_st PID_val[PIDGROUPLEN+3];
 
 
 /**

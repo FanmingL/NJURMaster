@@ -4,7 +4,7 @@
 #include "mymath.h"
 #include "pid.h"
 #define PIDGROUPLEN 8
-#define Chassis_Pos_PID_arg ( *PID_arg )
+#define Chassis_Rot_PID_arg ( *PID_arg )
 #define Chassis_Vec_PID_arg ( *(PID_arg+1) )
 #define GimbalPitch_Pos_PID_arg ( *(PID_arg+2) )
 #define GimbalPitch_Vec_PID_arg ( *(PID_arg+3) )
@@ -12,6 +12,18 @@
 #define GimbalYaw_Vec_PID_arg ( *(PID_arg+3) )
 #define Slibing_Pos_PID_arg ( *(PID_arg+4) )
 #define Slibing_Vec_PID_arg ( *(PID_arg+5) )
+
+#define Chassis_Rot_PID_val ( *PID_val )
+#define Chassis_Vec_PID_val1 ( *(PID_val+1) )
+#define Chassis_Vec_PID_val2 ( *(PID_val+2) )
+#define Chassis_Vec_PID_val3 ( *(PID_val+3) )
+#define Chassis_Vec_PID_val4 ( *(PID_val+4) )
+#define GimbalPitch_Pos_PID_val ( *(PID_val+5) )
+#define GimbalPitch_Vec_PID_val ( *(PID_val+6) )
+#define GimbalYaw_Pos_PID_val ( *(PID_val+7) )
+#define GimbalYaw_Vec_PID_val ( *(PID_val+8) )
+#define Slibing_Pos_PID_val ( *(PID_val+9) )
+#define Slibing_Vec_PID_val ( *(PID_val+10) )
 
 
 void ParametersInit(void);
@@ -56,4 +68,5 @@ extern IMUSensor_OffSet__ IMUSensor_Offset;
 extern AllDataUnion__ AllDataUnion; 
 extern u8 ParamSavedFlag;
 extern _PID_arg_st PID_arg[PIDGROUPLEN];
+extern _PID_val_st PID_val[PIDGROUPLEN+3];
 #endif
