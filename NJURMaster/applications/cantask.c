@@ -58,12 +58,6 @@ void GetEncoderBias(volatile Encoder *v, CanRxMsg * msg)
 	v->last_raw_value = v->ecd_bias;
 }
 
-
-
-
-
-
-
 /**
   * @brief 直接设置四个底盘电机的转速大小(相对的)
   * @param CANx CAN1 or CAN2

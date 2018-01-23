@@ -348,5 +348,4 @@ void CanProtocolAnalysis(CanRxMsg * msg)
 					 }
 				}break;		
 			}				
-			FeedDog(DEVICE_INDEX_TIMEOUT);
 }

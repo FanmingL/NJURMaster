@@ -90,8 +90,15 @@ void ChassisControl(float _T)
 																&Chassis_Vec_PID_val4,	//PID数据结构体
 																0.2		//integration limit，积分限幅
 																 );
-	
-	
+
+	if (SysMode!=SYS_CALISTATE&&SysMode!=SYS_STOPSTATE)
+	{
+		ChassisSpeedSet(CAN1,CMOutput1,CMOutput2,CMOutput3,CMOutput4);
+	}
+	else
+	{
+		ChassisSpeedSet(CAN1,0,0,0,0);
+	}
 }
 
 /**

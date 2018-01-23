@@ -102,8 +102,8 @@ void GYRO_RST(void)
 void CAN1_TX_IRQHandler(void) //CAN TX
 {
     if (CAN_GetITStatus(CAN1,CAN_IT_TME)!= RESET) 
-	{
-		CAN_ClearITPendingBit(CAN1,CAN_IT_TME);
+		{
+			CAN_ClearITPendingBit(CAN1,CAN_IT_TME);
     }
 }
 
@@ -114,10 +114,10 @@ void CAN1_TX_IRQHandler(void) //CAN TX
   * @details 进入CAN解析函数
   */
 void CAN1_RX0_IRQHandler(void)
-{   
+{
 	  CanRxMsg rx_message;	
     if (CAN_GetITStatus(CAN1,CAN_IT_FMP0)!= RESET)
-	{
+		{
         CAN_ClearITPendingBit(CAN1, CAN_IT_FF0);
 		    CAN_ClearFlag(CAN1, CAN_FLAG_FF0); 
 		

@@ -8,7 +8,7 @@
 static void Duty_1ms(u32 _time)
 {
 	u32 loop_time = GetInnerLoop(Task_1ms_Time);
-	//DatatransferTask(_time);
+	DatatransferTask(_time);
 	WorkStateFSM(_time);
 	MPU6500_Data_Prepare();
 #if 0
