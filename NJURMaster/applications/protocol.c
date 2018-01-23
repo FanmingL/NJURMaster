@@ -321,7 +321,7 @@ void CanProtocolAnalysis(CanRxMsg * msg)
 							CALIFLAG &=~ GIMBALYAWCALING;
 						}
 					}
-					else if(((can_encoder_flag>>DEVICE_INDEX_MOTOR5) & 0x0001) == 0)
+					if(((can_encoder_flag>>DEVICE_INDEX_MOTOR5) & 0x0001) == 0)
 					{
 				   GMYawEncoder.ecd_bias =AllDataUnion.AllData.GimbalYawOffset;
 					 can_encoder_flag |= (1<<DEVICE_INDEX_MOTOR5);
@@ -358,7 +358,7 @@ void CanProtocolAnalysis(CanRxMsg * msg)
 							CALIFLAG &=~ GIMBALPITCHCALING;
 						}
 					}
-					else if(((can_encoder_flag>>DEVICE_INDEX_MOTOR6) & 0x0001) == 0)
+					if(((can_encoder_flag>>DEVICE_INDEX_MOTOR6) & 0x0001) == 0)
 					{
 				   GMPitchEncoder.ecd_bias =AllDataUnion.AllData.GimbalPitchOffset;
 					 can_encoder_flag |= (1<<DEVICE_INDEX_MOTOR6);
