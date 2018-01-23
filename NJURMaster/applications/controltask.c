@@ -29,7 +29,7 @@ void ChassisControl(float _T)
 				ChassisRotateOut=PID_calculate( _T,            //周期（单位：秒）
 																				0,				//前馈值
 																				0,				//期望值（设定值）
-																				0,			//反馈值（）
+																				GMYawEncoder.ecd_value,			//反馈值（）
 																				&Chassis_Rot_PID_arg, //PID参数结构体
 																				&Chassis_Rot_PID_val,	//PID数据结构体
 																				0.2		//integration limit，积分限幅
@@ -60,32 +60,32 @@ void ChassisControl(float _T)
 	ChassisMotorSpeed4=-ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
 	CMOutput1=PID_calculate( 			_T,            //周期（单位：秒）
 																0,				//前馈值
-																0,				//期望值（设定值）
-																0,			//反馈值（）
+																ChassisMotorSpeed1,				//期望值（设定值）
+																CM1Encoder.filter_rate,			//反馈值（）
 																&Chassis_Vec_PID_arg, //PID参数结构体
 																&Chassis_Vec_PID_val1,	//PID数据结构体
 															 	0.2		//integration limit，积分限幅
 																 );
 	CMOutput2=PID_calculate( 			_T,            //周期（单位：秒）
 																0,				//前馈值
-																0,				//期望值（设定值）
-																0,			//反馈值（）
+																ChassisMotorSpeed2,				//期望值（设定值）
+																CM2Encoder.filter_rate,			//反馈值（）
 																&Chassis_Vec_PID_arg, //PID参数结构体
 																&Chassis_Vec_PID_val2,	//PID数据结构体
 																0.2		//integration limit，积分限幅
 																 );
 	CMOutput3=PID_calculate( 			_T,            //周期（单位：秒）
 																0,				//前馈值
-																0,				//期望值（设定值）
-																0,			//反馈值（）
+																ChassisMotorSpeed3,				//期望值（设定值）
+																CM3Encoder.filter_rate,			//反馈值（）
 																&Chassis_Vec_PID_arg, //PID参数结构体
 																&Chassis_Vec_PID_val3,	//PID数据结构体
 																0.2		//integration limit，积分限幅
 																 );
 	CMOutput4=PID_calculate( 			_T,            //周期（单位：秒）
 																0,				//前馈值
-																0,				//期望值（设定值）
-																0,			//反馈值（）
+																ChassisMotorSpeed4,				//期望值（设定值）
+																CM4Encoder.filter_rate,			//反馈值（）
 																&Chassis_Vec_PID_arg, //PID参数结构体
 																&Chassis_Vec_PID_val4,	//PID数据结构体
 																0.2		//integration limit，积分限幅

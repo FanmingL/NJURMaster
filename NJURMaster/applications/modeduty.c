@@ -24,7 +24,7 @@ void WorkStateFSM(u32 sys)
 		}
 		if (ParamSavedFlag!=1)
 		{
-			SysMode=SYS_PREPARESTATE;
+			SysMode=SYS_CALISTATE;
 			return;
 		}
 		SysMode=SYS_NORMALSTATE;

@@ -82,15 +82,15 @@ if(*(data_buf+2)==0X02)
 	}
 		if(*(data_buf+2)==0X10)								//PID1
     {
-        PID_arg[0].kp  = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
-        PID_arg[0].ki  = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
-        PID_arg[0].kd  = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
-        PID_arg[1].kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
-        PID_arg[1].ki = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
-        PID_arg[1].kd = 0.001*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
-        PID_arg[2].kp 	= 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
-        PID_arg[2].ki 	= 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
-        PID_arg[2].kd 	= 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
+        PID_arg[0].kp  = 0.01*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+        PID_arg[0].ki  = 0.01*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+        PID_arg[0].kd  = 0.01*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+        PID_arg[1].kp = 0.01*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+        PID_arg[1].ki = 0.01*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+        PID_arg[1].kd = 0.01*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+        PID_arg[2].kp 	= 0.01*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
+        PID_arg[2].ki 	= 0.01*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
+        PID_arg[2].kd 	= 0.01*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
 				if(send_check == 0)
 				{
 					send_check = 1;
@@ -100,15 +100,15 @@ if(*(data_buf+2)==0X02)
     }
 		 if(*(data_buf+2)==0X11)								//PID2
     {
-        PID_arg[3].kp  = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
-        PID_arg[3].ki  = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
-        PID_arg[3].kd  = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
-        PID_arg[4].kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
-        PID_arg[4].ki = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
-        PID_arg[4].kd = 0.001*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
-				PID_arg[5].kp 	= 0.001*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
-        PID_arg[5].ki 	= 0.001*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
-        PID_arg[5].kd 	= 0.001*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
+        PID_arg[3].kp  = 0.01*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+        PID_arg[3].ki  = 0.01*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+        PID_arg[3].kd  = 0.01*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+        PID_arg[4].kp = 0.01*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+        PID_arg[4].ki = 0.01*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+        PID_arg[4].kd = 0.01*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+				PID_arg[5].kp 	= 0.01*( (vs16)(*(data_buf+16)<<8)|*(data_buf+17) );
+        PID_arg[5].ki 	= 0.01*( (vs16)(*(data_buf+18)<<8)|*(data_buf+19) );
+        PID_arg[5].kd 	= 0.01*( (vs16)(*(data_buf+20)<<8)|*(data_buf+21) );
 						if(send_check == 0)
 				{
 					send_check = 1;
@@ -124,12 +124,12 @@ if(*(data_buf+2)==0X02)
 	}
     if(*(data_buf+2)==0X12)								//PID3
     {	
-			  PID_arg[6].kp  = 0.001*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
-        PID_arg[6].ki  = 0.001*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
-        PID_arg[6].kd  = 0.001*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
-        PID_arg[7].kp = 0.001*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
-        PID_arg[7].ki = 0.001*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
-        PID_arg[7].kd = 0.001*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
+			  PID_arg[6].kp  = 0.01*( (vs16)(*(data_buf+4)<<8)|*(data_buf+5) );
+        PID_arg[6].ki  = 0.01*( (vs16)(*(data_buf+6)<<8)|*(data_buf+7) );
+        PID_arg[6].kd  = 0.01*( (vs16)(*(data_buf+8)<<8)|*(data_buf+9) );
+        PID_arg[7].kp = 0.01*( (vs16)(*(data_buf+10)<<8)|*(data_buf+11) );
+        PID_arg[7].ki = 0.01*( (vs16)(*(data_buf+12)<<8)|*(data_buf+13) );
+        PID_arg[7].kd = 0.01*( (vs16)(*(data_buf+14)<<8)|*(data_buf+15) );
        	if(send_check == 0)
 				{
 					send_check = 1;

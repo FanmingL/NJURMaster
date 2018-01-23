@@ -431,31 +431,31 @@ void ANO_DT_Send_PID(u8 group,float p1_p,float p1_i,float p1_d,float p2_p,float 
 	data_to_send[_cnt++]=0;
 	
 	
-	_temp = p1_p * 1000;
+	_temp = p1_p * 100;
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p1_i  * 1000;
+	_temp = p1_i  * 100;
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p1_d  * 1000;
+	_temp = p1_d  * 100;
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p2_p  * 1000;
+	_temp = p2_p  * 100;
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p2_i  * 1000;
+	_temp = p2_i  * 100;
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p2_d * 1000;
+	_temp = p2_d * 100;
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p3_p  * 1000;
+	_temp = p3_p  * 100;
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p3_i  * 1000;
+	_temp = p3_i  * 100;
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
-	_temp = p3_d * 1000;
+	_temp = p3_d * 100;
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
 	
