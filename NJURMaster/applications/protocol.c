@@ -168,6 +168,12 @@ if(*(data_buf+2)==0X02)
 
 }
 
+#define PITCH_MAX (10.0f)
+#define YAW_MAX   (0.1f)
+#define CHANNELMIDDLE	(1024)
+#define RC_TOWARD_SCALE (0.5f)
+#define RC_LEFTRIGHT_SCALE (0.5f)
+
 /**
   * @brief 对遥控器解析结果进行反应
   * @param None
@@ -179,12 +185,12 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 	if (GetRcMode()==RC_KEY_RCMODE)
 	{
 		__temp=GimbalPitchPosRef+rc->rc.ch1;
-		GimbalPitchPosRef=LIMIT(__temp,-10.0f,10.0f);
+		GimbalPitchPosRef=LIMIT(__temp,-PITCH_MAX,PITCH_MAX);
 		__temp=GimbalYawPosRef+rc->rc.ch0;
-		GimbalYawPosRef=LIMIT(__temp,-0.1f+Yaw,0.1f+Yaw);
+		GimbalYawPosRef=LIMIT(__temp,-YAW_MAX+Yaw,YAW_MAX+Yaw);
 		
-		ChassisGoToward=(rc->rc.ch3-1024)*0.5f;
-		ChassisGoLeftRight=(rc->rc.ch2-1024)*0.5f;
+		ChassisGoToward=(rc->rc.ch3-CHANNELMIDDLE)*RC_TOWARD_SCALE;
+		ChassisGoLeftRight=(rc->rc.ch2-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
 		
 	}
 	else if (GetRcMode()==RC_KEY_RCMODE)

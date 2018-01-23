@@ -1,6 +1,7 @@
 #include "main.h"
 
 u8 SysMode=SYS_PREPARESTATE;
+u8 ControlMode=MC_NORMAL;
 /**
   * @brief Ä£Ê½ÇÐ»»
   * @param None
