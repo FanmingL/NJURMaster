@@ -236,7 +236,7 @@ void RcProtocolAnalysis(u8 *pData,int _len)
     RC_CtrlData.mouse.press_r = pData[13];
  
     RC_CtrlData.key.v = ((int16_t)pData[15] << 8)|((int16_t)pData[14]);// | ((int16_t)pData[15] << 8);
-		
+		RcDataAnalysis(&RC_CtrlData);
 }
 
 /**
