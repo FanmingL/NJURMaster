@@ -42,6 +42,8 @@ typedef __packed struct
 {
 	u8 savedflag;
 	IMUSensor_OffSet__ imu_offset;
+	uint16_t GimbalPitchOffset;
+	uint16_t GimbalYawOffset;
 	_PID_arg_st PID_ARG[PIDGROUPLEN];
 }AllDataOffset__;
 typedef union
