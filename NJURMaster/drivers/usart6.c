@@ -109,8 +109,7 @@ void USART6_IRQHandler(void)
     USART_ClearITPendingBit(USART6,USART_IT_RXNE);
 
     com_data = USART6->DR;
-    //Usart6_DataPrepare(com_data);
-	BOTH_LED_TOGGLE();
+    Usart6_DataPrepare(com_data);
   }
 }
 
