@@ -143,8 +143,8 @@ void Usart3_Send(unsigned char *DataToSend ,u8 data_num)
 		Tx3DMABuffer[i]=*(DataToSend+i-num);
 	}
 	len=count3;
-	while (DMA_GetCmdStatus(DMA1_Stream6) != DISABLE){}	//确保DMA可以被设置  
-	DMA1_Stream6->NDTR = (uint16_t)(num+data_num);          //数据传输量  
+	while (DMA_GetCmdStatus(DMA1_Stream3) != DISABLE){}	//确保DMA可以被设置  
+	DMA1_Stream3->NDTR = (uint16_t)(num+data_num);          //数据传输量  
 	DMA_Cmd(DMA1_Stream3, ENABLE);       
 
 }
