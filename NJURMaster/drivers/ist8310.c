@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
-  * @brief Í¨¹ıMPU6500Ğ´Èë´ÅÁ¦¼Æ
+  * @brief é€šè¿‡MPU6500å†™å…¥ç£åŠ›è®¡
   * @param None
   * @retval None
   */
@@ -19,7 +19,7 @@
 }
  
 /**
-  * @brief Í¨¹ıMPU6500¶ÁÈ¡´ÅÁ¦¼Æ
+  * @brief é€šè¿‡MPU6500è¯»å–ç£åŠ›è®¡
   * @param None
   * @retval None
   */
@@ -38,10 +38,10 @@
 }
 
 /**
-  * @brief MPU_Auto_ReadÅäÖÃ
+  * @brief MPU_Auto_Readé…ç½®
   * @param None
   * @retval None
-  * @details SLV1Ğ´ SLV0¶Á
+  * @details SLV1å†™ SLV0è¯»
   */
  static void MPU_Auto_Read_IST_config(uint8_t device_address, uint8_t reg_base_addr, uint8_t data_num)
 {
@@ -71,10 +71,10 @@
 }
 
 /**
-  * @brief IST8310³õÊ¼»¯
+  * @brief IST8310åˆå§‹åŒ–
   * @param None
-  * @retval ³õÊ¼»¯³É¹¦Ôò·µ»Ø0
-  * @details SLV4¶ÁÈ¡ SLV1Ğ´Èë
+  * @retval åˆå§‹åŒ–æˆåŠŸåˆ™è¿”å›0
+  * @details SLV4è¯»å– SLV1å†™å…¥
   */
 u8 IST8310_Init(void)
 {
@@ -125,7 +125,7 @@ u8 IST8310_Init(void)
 
 xyz_f_t IST_Raw;
 /**
-  * @brief Í¨¹ıSLV0È¥×Ô¶¯¶ÁÈ¡ist8310
+  * @brief é€šè¿‡SLV0å»è‡ªåŠ¨è¯»å–ist8310
   * @param None
   * @retval None
   */
@@ -146,7 +146,7 @@ void IST8310_getRawEX(void)
 }
 
 /**
-  * @brief Ğ£×¼´ÅÁ¦¼Æ
+  * @brief æ ¡å‡†ç£åŠ›è®¡
   * @param None
   * @retval None
   */
@@ -196,7 +196,7 @@ void IST8310_CALI(void)
 }
 xyz_f_t MagValue;
 /**
-  * @brief µÃµ½ÂË²¨ºóµÄ´ÅÁ¦¼ÆÊı¾İ
+  * @brief å¾—åˆ°æ»¤æ³¢åçš„ç£åŠ›è®¡æ•°æ®
   * @param None
   * @retval None
   */

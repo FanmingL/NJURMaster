@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
-  * @brief ²¦µ¯µç»ú±àÂëÆ÷³õÊ¼»¯
+  * @brief æ‹¨å¼¹ç”µæœºç¼–ç å™¨åˆå§‹åŒ–
   * @param None
   * @retval None
   */
@@ -13,7 +13,7 @@ void EncoderInit(void)
 }
 
 /**
-  * @brief ²¦µ¯µç»ú³õÊ¼»¯
+  * @brief æ‹¨å¼¹ç”µæœºåˆå§‹åŒ–
   * @param None
   * @retval None
   */
@@ -23,7 +23,7 @@ void DialingMotorInit(void)
 }
 
 /**
-  * @brief ¿ØÖÆ²¦µ¯µç»ú×ªËÙ
+  * @brief æ§åˆ¶æ‹¨å¼¹ç”µæœºè½¬é€Ÿ
   * @param None
   * @retval None
   */

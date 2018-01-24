@@ -1,0 +1,3 @@
+/*-------------------------------全局定义--------------------------------------*/
+u32 SelfCheckErrorFlag=0x0000;
+u16 SelfCheckValue[SELF_CHECK_ITEM_NUM];

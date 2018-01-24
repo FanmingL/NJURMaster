@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
-  * @brief 所有非驱动的初始化
+  * @brief 鎵�鏈夐潪椹卞姩鐨勫垵濮嬪寲
   * @param None
   * @retval None
   */

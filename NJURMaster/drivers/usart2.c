@@ -27,7 +27,7 @@ void Usart2_Init(u32 br_num)
 	
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE);	
-		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1,ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1,ENABLE);
 	NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
@@ -133,7 +133,7 @@ void Usart2_Send(unsigned char *DataToSend ,u8 data_num)
 		Tx2Buffer[count2++] = *(DataToSend+i);
 	}
 	for (i=0;i<(u8)num;i++)
-	{
+	{ 
 		Tx2DMABuffer[i]=Tx2Buffer[((u8)(len-num+i))];
 	}
 	for (;i<(u8)(num+data_num);i++)

@@ -1,0 +1,66 @@
+/*------------------------------函数调用关系-----------------------------------*/
+int main()
+  void AppInit()  //所有非驱动的初始化
+    void DogInit(); //看门狗初始化
+    void SensorOffsetInit();  //传感器校准值初始化
+      void BSP_FLASH_Read(u32 ReadAddr, u8 *pBuffer, u32 ByteToRead)//从指定地址开始读出指定长度的数据
+    void ParametersInit();  //参数初始化
+  
+  void AllInit()  //底层驱动初始化
+    void NVIC_PriorityGroupConfig(uint32_t NVIC_PriorityGroup)//中断分组
+    void TIM6_Configuration(void)；  //TIM6初始化
+      RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6,ENABLE);
+      NVIC_Init(&nvic);
+      TIM_TimeBaseInit(TIM6,&tim);
+    void TIM5_Configuration(void)  //TIM5初始化
+      RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5,ENABLE);
+      TIM_ARRPreloadConfig(TIM5, ENABLE);
+      TIM_TimeBaseInit(TIM5, &tim);
+      TIM_Cmd(TIM5,ENABLE);  //开始记时
+    void InnerLoopInit(void)  //初始化GetInnerLoop功能
+      uint32_t GetInnerLoop(int loop)  //@brief 得到某函数的精准的调用周期@param 计时序号，在头文件中可以查到@retval 执行周期  
+        Get_Time_Micros();  //TIM5->CNT
+    void Led_Configuration(void)  //LED初始化  RED-->PF14  GREEN-->PE7
+        RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+        GPIO_Init(GPIOE, &GPIO_InitStructure);
+        RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOF, ENABLE);
+        GPIO_Init(GPIOF, &GPIO_InitStructure);
+        GREEN_LED_ON();  //GPIO_ResetBits(GPIOF, GPIO_Pin_14) 
+        RED_LED_OFF();  //GPIO_SetBits(GPIOF, GPIO_Pin_14)
+    void Rc_Init(void)  //遥控器初始化
+      void Usart1_Init(void)  //串口1初始化
+        ...
+        USART_ITConfig(USART1, USART_IT_IDLE, ENABLE);
+          void USART1_IRQHandler(void)  //已经使能IDLE中断，由此进入遥控器通讯协议解析
+    void Usart2_Init(u32 br_num)
+      ...
+    void Usart3_Init(u32 br_num)
+      ...
+    void Usart6_Init(u32 br_num)
+      ...
+    void PWM_Init(void) //摩擦轮的PWM初始化
+      ...
+    void EncoderInit(void)  //拨弹电机编码器初始化
+      ...
+    delay_ms(100);
+    void SPI5_Init(void)  //SPI1初始化
+      ...
+    delay_ms(100);
+    u8 MPU6500_Init(void)  //MPU6500初始化
+      ...
+    u8 IST8310_Init(void)  //IST8310初始化
+      ...
+    void TIM6_Start(void)  //使能TIM6中断
+      TIM_Cmd(TIM6, ENABLE);	 
+      TIM_ITConfig(TIM6, TIM_IT_Update,ENABLE);
+      TIM_ClearFlag(TIM6, TIM_FLAG_Update);
+      Duty_loop();  //系统主任务循环
+    
+  while(1)
+  {
+    void ParametersSave(void) //参数保存至FALSH
+      u8 BSP_FLASH_Write(u32 WriteAddr, u8 *pBuffer, u32 ByteToWrite)  //从指定地址开始写入指定长度的数据
+
+  }
+/*----------------------------------------------------------------------------*/
+

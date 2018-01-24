@@ -16,11 +16,11 @@ float GMYawOutput,GMPitchOutput;
 unsigned int test_fire_speed = 1500;
 
 /**
-  * @brief µ×ÅÌ¿ØÖÆ³ÌĞò
-  * @param _T³ÌĞòµ÷ÓÃÖÜÆÚ(s)
+  * @brief åº•ç›˜æ§åˆ¶ç¨‹åº
+  * @param _Tç¨‹åºè°ƒç”¨å‘¨æœŸ(s)
   * @retval None
-  * @details 	¸ù¾İµ±Ç°µÄÆÚÍûµ×ÅÌÒÆ¶¯ËÙ¶ÈºÍµ±Ç°µ×ÅÌ¹¦ÂÊ
-	*						¶ÔËÄ¸öµ×ÅÌµç»úµÄµçÁ÷½øĞĞ¿ØÖÆ
+  * @details 	æ ¹æ®å½“å‰çš„æœŸæœ›åº•ç›˜ç§»åŠ¨é€Ÿåº¦å’Œå½“å‰åº•ç›˜åŠŸç‡
+	*						å¯¹å››ä¸ªåº•ç›˜ç”µæœºçš„ç”µæµè¿›è¡Œæ§åˆ¶
   */
 void ChassisControl(float _T)
 {	
@@ -29,13 +29,13 @@ void ChassisControl(float _T)
 		switch(ControlMode)
 		{
 			case MC_NORMAL:
-				ChassisRotateOut=PID_calculate( _T,            //ÖÜÆÚ£¨µ¥Î»£ºÃë£©
-																				0,				//Ç°À¡Öµ
-																				0,				//ÆÚÍûÖµ£¨Éè¶¨Öµ£©
-																				GMYawEncoder.ecd_value,			//·´À¡Öµ£¨£©
-																				&Chassis_Rot_PID_arg, //PID²ÎÊı½á¹¹Ìå
-																				&Chassis_Rot_PID_val,	//PIDÊı¾İ½á¹¹Ìå
-																				0.2		//integration limit£¬»ı·ÖÏŞ·ù
+				ChassisRotateOut=PID_calculate( _T,            //å‘¨æœŸï¼ˆå•ä½ï¼šç§’ï¼‰
+																				0,				//å‰é¦ˆå€¼
+																				0,				//æœŸæœ›å€¼ï¼ˆè®¾å®šå€¼ï¼‰
+																				GMYawEncoder.ecd_value,			//åé¦ˆå€¼ï¼ˆï¼‰
+																				&Chassis_Rot_PID_arg, //PIDå‚æ•°ç»“æ„ä½“
+																				&Chassis_Rot_PID_val,	//PIDæ•°æ®ç»“æ„ä½“
+																				0.2		//integration limitï¼Œç§¯åˆ†é™å¹…
 																				 );
 				break;
 			
@@ -61,37 +61,37 @@ void ChassisControl(float _T)
 	ChassisMotorSpeed2=ChassisGoToward*0.075f+ChassisGoLeftRight*0.075f+ChassisRotateOut;
 	ChassisMotorSpeed3=ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
 	ChassisMotorSpeed4=-ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
-	CMOutput1=PID_calculate( 			_T,            //ÖÜÆÚ£¨µ¥Î»£ºÃë£©
-																0,				//Ç°À¡Öµ
-																ChassisMotorSpeed1,				//ÆÚÍûÖµ£¨Éè¶¨Öµ£©
-																CM1Encoder.filter_rate,			//·´À¡Öµ£¨£©
-																&Chassis_Vec_PID_arg, //PID²ÎÊı½á¹¹Ìå
-																&Chassis_Vec_PID_val1,	//PIDÊı¾İ½á¹¹Ìå
-															 	0.2		//integration limit£¬»ı·ÖÏŞ·ù
+	CMOutput1=PID_calculate( 			_T,            //å‘¨æœŸï¼ˆå•ä½ï¼šç§’ï¼‰
+																0,				//å‰é¦ˆå€¼
+																ChassisMotorSpeed1,				//æœŸæœ›å€¼ï¼ˆè®¾å®šå€¼ï¼‰
+																CM1Encoder.filter_rate,			//åé¦ˆå€¼ï¼ˆï¼‰
+																&Chassis_Vec_PID_arg, //PIDå‚æ•°ç»“æ„ä½“
+																&Chassis_Vec_PID_val1,	//PIDæ•°æ®ç»“æ„ä½“
+															 	0.2		//integration limitï¼Œç§¯åˆ†é™å¹…
 																 );
-	CMOutput2=PID_calculate( 			_T,            //ÖÜÆÚ£¨µ¥Î»£ºÃë£©
-																0,				//Ç°À¡Öµ
-																ChassisMotorSpeed2,				//ÆÚÍûÖµ£¨Éè¶¨Öµ£©
-																CM2Encoder.filter_rate,			//·´À¡Öµ£¨£©
-																&Chassis_Vec_PID_arg, //PID²ÎÊı½á¹¹Ìå
-																&Chassis_Vec_PID_val2,	//PIDÊı¾İ½á¹¹Ìå
-																0.2		//integration limit£¬»ı·ÖÏŞ·ù
+	CMOutput2=PID_calculate( 			_T,            //å‘¨æœŸï¼ˆå•ä½ï¼šç§’ï¼‰
+																0,				//å‰é¦ˆå€¼
+																ChassisMotorSpeed2,				//æœŸæœ›å€¼ï¼ˆè®¾å®šå€¼ï¼‰
+																CM2Encoder.filter_rate,			//åé¦ˆå€¼ï¼ˆï¼‰
+																&Chassis_Vec_PID_arg, //PIDå‚æ•°ç»“æ„ä½“
+																&Chassis_Vec_PID_val2,	//PIDæ•°æ®ç»“æ„ä½“
+																0.2		//integration limitï¼Œç§¯åˆ†é™å¹…
 																 );
-	CMOutput3=PID_calculate( 			_T,            //ÖÜÆÚ£¨µ¥Î»£ºÃë£©
-																0,				//Ç°À¡Öµ
-																ChassisMotorSpeed3,				//ÆÚÍûÖµ£¨Éè¶¨Öµ£©
-																CM3Encoder.filter_rate,			//·´À¡Öµ£¨£©
-																&Chassis_Vec_PID_arg, //PID²ÎÊı½á¹¹Ìå
-																&Chassis_Vec_PID_val3,	//PIDÊı¾İ½á¹¹Ìå
-																0.2		//integration limit£¬»ı·ÖÏŞ·ù
+	CMOutput3=PID_calculate( 			_T,            //å‘¨æœŸï¼ˆå•ä½ï¼šç§’ï¼‰
+																0,				//å‰é¦ˆå€¼
+																ChassisMotorSpeed3,				//æœŸæœ›å€¼ï¼ˆè®¾å®šå€¼ï¼‰
+																CM3Encoder.filter_rate,			//åé¦ˆå€¼ï¼ˆï¼‰
+																&Chassis_Vec_PID_arg, //PIDå‚æ•°ç»“æ„ä½“
+																&Chassis_Vec_PID_val3,	//PIDæ•°æ®ç»“æ„ä½“
+																0.2		//integration limitï¼Œç§¯åˆ†é™å¹…
 																 );
-	CMOutput4=PID_calculate( 			_T,            //ÖÜÆÚ£¨µ¥Î»£ºÃë£©
-																0,				//Ç°À¡Öµ
-																ChassisMotorSpeed4,				//ÆÚÍûÖµ£¨Éè¶¨Öµ£©
-																CM4Encoder.filter_rate,			//·´À¡Öµ£¨£©
-																&Chassis_Vec_PID_arg, //PID²ÎÊı½á¹¹Ìå
-																&Chassis_Vec_PID_val4,	//PIDÊı¾İ½á¹¹Ìå
-																0.2		//integration limit£¬»ı·ÖÏŞ·ù
+	CMOutput4=PID_calculate( 			_T,            //å‘¨æœŸï¼ˆå•ä½ï¼šç§’ï¼‰
+																0,				//å‰é¦ˆå€¼
+																ChassisMotorSpeed4,				//æœŸæœ›å€¼ï¼ˆè®¾å®šå€¼ï¼‰
+																CM4Encoder.filter_rate,			//åé¦ˆå€¼ï¼ˆï¼‰
+																&Chassis_Vec_PID_arg, //PIDå‚æ•°ç»“æ„ä½“
+																&Chassis_Vec_PID_val4,	//PIDæ•°æ®ç»“æ„ä½“
+																0.2		//integration limitï¼Œç§¯åˆ†é™å¹…
 																 );
 
 	if (SysMode!=SYS_CALISTATE&&SysMode!=SYS_STOPSTATE)
@@ -106,10 +106,10 @@ void ChassisControl(float _T)
 }
 
 /**
-  * @brief ÔÆÌ¨¿ØÖÆ³ÌĞò
-  * @param _T³ÌĞòµ÷ÓÃÖÜÆÚ
+  * @brief æµœæˆå½´éºÑƒåŸ—ç»‹å¬ªç°­
+  * @param _Tç»‹å¬ªç°­ç’‹å†ªæ•¤é›ã„¦æ¹¡
   * @retval None
-  * @details ¸ù¾İµ±Ç°ÔÆÌ¨µÄÆÚÍû½Ç¶ÈÀ´¿ØÖÆÁ½¸öÔÆÌ¨µç»úµÄÊä³öµçÁ÷
+  * @details éè§„åµè¤°æ’³å¢ æµœæˆå½´é¨å‹¬æ¹¡éˆæ¶œï¿½æ‘å®³é‰ãƒ¦å¸¶é’æœµè¢±æ¶“ï¿½æµœæˆå½´é¢å«æº€é¨å‹®ç·­é‘è™¹æ•¸å¨´ï¿½
   */
 void GimbalControl(float _T)
 {
@@ -157,10 +157,10 @@ void GimbalControl(float _T)
 }
 
 /**
-  * @brief ·¢Éä»ú¹¹¿ØÖÆ³ÌĞò
-  * @param _T³ÌĞòµ÷ÓÃÖÜÆÚ(s)
+  * @brief é™æˆçš éˆçƒ˜ç€¯éºÑƒåŸ—ç»‹å¬ªç°­
+  * @param _Tç»‹å¬ªç°­ç’‹å†ªæ•¤é›ã„¦æ¹¡(s)
   * @retval None
-  * @details ¸ù¾İ¸øµÄÒ£¿ØÆ÷»òÕßÆäËûĞÅºÅ¿ØÖÆÄ¦²ÁÂÖºÍ²¦µ¥µç»úµÄ×ªËÙ
+  * @details éè§„åµç¼æ¬‘æ®‘é–¬ãƒ¦å¸¶é£ã„¦å¨é‘°å‘­å¾æµ æ ¦ä¿Šé™é”‹å¸¶é’èˆµæ‡‡é¿ï¹ç–†éœå±¾å«§é—æ› æ•¸éˆè™¹æ®‘æï¿½é–«ï¿½
   */
 void FireControl(float _T)
 {

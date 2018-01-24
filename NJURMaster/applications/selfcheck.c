@@ -4,7 +4,7 @@ u32 SelfCheckErrorFlag=0x0000;
 const u16 SelfCheckInitValue[SELF_CHECK_ITEM_NUM]={200u,200u,200u,200u,200u,200u,200u,200u,200u,200u,100u};
 u16 SelfCheckValue[SELF_CHECK_ITEM_NUM]={200u,200u,200u,200u,200u,200u,200u,200u,200u,200u,100u};;
 /**
-  * @brief ¿´ÃÅ¹·³õÊ¼»¯
+  * @brief çœ‹é—¨ç‹—åˆå§‹åŒ–
   * @param None
   * @retval None
   */
@@ -19,7 +19,7 @@ void DogInit(void)
 }
 
 /**
-  * @brief Î¹¹·
+  * @brief å–‚ç‹—
   * @param None
   * @retval None
   */
@@ -30,7 +30,7 @@ void FeedDog(u8 _dog_index)
 }
 
 /**
-  * @brief ÅĞ¶ÏÏµÍ³ÓĞÄÄĞ©Éè±¸µôÏß£¨Ê§È¥Á¬½Ó£©
+  * @brief åˆ¤æ–­ç³»ç»Ÿæœ‰å“ªäº›è®¾å¤‡æ‰çº¿ï¼ˆå¤±å»è¿æ¥ï¼‰
   * @param None
   * @retval None
   */
@@ -54,9 +54,9 @@ void CheckDog(void)
 }
 
 /**
-  * @brief ¼ì²éÄ³Éè±¸µ±Ç°µÄ×´Ì¬
-  * @param Éè±¸Ãû£¬¿ÉÔÚÍ·ÎÄ¼şÕÒµ½
-  * @retval ÈôÉè±¸µôÏß£¬·µ»Ø1£¬·ñÔò·µ»Ø0
+  * @brief æ£€æŸ¥æŸè®¾å¤‡å½“å‰çš„çŠ¶æ€
+  * @param è®¾å¤‡åï¼Œå¯åœ¨å¤´æ–‡ä»¶æ‰¾åˆ°
+  * @retval è‹¥è®¾å¤‡æ‰çº¿ï¼Œè¿”å›1ï¼Œå¦åˆ™è¿”å›0
   */
 u8 IsDeviceLost(int _dog_index)
 {

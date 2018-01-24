@@ -32,15 +32,15 @@
 *********************************************************************************************************
 *                                               STMFLASH_ReadByte
 *
-* ÃèÊö : ´ÓflashÖÐ¶ÁÈ¡Ò»¸ö×Ö½Ú
+* æè¿° : ä»Žflashä¸­è¯»å–ä¸€ä¸ªå­—èŠ‚
 *
-* ÊäÈë : faddr£ºflashµØÖ·
+* è¾“å…¥ : faddrï¼šflashåœ°å€
 *
-* Êä³ö : ¶ÁÈ¡µ½µÄ×Ö½Ú
+* è¾“å‡º : è¯»å–åˆ°çš„å­—èŠ‚
 *
-* µ÷ÓÃ : ÄÚ²¿µ÷ÓÃ
+* è°ƒç”¨ : å†…éƒ¨è°ƒç”¨
 *
-* ËµÃ÷ : ÎÞ
+* è¯´æ˜Ž : æ— 
 *********************************************************************************************************
 */
 static u8 BSP_FLASH_ReadByte(u32 faddr)
@@ -53,15 +53,15 @@ static u8 BSP_FLASH_ReadByte(u32 faddr)
 *********************************************************************************************************
 *                                               STMFLASH_GetFlashSector
 *
-* ÃèÊö : »ñÈ¡Ö¸¶¨µØÖ·ËùÔÚflashµÄ¿éÊ×µØÖ·
+* æè¿° : èŽ·å–æŒ‡å®šåœ°å€æ‰€åœ¨flashçš„å—é¦–åœ°å€
 *
-* ÊäÈë : addr£ºflashµØÖ·
+* è¾“å…¥ : addrï¼šflashåœ°å€
 *
-* Êä³ö : ËùÔÚÒ³Ê×µØÖ·
+* è¾“å‡º : æ‰€åœ¨é¡µé¦–åœ°å€
 *
-* µ÷ÓÃ : Íâ²¿µ÷ÓÃ
+* è°ƒç”¨ : å¤–éƒ¨è°ƒç”¨
 *
-* ËµÃ÷ : ×î¸ß¿ÉÖ§³Ö1MflashµÄSTM32Ð¾Æ¬
+* è¯´æ˜Ž : æœ€é«˜å¯æ”¯æŒ1Mflashçš„STM32èŠ¯ç‰‡
 *********************************************************************************************************
 */
 uint16_t BSP_FLASH_GetFlashSector(u32 addr)
@@ -85,23 +85,23 @@ uint16_t BSP_FLASH_GetFlashSector(u32 addr)
 *********************************************************************************************************
 *                                               BSP_FLASH_Write
 *
-* ÃèÊö : ´ÓÖ¸¶¨µØÖ·¿ªÊ¼Ð´ÈëÖ¸¶¨³¤¶ÈµÄÊý¾Ý
+* æè¿° : ä»ŽæŒ‡å®šåœ°å€å¼€å§‹å†™å…¥æŒ‡å®šé•¿åº¦çš„æ•°æ®
 *
-* ÊäÈë : WriteAddr£ºÆðÊ¼µØÖ·
-*        pBuffer£ºÒªÐ´ÈëÊý¾Ý´æ´¢µÄÊ×µØÖ·
-*        ByteToWrite£ºÒªÐ´ÈëµÄ×Ö½ÚÊý£¬×¢ÒâÊÇ×Ö½ÚÊý£¬Èç¹ûÐ´Èë×Ö£¬ÐèÒªÓÃ×ÖÊý³ËÒÔ4
+* è¾“å…¥ : WriteAddrï¼šèµ·å§‹åœ°å€
+*        pBufferï¼šè¦å†™å…¥æ•°æ®å­˜å‚¨çš„é¦–åœ°å€
+*        ByteToWriteï¼šè¦å†™å…¥çš„å­—èŠ‚æ•°ï¼Œæ³¨æ„æ˜¯å­—èŠ‚æ•°ï¼Œå¦‚æžœå†™å…¥å­—ï¼Œéœ€è¦ç”¨å­—æ•°ä¹˜ä»¥4
 *
-* Êä³ö : 0:Ð´ÈëÊ§°Ü     1£ºÐ´Èë³É¹¦
+* è¾“å‡º : 0:å†™å…¥å¤±è´¥     1ï¼šå†™å…¥æˆåŠŸ
 *
-* µ÷ÓÃ : Íâ²¿µ÷ÓÃ
+* è°ƒç”¨ : å¤–éƒ¨è°ƒç”¨
 *
-* ËµÃ÷ : ÒòÎªSTM32F4µÄÉÈÇøÊµÔÚÌ«´ó,Ã»°ì·¨±¾µØ±£´æÉÈÇøÊý¾Ý,ËùÒÔ±¾º¯Êý
-*        Ð´µØÖ·Èç¹û·Ç0XFF,ÄÇÃ´»áÏÈ²Á³ýÕû¸öÉÈÇøÇÒ²»±£´æÉÈÇøÊý¾Ý.ËùÒÔ
-*        Ð´·Ç0XFFµÄµØÖ·,½«µ¼ÖÂÕû¸öÉÈÇøÊý¾Ý¶ªÊ§.½¨ÒéÐ´Ö®Ç°È·±£ÉÈÇøÀï
-*        Ã»ÓÐÖØÒªÊý¾Ý,×îºÃÊÇÕû¸öÉÈÇøÏÈ²Á³ýÁË,È»ºóÂýÂýÍùºóÐ´. 
+* è¯´æ˜Ž : å› ä¸ºSTM32F4çš„æ‰‡åŒºå®žåœ¨å¤ªå¤§,æ²¡åŠžæ³•æœ¬åœ°ä¿å­˜æ‰‡åŒºæ•°æ®,æ‰€ä»¥æœ¬å‡½æ•°
+*        å†™åœ°å€å¦‚æžœéž0XFF,é‚£ä¹ˆä¼šå…ˆæ“¦é™¤æ•´ä¸ªæ‰‡åŒºä¸”ä¸ä¿å­˜æ‰‡åŒºæ•°æ®.æ‰€ä»¥
+*        å†™éž0XFFçš„åœ°å€,å°†å¯¼è‡´æ•´ä¸ªæ‰‡åŒºæ•°æ®ä¸¢å¤±.å»ºè®®å†™ä¹‹å‰ç¡®ä¿æ‰‡åŒºé‡Œ
+*        æ²¡æœ‰é‡è¦æ•°æ®,æœ€å¥½æ˜¯æ•´ä¸ªæ‰‡åŒºå…ˆæ“¦é™¤äº†,ç„¶åŽæ…¢æ…¢å¾€åŽå†™. 
 *
-*        ±¾º¯Êý¶ÔOTPÇøÓòÒ²ÓÐÐ§!¿ÉÒÔÓÃÀ´Ð´OTPÇø!
-*        OTPÇøÓòµØÖ··¶Î§:0X1FFF7800~0X1FFF7A0F
+*        æœ¬å‡½æ•°å¯¹OTPåŒºåŸŸä¹Ÿæœ‰æ•ˆ!å¯ä»¥ç”¨æ¥å†™OTPåŒº!
+*        OTPåŒºåŸŸåœ°å€èŒƒå›´:0X1FFF7800~0X1FFF7A0F
 *********************************************************************************************************
 */
 u8 BSP_FLASH_Write(u32 WriteAddr, u8 *pBuffer, u32 ByteToWrite)	
@@ -115,24 +115,24 @@ u8 BSP_FLASH_Write(u32 WriteAddr, u8 *pBuffer, u32 ByteToWrite)
     u32 start_sector = 0;
     u32 end_sector = 0;
     
-    if(WriteAddr<STM32_FLASH_BASE)return 0;	//·Ç·¨µØÖ·
-		FLASH_Unlock();									//½âËø 
-    FLASH_DataCacheCmd(DISABLE);//FLASH²Á³ýÆÚ¼ä,±ØÐë½ûÖ¹Êý¾Ý»º´æ
+    if(WriteAddr<STM32_FLASH_BASE)return 0;	//éžæ³•åœ°å€
+		FLASH_Unlock();									//è§£é” 
+    FLASH_DataCacheCmd(DISABLE);//FLASHæ“¦é™¤æœŸé—´,å¿…é¡»ç¦æ­¢æ•°æ®ç¼“å­˜
  		
-		addrx=WriteAddr;				//Ð´ÈëµÄÆðÊ¼µØÖ·
-		endaddr=WriteAddr+ByteToWrite;	//Ð´ÈëµÄ½áÊøµØÖ·
+		addrx=WriteAddr;				//å†™å…¥çš„èµ·å§‹åœ°å€
+		endaddr=WriteAddr+ByteToWrite;	//å†™å…¥çš„ç»“æŸåœ°å€
     
     start_sector = BSP_FLASH_GetFlashSector(addrx);
     end_sector = BSP_FLASH_GetFlashSector(endaddr);
     
-		if(addrx<0X1FFF0000)			//Ö»ÓÐÖ÷´æ´¢Çø,²ÅÐèÒªÖ´ÐÐ²Á³ý²Ù×÷!!
+		if(addrx<0X1FFF0000)			//åªæœ‰ä¸»å­˜å‚¨åŒº,æ‰éœ€è¦æ‰§è¡Œæ“¦é™¤æ“ä½œ!!
 		{             
 				 for(i = start_sector; i <= end_sector; i += 8)
 				 {
 						 status = FLASH_EraseSector(i, VoltageRange_3);
 						 if(status!=FLASH_COMPLETE)
 						 {
-								 res = 0;	//·¢Éú´íÎóÁË
+								 res = 0;	//å‘ç”Ÿé”™è¯¯äº†
 								 break;
 						 }           
 				 }           
@@ -140,11 +140,11 @@ u8 BSP_FLASH_Write(u32 WriteAddr, u8 *pBuffer, u32 ByteToWrite)
 			
 		if(status == FLASH_COMPLETE)
 		{
-			while(WriteAddr < endaddr)//Ð´Êý¾Ý
+			while(WriteAddr < endaddr)//å†™æ•°æ®
 			{
-				if(FLASH_ProgramByte(WriteAddr,*pBuffer) != FLASH_COMPLETE)//Ð´ÈëÊý¾Ý
+				if(FLASH_ProgramByte(WriteAddr,*pBuffer) != FLASH_COMPLETE)//å†™å…¥æ•°æ®
 				{ 
-					res = 0;	//Ð´ÈëÒì³£
+					res = 0;	//å†™å…¥å¼‚å¸¸
 									break;
 				}
 				WriteAddr+=1;
@@ -152,8 +152,8 @@ u8 BSP_FLASH_Write(u32 WriteAddr, u8 *pBuffer, u32 ByteToWrite)
 			} 
 		}
    
-    FLASH_DataCacheCmd(ENABLE);	//FLASH²Á³ý½áÊø,¿ªÆôÊý¾Ý»º´æ
-    FLASH_Lock();//ÉÏËø
+    FLASH_DataCacheCmd(ENABLE);	//FLASHæ“¦é™¤ç»“æŸ,å¼€å¯æ•°æ®ç¼“å­˜
+    FLASH_Lock();//ä¸Šé”
     return res;
 } 
 
@@ -162,23 +162,23 @@ u8 BSP_FLASH_Write(u32 WriteAddr, u8 *pBuffer, u32 ByteToWrite)
 *********************************************************************************************************
 *                                               BSP_FLASH_Write
 *
-* ÃèÊö : ´ÓÖ¸¶¨µØÖ·¿ªÊ¼¶Á³öÖ¸¶¨³¤¶ÈµÄÊý¾Ý
+* æè¿° : ä»ŽæŒ‡å®šåœ°å€å¼€å§‹è¯»å‡ºæŒ‡å®šé•¿åº¦çš„æ•°æ®
 *
-* ÊäÈë : ReadAddr£ºÆðÊ¼µØÖ·
-*        pBuffer£ºÒªÐ´ÈëÊý¾Ý´æ´¢µÄÊ×µØÖ·
-*        ByteToWrite£ºÒª¶Á³öµÄ×Ö½ÚÊý£¬×¢ÒâÊÇ×Ö½ÚÊý£¬Èç¹ûÐ´Èë×Ö£¬ÐèÒªÓÃ×ÖÊý³ËÒÔ4
+* è¾“å…¥ : ReadAddrï¼šèµ·å§‹åœ°å€
+*        pBufferï¼šè¦å†™å…¥æ•°æ®å­˜å‚¨çš„é¦–åœ°å€
+*        ByteToWriteï¼šè¦è¯»å‡ºçš„å­—èŠ‚æ•°ï¼Œæ³¨æ„æ˜¯å­—èŠ‚æ•°ï¼Œå¦‚æžœå†™å…¥å­—ï¼Œéœ€è¦ç”¨å­—æ•°ä¹˜ä»¥4
 *
-* Êä³ö : ÎÞ
+* è¾“å‡º : æ— 
 *
-* µ÷ÓÃ : Íâ²¿µ÷ÓÃ
+* è°ƒç”¨ : å¤–éƒ¨è°ƒç”¨
 *
-* ËµÃ÷ : ÒòÎªSTM32F4µÄÉÈÇøÊµÔÚÌ«´ó,Ã»°ì·¨±¾µØ±£´æÉÈÇøÊý¾Ý,ËùÒÔ±¾º¯Êý
-*        Ð´µØÖ·Èç¹û·Ç0XFF,ÄÇÃ´»áÏÈ²Á³ýÕû¸öÉÈÇøÇÒ²»±£´æÉÈÇøÊý¾Ý.ËùÒÔ
-*        Ð´·Ç0XFFµÄµØÖ·,½«µ¼ÖÂÕû¸öÉÈÇøÊý¾Ý¶ªÊ§.½¨ÒéÐ´Ö®Ç°È·±£ÉÈÇøÀï
-*        Ã»ÓÐÖØÒªÊý¾Ý,×îºÃÊÇÕû¸öÉÈÇøÏÈ²Á³ýÁË,È»ºóÂýÂýÍùºóÐ´. 
+* è¯´æ˜Ž : å› ä¸ºSTM32F4çš„æ‰‡åŒºå®žåœ¨å¤ªå¤§,æ²¡åŠžæ³•æœ¬åœ°ä¿å­˜æ‰‡åŒºæ•°æ®,æ‰€ä»¥æœ¬å‡½æ•°
+*        å†™åœ°å€å¦‚æžœéž0XFF,é‚£ä¹ˆä¼šå…ˆæ“¦é™¤æ•´ä¸ªæ‰‡åŒºä¸”ä¸ä¿å­˜æ‰‡åŒºæ•°æ®.æ‰€ä»¥
+*        å†™éž0XFFçš„åœ°å€,å°†å¯¼è‡´æ•´ä¸ªæ‰‡åŒºæ•°æ®ä¸¢å¤±.å»ºè®®å†™ä¹‹å‰ç¡®ä¿æ‰‡åŒºé‡Œ
+*        æ²¡æœ‰é‡è¦æ•°æ®,æœ€å¥½æ˜¯æ•´ä¸ªæ‰‡åŒºå…ˆæ“¦é™¤äº†,ç„¶åŽæ…¢æ…¢å¾€åŽå†™. 
 *
-*        ±¾º¯Êý¶ÔOTPÇøÓòÒ²ÓÐÐ§!¿ÉÒÔÓÃÀ´Ð´OTPÇø!
-*        OTPÇøÓòµØÖ··¶Î§:0X1FFF7800~0X1FFF7A0F
+*        æœ¬å‡½æ•°å¯¹OTPåŒºåŸŸä¹Ÿæœ‰æ•ˆ!å¯ä»¥ç”¨æ¥å†™OTPåŒº!
+*        OTPåŒºåŸŸåœ°å€èŒƒå›´:0X1FFF7800~0X1FFF7A0F
 *********************************************************************************************************
 */
 void BSP_FLASH_Read(u32 ReadAddr, u8 *pBuffer, u32 ByteToRead)   	
@@ -187,8 +187,8 @@ void BSP_FLASH_Read(u32 ReadAddr, u8 *pBuffer, u32 ByteToRead)
 //    u32 NumToRead = ((ByteToRead+3u)&(~3u))/4u;
 	for(i=0;i<ByteToRead;i++)
 	{
-		pBuffer[i]=BSP_FLASH_ReadByte(ReadAddr);//¶ÁÈ¡1¸ö×Ö½Ú.
-		ReadAddr+=1;//Æ«ÒÆ1¸ö×Ö½Ú.	
+		pBuffer[i]=BSP_FLASH_ReadByte(ReadAddr);//è¯»å–1ä¸ªå­—èŠ‚.
+		ReadAddr+=1;//åç§»1ä¸ªå­—èŠ‚.	
 	}
 }
 

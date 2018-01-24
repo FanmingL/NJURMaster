@@ -1,12 +1,12 @@
 #include "main.h"
 
 /**
-  * @brief ´®¿Ú1³õÊ¼»¯
+  * @brief ä¸²å£1åˆå§‹åŒ–
   * @param None
   * @retval None
   * @details	Rx	PB7
 	*						Usart1	BaudRate	100000
-	*						Ê¹ÄÜDMA½ÓÊÕ,Ë«»º³å,Ê¹ÄÜIDLEÖĞ¶Ï£¬½ÓÊÕÍêÒ»Ö¡Êı¾İºóµÄÒ»¸ö×Ö½Ú¿ÕÏĞºó½øÈëÖĞ¶Ï
+	*						ä½¿èƒ½DMAæ¥æ”¶,åŒç¼“å†²,ä½¿èƒ½IDLEä¸­æ–­ï¼Œæ¥æ”¶å®Œä¸€å¸§æ•°æ®åçš„ä¸€ä¸ªå­—èŠ‚ç©ºé—²åè¿›å…¥ä¸­æ–­
   */
 u8 _USART1_DMA_RX_BUF[2][USART1_DMA_RX_LEN];
 void Usart1_Init(void)
@@ -61,7 +61,7 @@ void Usart1_Init(void)
     dma.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
     DMA_Init(DMA2_Stream2, &dma);
     
-    //ÅäÖÃMemory1,Memory0ÊÇµÚÒ»¸öÊ¹ÓÃµÄMemory
+    //é…ç½®Memory1,Memory0æ˜¯ç¬¬ä¸€ä¸ªä½¿ç”¨çš„Memory
     DMA_DoubleBufferModeConfig(DMA2_Stream2, (uint32_t)&_USART1_DMA_RX_BUF[1][0], DMA_Memory_0);   //first used memory configuration
     DMA_DoubleBufferModeCmd(DMA2_Stream2, ENABLE);
     
@@ -82,10 +82,10 @@ void Usart1_Init(void)
 }
 
 /**
-  * @brief ´®¿Ú1ÖĞ¶Ïº¯Êı
+  * @brief ä¸²å£1ä¸­æ–­å‡½æ•°
   * @param None
   * @retval None
-  * @details ÒÑ¾­Ê¹ÄÜIDLEÖĞ¶Ï£¬ÓÉ´Ë½øÈëÒ£¿ØÆ÷Í¨Ñ¶Ğ­Òé½âÎö
+  * @details å·²ç»ä½¿èƒ½IDLEä¸­æ–­ï¼Œç”±æ­¤è¿›å…¥é¥æ§å™¨é€šè®¯åè®®è§£æ
   */
 void USART1_IRQHandler(void)
 {
@@ -126,7 +126,7 @@ void USART1_IRQHandler(void)
 }
 
 /**
-  * @brief Ò£¿ØÆ÷³õÊ¼»¯
+  * @brief é¥æ§å™¨åˆå§‹åŒ–
   * @param None
   * @retval None
   */

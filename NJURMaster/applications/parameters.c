@@ -27,7 +27,7 @@ _PID_val_st PID_val[PIDGROUPLEN+3];
 
 
 /**
-  * @brief ²ÎÊı³õÊ¼»¯
+  * @brief å‚æ•°åˆå§‹åŒ–
   * @param None
   * @retval None
   */
@@ -45,7 +45,7 @@ void ParametersInit(void)
 }
 
 /**
-  * @brief ´«¸ĞÆ÷Ğ£×¼Öµ³õÊ¼»¯
+  * @brief ä¼ æ„Ÿå™¨æ ¡å‡†å€¼åˆå§‹åŒ–
   * @param None
   * @retval None
   */
@@ -66,7 +66,7 @@ void SensorOffsetInit(void)
 }
 
 /**
-  * @brief ²ÎÊı±£´æÖÁFALSH
+  * @brief å‚æ•°ä¿å­˜è‡³FALSH
   * @param None
   * @retval None
   */
@@ -83,7 +83,7 @@ void ParametersSave(void)
 }
 
 /**
-  * @brief ´«¸ĞÆ÷Ğ£×¼Öµ±£´æÖÁFLASH
+  * @brief ä¼ æ„Ÿå™¨æ ¡å‡†å€¼ä¿å­˜è‡³FLASH
   * @param None
   * @retval None
   */
@@ -94,7 +94,7 @@ void SensorsOffsetSave(void)
 }
 
 /**
-  * @brief ÍÓÂİÒÇĞ£×¼
+  * @brief é™€èºä»ªæ ¡å‡†
   * @param None
   * @retval None
   */
@@ -104,7 +104,7 @@ void IMU_GYRODataCali(void)
 }
 
 /**
-  * @brief ¼ÓËÙ¶È¼ÆĞ£×¼
+  * @brief åŠ é€Ÿåº¦è®¡æ ¡å‡†
   * @param None
   * @retval None
   */
@@ -115,7 +115,7 @@ void IMU_ACCERDataCali(void)
 }
 
 /**
-  * @brief ´ÅÁ¦¼ÆĞ£×¼
+  * @brief ç£åŠ›è®¡æ ¡å‡†
   * @param None
   * @retval None
   */
@@ -125,7 +125,7 @@ void IMU_MAGDataCali(void)
 }
 
 /**
-  * @brief ÔÆÌ¨Ğ£×¼
+  * @brief äº‘å°æ ¡å‡†
   * @param None
   * @retval None
   */
