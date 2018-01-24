@@ -1,35 +1,35 @@
 #include "main.h"
 
 /**
-  * @brief MPU6500��ʼ��
+  * @brief MPU6500初始化
   * @param None
-  * @retval �ɹ���ʼ������0�����򷵻�1
+  * @retval 成功初始化返回0，否则返回1
   */
 u8 MPU6500_Init(void)
 {
-	if( MPU6500_Read_Reg(WHO_AM_I)== 0x70)			//��ȷ��ȡ��6500�ĵ�ַ
+	if( MPU6500_Read_Reg(WHO_AM_I)== 0x70)			//正确读取到6500的地址
 	{		
 		delay_ms(100);
-		MPU6500_Write_Reg(PWR_MGMT_1,0X80);   		//��Դ����,��λMPU6500
+		MPU6500_Write_Reg(PWR_MGMT_1,0X80);   		//电源管理,复位MPU6500
 		delay_ms(100);
-		MPU6500_Write_Reg(SIGNAL_PATH_RESET,0X07);//�����ǡ����ٶȼơ��¶ȼƸ�λ
+		MPU6500_Write_Reg(SIGNAL_PATH_RESET,0X07);//陀螺仪、加速度计、温度计复位
 		delay_ms(100);
-		MPU6500_Write_Reg(PWR_MGMT_1,0X01);   		//ѡ��ʱ��Դ
+		MPU6500_Write_Reg(PWR_MGMT_1,0X01);   		//选择时钟源
 		
 		delay_ms(100);
 		MPU6500_Write_Reg(USER_CTRL,0X30);  
 		delay_ms(100);
-		MPU6500_Write_Reg(SMPLRT_DIV,0X00);				//������1000/(1+0)=1000HZ
+		MPU6500_Write_Reg(SMPLRT_DIV,0X00);				//采样率1000/(1+0)=1000HZ
 		delay_ms(100);
-		MPU6500_Write_Reg(GYRO_CONFIG,0X10);  		//�����ǲ�����Χ 0X10 ����1000��
+		MPU6500_Write_Reg(GYRO_CONFIG,0X10);  		//陀螺仪测量范围 0X10 正负1000度
 		delay_ms(100);
-		MPU6500_Write_Reg(CONFIG,0X04);						//��ͨ�˲��� 0x02 20hz (9.9ms delay) fs=1khz
+		MPU6500_Write_Reg(CONFIG,0X04);						//低通滤波器 0x02 20hz (9.9ms delay) fs=1khz
 		delay_ms(100);
-		MPU6500_Write_Reg(ACCEL_CONFIG,0x10); 		//���ٶȼƲ�����Χ 0X10 ����8g
+		MPU6500_Write_Reg(ACCEL_CONFIG,0x10); 		//加速度计测量范围 0X10 正负8g
 		delay_ms(100);
-		MPU6500_Write_Reg(ACCEL_CONFIG2,0x04);		//���ٶȼ�����1khz �˲���20hz (99.8ms delay)
+		MPU6500_Write_Reg(ACCEL_CONFIG2,0x04);		//加速度计速率1khz 滤波器20hz (99.8ms delay)
 		delay_ms(100);
-		MPU6500_Write_Reg(PWR_MGMT_2,0X00);   		//ʹ�ܼ��ٶȼƺ�������
+		MPU6500_Write_Reg(PWR_MGMT_2,0X00);   		//使能加速度计和陀螺仪
 		
 		return 0;
 	}
@@ -44,7 +44,7 @@ xyz_f_t MPU6500_Gyro;
 u8 mpu6500_buf[20];
 
 /**
-  * @brief ��ȡ���ٶȼ������ǵ�ԭʼ����
+  * @brief 读取加速度计陀螺仪的原始数据
   * @param None
   * @retval None
   */
@@ -52,13 +52,13 @@ void MPU6500_ReadValueRaw(void)
 {
 	uint8_t i;
 	
-	MPU6500_CS(0); 																	//ʹ��SPI����
+	MPU6500_CS(0); 																	//使能SPI传输
 
-	SPI5_Read_Write_Byte(ACCEL_XOUT_H|0x80); 				//�Ӽ��ٶȼƵļĴ�����ʼ���ж�ȡ�����Ǻͼ��ٶȼƵ�ֵ//���Ͷ�����+�Ĵ�����
+	SPI5_Read_Write_Byte(ACCEL_XOUT_H|0x80); 				//从加速度计的寄存器开始进行读取陀螺仪和加速度计的值//发送读命令+寄存器号
 	
-	for(i	=	0;i	<	14;i++)														//һ����ȡ14�ֽڵ�����
+	for(i	=	0;i	<	14;i++)														//一共读取14字节的数据
 	{
-		mpu6500_buf[i]	=	SPI5_Read_Write_Byte(0xff);	//����0xff,��Ϊslave��ʶ��
+		mpu6500_buf[i]	=	SPI5_Read_Write_Byte(0xff);	//输入0xff,因为slave不识别
 	}	
 		MPU6500_Acc_Raw.x = BYTE16(s16, mpu6500_buf[0],  mpu6500_buf[1]);
 		MPU6500_Acc_Raw.y = BYTE16(s16, mpu6500_buf[2],  mpu6500_buf[3]);
@@ -68,11 +68,11 @@ void MPU6500_ReadValueRaw(void)
 		MPU6500_Gyro_Raw.z = BYTE16(s16, mpu6500_buf[12],  mpu6500_buf[13]);
 //		
 //		mpu6500_tempreature_temp	=	BYTE16(s16, mpu6500_buf[6],  mpu6500_buf[7]);
-//		mpu6500_tempreature	=	(float)(35000+((521+mpu6500_tempreature_temp)*100)/34); // ԭ����ĸΪ340�����ڷ���*100����������1000����
+//		mpu6500_tempreature	=	(float)(35000+((521+mpu6500_tempreature_temp)*100)/34); // 原来分母为340，现在分子*100，即：扩大1000倍；
 //		mpu6500_tempreature = mpu6500_tempreature/1000;                             
 	
 	
-	MPU6500_CS(1);  	    //��ֹSPI����
+	MPU6500_CS(1);  	    //禁止SPI传输
 }
 
 float sum_temp[ITEMS]= {0,0,0,0,0,0,0};
@@ -80,7 +80,7 @@ u16 acc_sum_cnt = 0,gyro_sum_cnt = 0;
 
 
 /**
-  * @brief MPU6500����У׼
+  * @brief MPU6500数据校准
   * @param None
   * @retval None
   */
@@ -131,7 +131,7 @@ float mpu_fil_tmp[ITEMS];
 s16 FILT_BUF[ITEMS][(FILTER_NUM + 1)];
 uint8_t filter_cnt = 0,filter_cnt_old = 0;
 /**
-  * @brief �Բ����������ݼ�ȥoffset�����ƶ�ƽ��
+  * @brief 对采样到的数据减去offset并作移动平均
   * @param None
   * @retval None
   */

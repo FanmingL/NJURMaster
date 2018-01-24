@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
-  * @brief LED≥ı ºªØ
+  * @brief LEDÂàùÂßãÂåñ
   * @param None
   * @retval None
   * @details 	REDLED 		PF14
@@ -10,7 +10,7 @@
 void Led_Configuration(void)
 {
   GPIO_InitTypeDef  GPIO_InitStructure;
-
+ 
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
 	
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;//RED

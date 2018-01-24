@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
-  * @brief µ×²ãÇı¶¯³õÊ¼»¯
+  * @brief åº•å±‚é©±åŠ¨åˆå§‹åŒ–
   * @param None
   * @retval None
   */

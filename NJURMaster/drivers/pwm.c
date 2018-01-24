@@ -1,7 +1,7 @@
 #include "pwm.h"
 
 /**
-  * @brief Ä¦²ÁÂÖµÄPWM³õÊ¼»¯
+  * @brief æ‘©æ“¦è½®çš„PWMåˆå§‹åŒ–
   * @param None
   * @retval None
   * @details	PH6	TIM12_CH1

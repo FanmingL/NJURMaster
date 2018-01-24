@@ -46,7 +46,7 @@ static void Duty_5ms(u32 _time)
 {
 	u32 loop_time = GetInnerLoop(Task_5ms_Time);
 	IST8310_Data_Prepare();
-	CheckDog();
+	CheckDog ();
 	ChassisControl(loop_time/1000000.0f);
 	GimbalControl(loop_time/1000000.0f);
 }
@@ -82,15 +82,16 @@ static void Duty_20ms(u32 _time)
   */
 static void Duty_50ms(u32 _time)
 {
-//	int j=0;
-//	char buff[200];
+	int j=0;
+	char buff[200];
 
 	if (IsDeviceLost(DEVICE_INDEX_TIMEOUT))
 	{
 		BOTH_LED_TOGGLE();
 	}
-//		j+=sprintf(j+buff,"%d\n",GetInnerLoop(DutyLoop_Time));
-//		Usart2_Send((u8*)buff,j);
+		j+=sprintf(j+buff,"%d\n",GetInnerLoop(DutyLoop_Time));
+		Usart6_Send((u8*)buff,j);
+	//USART_SendData(USART6,123);
 	
 }
 

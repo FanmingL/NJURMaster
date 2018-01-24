@@ -2,18 +2,18 @@
 
 
 /**
-  * @brief TIM5³õÊ¼»¯
+  * @brief TIM5åˆå§‹åŒ–
   * @param None
   * @retval None
-  * @details 	TIM5ÊÇÒ»¸ö32Î»µÄ¼Ä´æÆ÷£¬¿ÉÒÔÓÃÀ´´¿´âµÄ¼ÆÊ±£¬¼ÇÂ¼´ÓÏµÍ³¿ªÊ¼µ½ÏÖÔÚËù
-	*						¾­¹ıµÄÎ¢ÃëÊı
+  * @details 	TIM5æ˜¯ä¸€ä¸ª32ä½çš„å¯„å­˜å™¨ï¼Œå¯ä»¥ç”¨æ¥çº¯ç²¹çš„è®¡æ—¶ï¼Œè®°å½•ä»ç³»ç»Ÿå¼€å§‹åˆ°ç°åœ¨æ‰€
+	*						ç»è¿‡çš„å¾®ç§’æ•°
   */
 void TIM5_Configuration(void)										
 {
    TIM_TimeBaseInitTypeDef tim;
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5,ENABLE);
     tim.TIM_Period = 0xFFFFFFFF;
-    tim.TIM_Prescaler = 90 - 1;	 //1M µÄÊ±ÖÓ  
+    tim.TIM_Prescaler = 90 - 1;	 //1M çš„æ—¶é’Ÿ  
     tim.TIM_ClockDivision = TIM_CKD_DIV1;	
     tim.TIM_CounterMode = TIM_CounterMode_Up;  
     TIM_ARRPreloadConfig(TIM5, ENABLE);	
@@ -22,10 +22,10 @@ void TIM5_Configuration(void)
 }
 
 /**
-  * @brief TIM5µÄÒç³öÖĞ¶Ï
+  * @brief TIM5çš„æº¢å‡ºä¸­æ–­
   * @param None
   * @retval None
-  * @details Ö´ĞĞÇå³ıÖĞ¶ÏÎ»µÄ²Ù×÷
+  * @details æ‰§è¡Œæ¸…é™¤ä¸­æ–­ä½çš„æ“ä½œ
   */
 void TIM5_IRQHandler(void)										
 {
@@ -37,18 +37,18 @@ void TIM5_IRQHandler(void)
 } 
 
 /**
-  * @brief Î¢Ãë¼¶ÑÓÊ±
+  * @brief å¾®ç§’çº§å»¶æ—¶
   * @param None
   * @retval None
   */
-void Delay_us(uint32_t us)										//ÓÃTIM2µÄ¼ÆÊıÖµÀ´×öµ½¾«È·ÑÓÊ±
+void Delay_us(uint32_t us)										//ç”¨TIM2çš„è®¡æ•°å€¼æ¥åšåˆ°ç²¾ç¡®å»¶æ—¶
 {
     uint32_t now = Get_Time_Micros();
     while (Get_Time_Micros() - now < us);
 }
 
 /**
-  * @brief ºÁÃë¼¶ÑÓÊ±
+  * @brief æ¯«ç§’çº§å»¶æ—¶
   * @param None
   * @retval None
   */
@@ -59,10 +59,10 @@ void Delay_ms(uint32_t ms)
 }
 
 /**
-  * @brief TIM6³õÊ¼»¯
+  * @brief TIM6åˆå§‹åŒ–
   * @param None
   * @retval None
-  * @details	TIM6ÓÃÓÚ²úÉú1msÖĞ¶Ï
+  * @details	TIM6ç”¨äºäº§ç”Ÿ1msä¸­æ–­
   */
 void TIM6_Configuration(void)							
 {
@@ -85,10 +85,10 @@ void TIM6_Configuration(void)
 }
 
 /**
-  * @brief Ê¹ÄÜTIM6ÖĞ¶Ï
+  * @brief ä½¿èƒ½TIM6ä¸­æ–­
   * @param None
   * @retval None
-  * @details	TIM6ÖĞ¶ÏÓÉ´Ë¿ªÊ¼
+  * @details	TIM6ä¸­æ–­ç”±æ­¤å¼€å§‹
   */
 void TIM6_Start(void)
 {
@@ -98,10 +98,10 @@ void TIM6_Start(void)
 }
 
 /**
-  * @brief TIM6Òç³öÖĞ¶Ï
+  * @brief TIM6æº¢å‡ºä¸­æ–­
   * @param None
   * @retval None
-  * @details 1msÖĞ¶Ï£¬ÓÉ´Ë½øÈëDuty_loop
+  * @details 1msä¸­æ–­ï¼Œç”±æ­¤è¿›å…¥Duty_loop
   */
 void TIM6_DAC_IRQHandler(void)								
 {
@@ -115,7 +115,7 @@ void TIM6_DAC_IRQHandler(void)
 }
 
 /**
-  * @brief ³õÊ¼»¯GetInnerLoop¹¦ÄÜ
+  * @brief åˆå§‹åŒ–GetInnerLoopåŠŸèƒ½
   * @param None
   * @retval None
   */
@@ -129,11 +129,11 @@ void InnerLoopInit(void)
 }	
 
 /**
-  * @brief µÃµ½Ä³º¯ÊıµÄ¾«×¼µÄµ÷ÓÃÖÜÆÚ
-  * @param ¼ÆÊ±ĞòºÅ£¬ÔÚÍ·ÎÄ¼şÖĞ¿ÉÒÔ²éµ½
-  * @retval Ö´ĞĞÖÜÆÚ
+  * @brief å¾—åˆ°æŸå‡½æ•°çš„ç²¾å‡†çš„è°ƒç”¨å‘¨æœŸ
+  * @param è®¡æ—¶åºå·ï¼Œåœ¨å¤´æ–‡ä»¶ä¸­å¯ä»¥æŸ¥åˆ°
+  * @retval æ‰§è¡Œå‘¨æœŸ
   */
-uint32_t GetInnerLoop(int loop)								//ÓÃÓÚ»ñµÃ¾«È·µÄº¯Êıµ÷ÓÃµÄÖÜÆÚ
+uint32_t GetInnerLoop(int loop)								//ç”¨äºè·å¾—ç²¾ç¡®çš„å‡½æ•°è°ƒç”¨çš„å‘¨æœŸ
 {
 	static uint32_t Time[2][20]={0};//Time[0] is the last time, Time[1] is the new time;
 	Time[0][loop] = Time[1][loop];

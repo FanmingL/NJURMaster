@@ -6,10 +6,10 @@ u8 data_to_send[50];
 #define BYTE2(dwTemp)       ( *( (char *)(&dwTemp) + 2) )
 #define BYTE3(dwTemp)       ( *( (char *)(&dwTemp) + 3) )
 /**
-  * @brief ´®¿ÚÍ¨Ñ¶task
-  * @param ÏµÍ³´Ó¿ª»úµ½ÏÖÔÚÔËĞĞµÄºÁÃëÊı
+  * @brief ä¸²å£é€šè®¯task
+  * @param ç³»ç»Ÿä»å¼€æœºåˆ°ç°åœ¨è¿è¡Œçš„æ¯«ç§’æ•°
   * @retval None
-  * @details ÔÚÕâÀïÏòÉÏÎ»»ú»òÕßÉÏ²ãÓ²¼ş·¢ËÍµ±Ç°»úÆ÷ÈËµÄ×´Ì¬»ò´«¸ĞÆ÷µÄÊı¾İ
+  * @details åœ¨è¿™é‡Œå‘ä¸Šä½æœºæˆ–è€…ä¸Šå±‚ç¡¬ä»¶å‘é€å½“å‰æœºå™¨äººçš„çŠ¶æ€æˆ–ä¼ æ„Ÿå™¨çš„æ•°æ®
   */
 void DatatransferTask(u32 sys_time)
 {
@@ -53,10 +53,10 @@ void DatatransferTask(u32 sys_time)
 }
 
 /**
-  * @brief ´®¿Ú2Êı¾İÔ¤½âÎö
-  * @param data	´ÓDR¼Ä´æÆ÷ÖĞ¶ÁÈ¡µ½µÄÊı¾İ
+  * @brief ä¸²å£2æ•°æ®é¢„è§£æ
+  * @param data	ä»DRå¯„å­˜å™¨ä¸­è¯»å–åˆ°çš„æ•°æ®
   * @retval None
-  * @details Èô½âÎö³É¹¦ÔòÌø×ªµ½BasicProtocolAnalysis½øĞĞ´¦Àí
+  * @details è‹¥è§£ææˆåŠŸåˆ™è·³è½¬åˆ°BasicProtocolAnalysisè¿›è¡Œå¤„ç†
   */
 void Usart2_DataPrepare(u8 data)
 {
@@ -64,36 +64,36 @@ void Usart2_DataPrepare(u8 data)
 	static u8 _data_len = 0,_data_cnt = 0;
 	static u8 state = 0;
 	
-	if(state==0&&data==0xAA)						//ÅĞ¶ÏÖ¡Í·
+	if(state==0&&data==0xAA)						//åˆ¤æ–­å¸§å¤´
 	{
 		state=1;
 		RxBuffer[0]=data;
 	}
-	else if(state==1&&data==0xAF)			//Ö¡Í·
+	else if(state==1&&data==0xAF)			//å¸§å¤´
 	{
 		state=2;
 		RxBuffer[1]=data;
 	}
-	else if(state==2&&data<0XF1)			//Ö¡ÀàĞÍ
+	else if(state==2&&data<0XF1)			//å¸§ç±»å‹
 	{
 		state=3;
 		RxBuffer[2]=data;
 	}
-	else if(state==3&&data<50)				//Ö¡³¤
+	else if(state==3&&data<50)				//å¸§é•¿
 	{
 		state = 4;
 		RxBuffer[3]=data;
 		_data_len = data;
 		_data_cnt = 0;
 	}
-	else if(state==4&&_data_len>0)		//Êı¾İÖ¡
+	else if(state==4&&_data_len>0)		//æ•°æ®å¸§
 	{
 		_data_len--;
 		RxBuffer[4+_data_cnt++]=data;
 		if(_data_len==0)
 			state = 5;
 	}
-	else if(state==5)								//Ğ£ÑéÖ¡
+	else if(state==5)								//æ ¡éªŒå¸§
 	{
 		state = 0;
 		RxBuffer[4+_data_cnt]=data;
@@ -106,10 +106,10 @@ void Usart2_DataPrepare(u8 data)
 }
 
 /**
-  * @brief ´®¿Ú3Êı¾İÔ¤½âÎö
-  * @param data	´ÓDR¼Ä´æÆ÷ÖĞ¶ÁÈ¡µ½µÄÊı¾İ
+  * @brief ä¸²å£3æ•°æ®é¢„è§£æ
+  * @param data	ä»DRå¯„å­˜å™¨ä¸­è¯»å–åˆ°çš„æ•°æ®
   * @retval None
-  * @details Èô½âÎö³É¹¦ÔòÌø×ªµ½BasicProtocolAnalysis½øĞĞ´¦Àí
+  * @details è‹¥è§£ææˆåŠŸåˆ™è·³è½¬åˆ°BasicProtocolAnalysisè¿›è¡Œå¤„ç†
   */
 void Usart3_DataPrepare(u8 data)
 {
@@ -117,36 +117,36 @@ void Usart3_DataPrepare(u8 data)
 	static u8 _data_len = 0,_data_cnt = 0;
 	static u8 state = 0;
 	
-	if(state==0&&data==0xAA)						//ÅĞ¶ÏÖ¡Í·
+	if(state==0&&data==0xAA)						//åˆ¤æ–­å¸§å¤´
 	{
 		state=1;
 		RxBuffer[0]=data;
 	}
-	else if(state==1&&data==0xAF)			//Ö¡Í·
+	else if(state==1&&data==0xAF)			//å¸§å¤´
 	{
 		state=2;
 		RxBuffer[1]=data;
 	}
-	else if(state==2&&data<0XF1)			//Ö¡ÀàĞÍ
+	else if(state==2&&data<0XF1)			//å¸§ç±»å‹
 	{
 		state=3;
 		RxBuffer[2]=data;
 	}
-	else if(state==3&&data<50)				//Ö¡³¤
+	else if(state==3&&data<50)				//å¸§é•¿
 	{
 		state = 4;
 		RxBuffer[3]=data;
 		_data_len = data;
 		_data_cnt = 0;
 	}
-	else if(state==4&&_data_len>0)		//Êı¾İÖ¡
+	else if(state==4&&_data_len>0)		//æ•°æ®å¸§
 	{
 		_data_len--;
 		RxBuffer[4+_data_cnt++]=data;
 		if(_data_len==0)
 			state = 5;
 	}
-	else if(state==5)								//Ğ£ÑéÖ¡
+	else if(state==5)								//æ ¡éªŒå¸§
 	{
 		state = 0;
 		RxBuffer[4+_data_cnt]=data;
@@ -160,10 +160,10 @@ void Usart3_DataPrepare(u8 data)
 }
 
 /**
-  * @brief ´®¿Ú6Êı¾İÔ¤½âÎö
-  * @param data	´ÓDR¼Ä´æÆ÷ÖĞ¶ÁÈ¡µ½µÄÊı¾İ
+  * @brief ä¸²å£6æ•°æ®é¢„è§£æ
+  * @param data	ä»DRå¯„å­˜å™¨ä¸­è¯»å–åˆ°çš„æ•°æ®
   * @retval None
-  * @details Èô½âÎö³É¹¦ÔòÌø×ªµ½BasicProtocolAnalysis½øĞĞ´¦Àí
+  * @details è‹¥è§£ææˆåŠŸåˆ™è·³è½¬åˆ°BasicProtocolAnalysisè¿›è¡Œå¤„ç†
   */
 void Usart6_DataPrepare(u8 data)
 {
@@ -171,36 +171,36 @@ void Usart6_DataPrepare(u8 data)
 	static u8 _data_len = 0,_data_cnt = 0;
 	static u8 state = 0;
 	
-	if(state==0&&data==0xAA)						//ÅĞ¶ÏÖ¡Í·
+	if(state==0&&data==0xAA)						//åˆ¤æ–­å¸§å¤´
 	{
 		state=1;
 		RxBuffer[0]=data;
 	}
-	else if(state==1&&data==0xAF)			//Ö¡Í·
+	else if(state==1&&data==0xAF)			//å¸§å¤´
 	{
 		state=2;
 		RxBuffer[1]=data;
 	}
-	else if(state==2&&data<0XF1)			//Ö¡ÀàĞÍ
+	else if(state==2&&data<0XF1)			//å¸§ç±»å‹
 	{
 		state=3;
 		RxBuffer[2]=data;
 	}
-	else if(state==3&&data<50)				//Ö¡³¤
+	else if(state==3&&data<50)				//å¸§é•¿
 	{
 		state = 4;
 		RxBuffer[3]=data;
 		_data_len = data;
 		_data_cnt = 0;
 	}
-	else if(state==4&&_data_len>0)		//Êı¾İÖ¡
+	else if(state==4&&_data_len>0)		//æ•°æ®å¸§
 	{
 		_data_len--;
 		RxBuffer[4+_data_cnt++]=data;
 		if(_data_len==0)
 			state = 5;
 	}
-	else if(state==5)								//Ğ£ÑéÖ¡
+	else if(state==5)								//æ ¡éªŒå¸§
 	{
 		state = 0;
 		RxBuffer[4+_data_cnt]=data;
@@ -214,9 +214,9 @@ void Usart6_DataPrepare(u8 data)
 }
 
 /**
-  * @brief ·¢ËÍattack
-  * @param head Ö¡ÀàĞÍ
-  * @param check_sum Ğ£ÑéÎ»
+  * @brief å‘é€attack
+  * @param head å¸§ç±»å‹
+  * @param check_sum æ ¡éªŒä½
   * @retval None
   */
 void ANO_DT_Send_Check(u8 head, u8 check_sum)
@@ -241,8 +241,8 @@ void ANO_DT_Send_Check(u8 head, u8 check_sum)
 
 
 /**
-  * @brief ÏòÉÏÎ»»ú·¢ËÍÈı¸öÅ·À­½Ç
-  * @param Èı¸öÅ·À­½Ç£¬
+  * @brief å‘ä¸Šä½æœºå‘é€ä¸‰ä¸ªæ¬§æ‹‰è§’
+  * @param ä¸‰ä¸ªæ¬§æ‹‰è§’ï¼Œ
   * @retval None
   */
 void ANO_DT_Send_Status(float angle_rol, float angle_pit, float angle_yaw, s32 alt, u8 fly_model, u8 armed)

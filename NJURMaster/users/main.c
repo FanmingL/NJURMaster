@@ -1,9 +1,9 @@
 #include "main.h"
 
 /**
-  * @brief main函数，用于初始化执行主循环等
+  * @brief main鍑芥暟锛岀敤浜庡垵濮嬪寲鎵ц涓诲惊鐜瓑
   * @param None
-  * @retval 成功返回0，失败返回错误码
+  * @retval 鎴愬姛杩斿洖0锛屽け璐ヨ繑鍥為敊璇爜
   */
 int main()
 {

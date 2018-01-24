@@ -5,21 +5,21 @@ RC_Ctrl_t RC_CtrlData;   //remote control data
 u8 checkdata_to_send,checksum_to_send,send_check=0;
 u8 send_pid1=0,send_pid2=0,send_pid3=0;
 /**
-  * @brief »ù±¾´®¿ÚÍ¨Ñ¶Ğ­Òé½âÎö
-  * @param data_buf	°üº¬ÍêÕûÒ»Ö¡Êı¾İµÄÊı×éµÄÖ¸Õë
-	* @param _len		Ö¡×Ü³¤
+  * @brief åŸºæœ¬ä¸²å£é€šè®¯åè®®è§£æ
+  * @param data_buf	åŒ…å«å®Œæ•´ä¸€å¸§æ•°æ®çš„æ•°ç»„çš„æŒ‡é’ˆ
+	* @param _len		å¸§æ€»é•¿
   * @retval None
-  * @details ÉÏ²ãÓ²¼ş·¢À´µÄĞÅºÅ»òÊÇµØÃæÕ¾·¢À´µÄĞÅºÅµÄ½âÎöº¯Êı
+  * @details ä¸Šå±‚ç¡¬ä»¶å‘æ¥çš„ä¿¡å·æˆ–æ˜¯åœ°é¢ç«™å‘æ¥çš„ä¿¡å·çš„è§£æå‡½æ•°
   */
 void BasicProtocolAnalysis(u8 *data_buf,int _len)
 {
 	u8 sum = 0;
 	u8 i;
-	for(i=0;i<(_len-1);i++)														//ÇóºÍĞ£Ñé
+	for(i=0;i<(_len-1);i++)														//æ±‚å’Œæ ¡éªŒ
 		sum += *(data_buf+i);
-	if(!(sum==*(data_buf+_len-1)))		return;						//Ğ£Ñé²»³É¹¦Ôòreturn
-	if(!(*(data_buf)==0xAA && *(data_buf+1)==0xAF))		return;	//Ö¡Í·Ğ£Ñé²»³É¹¦Ôòreturn
-	if(*(data_buf+2)==0X01)														//·ÖÎöÖ¡ÀàĞÍ
+	if(!(sum==*(data_buf+_len-1)))		return;						//æ ¡éªŒä¸æˆåŠŸåˆ™return
+	if(!(*(data_buf)==0xAA && *(data_buf+1)==0xAF))		return;	//å¸§å¤´æ ¡éªŒä¸æˆåŠŸåˆ™return
+	if(*(data_buf+2)==0X01)														//åˆ†æå¸§ç±»å‹
 	{
 		if(*(data_buf+4)==0X01)
 		{
@@ -152,7 +152,7 @@ if(*(data_buf+2)==0X02)
 }
 
 /**
-  * @brief ¶ÔÒ£¿ØÆ÷½âÎö½á¹û½øĞĞ·´Ó¦
+  * @brief å¯¹é¥æ§å™¨è§£æç»“æœè¿›è¡Œååº”
   * @param None
   * @retval None
   */
@@ -162,9 +162,9 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 }
 
 /**
-  * @brief Ò£¿ØÆ÷½âÎöº¯Êı
-  * @param pData	ÍêÕûÒ»Ö¡½ÓÊÕ»ú·¢À´µÄÊı¾İ
-  * @param _len		Ö¡×Ü³¤
+  * @brief é¥æ§å™¨è§£æå‡½æ•°
+  * @param pData	å®Œæ•´ä¸€å¸§æ¥æ”¶æœºå‘æ¥çš„æ•°æ®
+  * @param _len		å¸§æ€»é•¿
   * @retval None
   */
 void RcProtocolAnalysis(u8 *pData,int _len)
@@ -196,9 +196,9 @@ void RcProtocolAnalysis(u8 *pData,int _len)
 }
 
 /**
-  * @brief ²ÃÅĞÏµÍ³½âÎö
-  * @param _item	ÍêÕûÒ»Ö¡²ÃÅĞÏµÍ³µÄÊı¾İ
-	* @param _len		Ö¡×Ü³¤
+  * @brief è£åˆ¤ç³»ç»Ÿè§£æ
+  * @param _item	å®Œæ•´ä¸€å¸§è£åˆ¤ç³»ç»Ÿçš„æ•°æ®
+	* @param _len		å¸§æ€»é•¿
   * @retval None
   */
 void RefereeProtocolAnalysis(u8 *_item,int _len)
@@ -208,7 +208,7 @@ void RefereeProtocolAnalysis(u8 *_item,int _len)
 }
 
 /**
-  * @brief CANÊı¾İ½âÎö
+  * @brief CANæ•°æ®è§£æ
   * @param None
   * @retval None
   */
