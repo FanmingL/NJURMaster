@@ -7,7 +7,7 @@
   */
 void AppInit(void)
 {
-	DogInit();
+//	DogInit();
 	SensorOffsetInit();
 	ParametersInit();
 }

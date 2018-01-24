@@ -1,10 +1,19 @@
 #ifndef _PROTOCOL_H_
-
+#define  _PROTOCOL_H_
 #include "stm32f4xx.h"
+#include "can.h"
 void BasicProtocolAnalysis(u8 *_item,int _len);
 void RcProtocolAnalysis(u8 *_item,int _len);
 void RefereeProtocolAnalysis(u8 *_item,int _len);
 void CanProtocolAnalysis(CanRxMsg * msg);
+
+extern volatile Encoder CM1Encoder;
+extern volatile Encoder CM2Encoder;
+extern volatile Encoder CM3Encoder;
+extern volatile Encoder CM4Encoder;
+extern volatile Encoder GMYawEncoder;
+extern volatile Encoder GMPitchEncoder;
+
 typedef __packed struct
 {
 	int16_t ch0;
@@ -55,5 +64,8 @@ extern u8 send_pid1,send_pid2,send_pid3;
 #define KEY_V 0x4000
 #define KEY_B 0x8000
 
+#define RC_KEY_STOP (2)
+#define RC_KEY_RCMODE (3)
+#define RC_KEY_KEYBOARD (1)
 
 #endif

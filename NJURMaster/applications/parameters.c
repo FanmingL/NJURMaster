@@ -1,10 +1,30 @@
 #include "main.h"
+////////////////////////////		kp		ki		kd		k_pre_d		inc_hz		k_inc_d_norm		k_ff
+#define CHASSIS_Rot_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define CHASSIS_Vec_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define GIMBALP_Pos_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define GIMBALP_Vec_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define GIMBALY_Pos_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define GIMBALY_Vec_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define SLIBLIN_Pos_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define SLIBLIN_Vec_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+
+
 u8 CALIFLAG=0;
 u8 ParamSavedFlag=0;
 u8 ParaSavingFlag=0;
 IMUSensor_OffSet__ IMUSensor_Offset;
 AllDataUnion__ AllDataUnion; 
-_PID_arg_st PID_arg[PIDGROUPLEN];
+_PID_arg_st PID_arg[PIDGROUPLEN]={CHASSIS_Rot_PID_OFF,
+																	CHASSIS_Vec_PID_OFF,
+																	GIMBALP_Pos_PID_OFF,
+																	GIMBALP_Vec_PID_OFF,
+																	GIMBALY_Pos_PID_OFF,
+																	GIMBALY_Vec_PID_OFF,
+																	SLIBLIN_Pos_PID_OFF,
+																	SLIBLIN_Vec_PID_OFF};
+_PID_val_st PID_val[PIDGROUPLEN+3];
+
 
 /**
   * @brief 参数初始化
@@ -14,9 +34,12 @@ _PID_arg_st PID_arg[PIDGROUPLEN];
 void ParametersInit(void)
 {
 	int i=0;
-	for(i=0;i<PIDGROUPLEN;i++)
+	if (AllDataUnion.AllData.savedflag==1)
 	{
-			PID_arg[i]=AllDataUnion.AllData.PID_ARG[i];
+		for(i=0;i<PIDGROUPLEN;i++)
+		{
+				PID_arg[i]=AllDataUnion.AllData.PID_ARG[i];
+		}
 	}
 
 }
@@ -28,17 +51,16 @@ void ParametersInit(void)
   */
 void SensorOffsetInit(void)
 {
-	int i=0;
 	BSP_FLASH_Read(ADDR_FLASH_SECTOR_11, AllDataUnion.data, sizeof(AllDataOffset__));
 	if (AllDataUnion.AllData.savedflag==1)
 	{
 		IMUSensor_Offset = AllDataUnion.AllData.imu_offset;
 		
 		ParamSavedFlag = 1;
-		for(i=0;i<PIDGROUPLEN;i++)
-		{
-			PID_arg[i]=AllDataUnion.AllData.PID_ARG[i];
-		}
+//		for(i=0;i<PIDGROUPLEN;i++)
+//		{
+//			PID_arg[i]=AllDataUnion.AllData.PID_ARG[i];
+//		}
 	}
 
 }
@@ -89,6 +111,7 @@ void IMU_GYRODataCali(void)
 void IMU_ACCERDataCali(void)
 {
 	CALIFLAG |= IMU_ACCERCALING;
+	GimbalDataCali();
 }
 
 /**
@@ -99,7 +122,6 @@ void IMU_ACCERDataCali(void)
 void IMU_MAGDataCali(void)
 {
 	CALIFLAG |= IMU_MAGCALING;
-
 }
 
 /**
@@ -109,5 +131,5 @@ void IMU_MAGDataCali(void)
   */
 void GimbalDataCali(void)
 {
-	CALIFLAG |= GIMBALCALING;
+	CALIFLAG |= (GIMBALYAWCALING|GIMBALPITCHCALING);
 }

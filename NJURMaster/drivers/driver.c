@@ -7,6 +7,7 @@
   */
 void All_Init(void)
 {
+	int i=0;
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);  
 		
 	TIM6_Configuration();
@@ -18,7 +19,8 @@ void All_Init(void)
 	Usart2_Init(115200);
 	Usart3_Init(115200);
 	Usart6_Init(115200);
-
+  Can1_Init();
+	Can2_Init();
 	PWM_Init();
 	EncoderInit();
 	
@@ -34,8 +36,12 @@ void All_Init(void)
 	{
 		delay_ms(200);
 	}
-
-
+  
+	for (i=0;i<100;i++)
+	{
+		CheckDog();
+		delay_ms(5);
+	}
 
 	
 	

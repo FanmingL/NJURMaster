@@ -1,8 +1,8 @@
 #include "main.h"
 
 /**
-  * @brief 1ms任务
-  * @param 系统从开机到现在经过的毫秒数
+  * @brief 1ms锟斤拷锟斤拷
+  * @param 系统锟接匡拷锟斤拷锟斤拷锟斤拷锟节撅拷锟斤拷锟侥猴拷锟斤拷锟斤拷
   * @retval None
   */
 static void Duty_1ms(u32 _time)
@@ -26,8 +26,8 @@ static void Duty_1ms(u32 _time)
 }
 
 /**
-  * @brief 2ms任务
-  * @param 系统从开机到现在经过的毫秒数
+  * @brief 2ms锟斤拷锟斤拷
+  * @param 系统锟接匡拷锟斤拷锟斤拷锟斤拷锟节撅拷锟斤拷锟侥猴拷锟斤拷锟斤拷
   * @retval None
   */
 static void Duty_2ms(u32 _time)
@@ -38,8 +38,8 @@ static void Duty_2ms(u32 _time)
 }
 
 /**
-  * @brief 5ms任务
-  * @param 系统从开机到现在经过的毫秒数
+  * @brief 5ms锟斤拷锟斤拷
+  * @param 系统锟接匡拷锟斤拷锟斤拷锟斤拷锟节撅拷锟斤拷锟侥猴拷锟斤拷锟斤拷
   * @retval None
   */
 static void Duty_5ms(u32 _time)
@@ -52,8 +52,8 @@ static void Duty_5ms(u32 _time)
 }
 
 /**
-  * @brief 10ms任务
-  * @param 系统从开机到现在经过的毫秒数
+  * @brief 10ms锟斤拷锟斤拷
+  * @param 系统锟接匡拷锟斤拷锟斤拷锟斤拷锟节撅拷锟斤拷锟侥猴拷锟斤拷锟斤拷
   * @retval None
   */
 static void Duty_10ms(u32 _time)
@@ -65,8 +65,8 @@ static void Duty_10ms(u32 _time)
 }
 
 /**
-  * @brief 20ms任务
-  * @param 系统从开机到现在经过的毫秒数
+  * @brief 20ms锟斤拷锟斤拷
+  * @param 系统锟接匡拷锟斤拷锟斤拷锟斤拷锟节撅拷锟斤拷锟侥猴拷锟斤拷锟斤拷
   * @retval None
   */
 static void Duty_20ms(u32 _time)
@@ -76,30 +76,28 @@ static void Duty_20ms(u32 _time)
 }
 
 /**
-  * @brief 50ms任务
-  * @param 系统从开机到现在经过的毫秒数
+  * @brief 50ms锟斤拷锟斤拷
+  * @param 系统锟接匡拷锟斤拷锟斤拷锟斤拷锟节撅拷锟斤拷锟侥猴拷锟斤拷锟斤拷
   * @retval None
   */
 static void Duty_50ms(u32 _time)
 {
-	int j=0;
-	char buff[200];
+	//int j=0;
+	//char buff[200];
 
-	if (IsDeviceLost(DEVICE_INDEX_TIMEOUT))
+	if (SysMode==SYS_PREPARESTATE&&(ParamSavedFlag==1))
 	{
 		BOTH_LED_TOGGLE();
 	}
-		j+=sprintf(j+buff,"%d\n",GetInnerLoop(DutyLoop_Time));
-		Usart6_Send((u8*)buff,j);
-	//USART_SendData(USART6,123);
-	
+	//	j+=sprintf(j+buff,"%d\n",CM1Encoder.filter_rate);
+	//	Usart2_Send((u8*)buff,j);
 }
 
 /**
-  * @brief 系统主任务循环
+  * @brief 系统锟斤拷锟斤拷锟斤拷循锟斤拷
   * @param None
   * @retval None
-  * @details 由定时器每毫秒准时调用，由这里进入各种task
+  * @details 锟缴讹拷时锟斤拷每锟斤拷锟斤拷准时锟斤拷锟矫ｏ拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷task
   */
 void Duty_loop(void)
 {
