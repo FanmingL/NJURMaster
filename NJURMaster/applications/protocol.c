@@ -186,16 +186,16 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 	float __temp;
 	if (GetRcMode()==RC_KEY_RCMODE)
 	{
-		__temp=GimbalPitchPosRef+rc->rc.ch1;
+		__temp=GimbalPitchPosRef+rc->rc.ch1-CHANNELMIDDLE;
 		GimbalPitchPosRef=LIMIT(__temp,-PITCH_MAX,PITCH_MAX);
-		__temp=GimbalYawPosRef+rc->rc.ch0;
+		__temp=GimbalYawPosRef+rc->rc.ch0-CHANNELMIDDLE;
 		GimbalYawPosRef=LIMIT(__temp,-YAW_MAX+Yaw,YAW_MAX+Yaw);
 		
 		ChassisGoToward=(rc->rc.ch3-CHANNELMIDDLE)*RC_TOWARD_SCALE;
 		ChassisGoLeftRight=(rc->rc.ch2-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
 		
 	}
-	else if (GetRcMode()==RC_KEY_RCMODE)
+	else if (GetRcMode()==RC_KEY_KEYBOARD)
 	{
 		
 	}

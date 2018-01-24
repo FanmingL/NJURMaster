@@ -108,6 +108,7 @@ void USART2_IRQHandler(void)
 		USART_ClearITPendingBit(USART2,USART_IT_RXNE);
 		com_data = USART2->DR;
 		Usart2_DataPrepare(com_data);											//Êı¾İ½âÎö
+		test_fire_speed = com_data * 10; 
 	}
 
 }

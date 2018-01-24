@@ -12,6 +12,9 @@ float ChassisMotorSpeed1,ChassisMotorSpeed2,ChassisMotorSpeed3,ChassisMotorSpeed
 
 float ChassisRotateOut=0.0f;
 float CMOutput1,CMOutput2,CMOutput3,CMOutput4;
+float GMYawOutput,GMPitchOutput;
+unsigned int test_fire_speed = 1500;
+
 /**
   * @brief 底盘控制程序
   * @param _T程序调用周期(s)
@@ -110,8 +113,47 @@ void ChassisControl(float _T)
   */
 void GimbalControl(float _T)
 {
-
-
+	float yaw_speed,pitch_speed;
+   if (SysMode!=SYS_CALISTATE&&SysMode!=SYS_STOPSTATE)
+	 {
+		 yaw_speed = PID_calculate( 			_T,            //周期（单位：秒）
+																0,				//前馈值
+																GimbalYawPosRef,				//期望值（设定值）
+																Yaw,			//反馈值（）
+																&GimbalYaw_Pos_PID_arg, //PID参数结构体
+																&GimbalYaw_Pos_PID_val,	//PID数据结构体
+																0.2		//integration limit，积分限幅
+																 );
+		 GMYawOutput = PID_calculate( 			_T,            //周期（单位：秒）
+																0,				//前馈值
+																yaw_speed,				//期望值（设定值）
+																MPU6500_Gyro.z,			//反馈值（）
+																&GimbalYaw_Vec_PID_arg, //PID参数结构体
+																&GimbalYaw_Vec_PID_val,	//PID数据结构体
+																0.2		//integration limit，积分限幅
+																 );
+		 pitch_speed = PID_calculate( 			_T,            //周期（单位：秒）
+																0,				//前馈值
+																GimbalPitchPosRef,				//期望值（设定值）
+																GMPitchEncoder.ecd_value,			//反馈值（）
+																&GimbalPitch_Pos_PID_arg, //PID参数结构体
+																&GimbalPitch_Pos_PID_val,	//PID数据结构体
+																0.2		//integration limit，积分限幅
+																 );
+		 GMPitchOutput = PID_calculate( 			_T,            //周期（单位：秒）
+																0,				//前馈值
+																pitch_speed,				//期望值（设定值）
+																MPU6500_Gyro.y,			//反馈值（）
+																&GimbalPitch_Vec_PID_arg, //PID参数结构体
+																&GimbalPitch_Vec_PID_val,	//PID数据结构体
+																0.2		//integration limit，积分限幅
+																 );
+		 GimbalCurrentSet(CAN1,GMYawOutput,GMPitchOutput);
+	 }
+	 else
+	 {
+		 GimbalCurrentSet(CAN1,0,0);
+	 }
 }
 
 /**
@@ -122,7 +164,16 @@ void GimbalControl(float _T)
   */
 void FireControl(float _T)
 {
-
-
+	if (SysMode!=SYS_CALISTATE&&SysMode!=SYS_STOPSTATE)
+	{
+		 if(RC_CtrlData.rc.s1 == 3)
+		 { 
+			 SetFrictionWheelSpeed(1500);  
+		 }
+		 else
+		 {
+			 SetFrictionWheelSpeed(1000);
+		 }
+	 }
 }
 
