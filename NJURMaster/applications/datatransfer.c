@@ -26,7 +26,7 @@ void DatatransferTask(u32 sys_time)
 //	}
 	if (sys_time%10==0)
 	{
-		ANO_DT_Send_Status(Roll,Pitch,Yaw,0,0,0);
+		ANO_DT_Send_Status(Roll,Pitch,Yaw,0,0,0);//每十个毫秒发送三个角度
 	}
 	else if((sys_time+1)%10==0)
 	{
