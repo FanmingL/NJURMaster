@@ -24,7 +24,7 @@ unsigned int test_fire_speed = 1500;
   */
 void ChassisControl(float _T)
 {	
-	if (SysMode!=SYS_CALISTATE&&SysMode!=SYS_STOPSTATE)
+	if (SysMode!=SYS_CALISTATE&&SysMode!=SYS_STOPSTATE&&SysMode!=SYS_PREPARESTATE)
 	{
 		switch(ControlMode)
 		{
@@ -118,39 +118,56 @@ void GimbalControl(float _T)
 	 {
 		 if (SysMode==SYS_NORMALSTATE)
 		 {
-			 yaw_speed = PID_calculate( 			_T,            //周期（单位：秒）
-																	0,				//前馈值
-																	GimbalYawPosRef,				//期望值（设定值）
-																	-Yaw,			//反馈值（）
-																	&GimbalYaw_Pos_PID_arg, //PID参数结构体
-																	&GimbalYaw_Pos_PID_val,	//PID数据结构体
-																	0.2		//integration limit，积分限幅
-																	 );
-			 GMYawOutput = PID_calculate( 			_T,            //周期（单位：秒）
-																	0,				//前馈值
-																	yaw_speed,				//期望值（设定值）
-																	-MPU6500_Gyro.z,			//反馈值（）
-																	&GimbalYaw_Vec_PID_arg, //PID参数结构体
-																	&GimbalYaw_Vec_PID_val,	//PID数据结构体
-																	0.2		//integration limit，积分限幅
-																	 );
-			 pitch_speed = PID_calculate( 			_T,            //周期（单位：秒）
-																	0,				//前馈值
-																	GimbalPitchPosRef,				//期望值（设定值）
-																	GMPitchEncoder.ecd_angle,			//反馈值（）
-																	&GimbalPitch_Pos_PID_arg, //PID参数结构体
-																	&GimbalPitch_Pos_PID_val,	//PID数据结构体
-																	0.2		//integration limit，积分限幅
-																	 );
-			 GMPitchOutput = PID_calculate( 			_T,            //周期（单位：秒）
-																	0,				//前馈值
-																	pitch_speed,				//期望值（设定值）
-																	MPU6500_Gyro.x,			//反馈值（）
-																	&GimbalPitch_Vec_PID_arg, //PID参数结构体
-																	&GimbalPitch_Vec_PID_val,	//PID数据结构体
-																	0.2		//integration limit，积分限幅
-																	 );
-			 GimbalCurrentSet(CAN1,GMYawOutput,GMPitchOutput);
+				if (ControlMode==MC_NORMAL)
+				{
+				 yaw_speed = PID_calculate( 			_T,            //周期（单位：秒）
+																		0,				//前馈值
+																		GimbalYawPosRef,				//期望值（设定值）
+																		-Yaw,			//反馈值（）
+																		&GimbalYaw_Pos_PID_arg, //PID参数结构体
+																		&GimbalYaw_Pos_PID_val,	//PID数据结构体
+																		0.2		//integration limit，积分限幅
+																		 );
+				 GMYawOutput = PID_calculate( 			_T,            //周期（单位：秒）
+																		0,				//前馈值
+																		yaw_speed,				//期望值（设定值）
+																		-MPU6500_Gyro.z,			//反馈值（）
+																		&GimbalYaw_Vec_PID_arg, //PID参数结构体
+																		&GimbalYaw_Vec_PID_val,	//PID数据结构体
+																		0.2		//integration limit，积分限幅
+																		 );
+				 pitch_speed = PID_calculate( 			_T,            //周期（单位：秒）
+																		0,				//前馈值
+																		GimbalPitchPosRef,				//期望值（设定值）
+																		GMPitchEncoder.ecd_angle,			//反馈值（）
+																		&GimbalPitch_Pos_PID_arg, //PID参数结构体
+																		&GimbalPitch_Pos_PID_val,	//PID数据结构体
+																		0.2		//integration limit，积分限幅
+																		 );
+				 GMPitchOutput = PID_calculate( 			_T,            //周期（单位：秒）
+																		0,				//前馈值
+																		pitch_speed,				//期望值（设定值）
+																		MPU6500_Gyro.x,			//反馈值（）
+																		&GimbalPitch_Vec_PID_arg, //PID参数结构体
+																		&GimbalPitch_Vec_PID_val,	//PID数据结构体
+																		0.2		//integration limit，积分限幅
+																		 );
+				 GimbalCurrentSet(CAN1,GMYawOutput,GMPitchOutput);
+				}
+				else if (ControlMode==MC_MODE1)
+				{
+				
+				
+				}
+				else if (ControlMode==MC_MODE2)
+				{
+				
+				
+				}
+				else
+				{
+				
+				}
 		 }
 		 else if (SysMode==SYS_PREPARESTATE)
 		 {
