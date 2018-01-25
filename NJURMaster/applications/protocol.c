@@ -18,7 +18,7 @@ u8 checkdata_to_send,checksum_to_send,send_check=0;
 u8 send_pid1=0,send_pid2=0,send_pid3=0;
 /**
   * @brief »ù±¾´®¿ÚÍ¨Ñ¶Ð­Òé½âÎö
-  * @param data_buf	°üº¬ÍêÕûÒ»Ö¡Êý¾ÝµÄÊý×éµÄÖ¸Õë
+  * @param data_buf	°üºwwwwwwww¬ÍêÕûÒ»Ö¡Êý¾ÝµÄÊý×éµÄÖ¸Õë
 	* @param _len		Ö¡×Ü³¤
   * @retval None
   * @details ÉÏ²ãÓ²¼þ·¢À´µÄÐÅºÅ»òÊÇµØÃæÕ¾·¢À´µÄÐÅºÅµÄ½âÎöº¯Êý
@@ -173,8 +173,8 @@ if(*(data_buf+2)==0X02)
 #define PITCH_MAX (10.0f)
 #define YAW_MAX   (0.1f)
 #define CHANNELMIDDLE	(1024)
-#define RC_TOWARD_SCALE (0.5f)
-#define RC_LEFTRIGHT_SCALE (0.5f)
+#define RC_TOWARD_SCALE (20.0f)
+#define RC_LEFTRIGHT_SCALE (20.0f)
 #define MAXTOWARDSPEED (660*RC_TOWARD_SCALE)
 #define MAXLEFTRIGHTSPEED (660*RC_LEFTRIGHT_SCALE)
 
@@ -194,7 +194,7 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 		GimbalYawPosRef=LIMIT(__temp,-YAW_MAX+Yaw,YAW_MAX+Yaw);
 		
 		ChassisGoToward=(rc->rc.ch3-CHANNELMIDDLE)*RC_TOWARD_SCALE;
-		ChassisGoLeftRight=(rc->rc.ch2-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
+		ChassisGoLeftRight=-(rc->rc.ch2-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
 		
 	}
 	else if (GetRcMode()==RC_KEY_KEYBOARD)
@@ -210,6 +210,7 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 		else
 		{
 			RampReset(&RcKeyTowardRamp);
+			ChassisGoToward = 0;
 		}
 		if(rc->key.v & KEY_A)
 		{
@@ -222,6 +223,7 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 		else
 		{
 			RampReset(&RcKeyLeftRightRamp);
+			ChassisGoLeftRight = 0;
 		}
 	}
 	else if (GetRcMode()==RC_KEY_STOP)
