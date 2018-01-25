@@ -175,6 +175,8 @@ if(*(data_buf+2)==0X02)
 #define CHANNELMIDDLE	(1024)
 #define RC_TOWARD_SCALE (0.5f)
 #define RC_LEFTRIGHT_SCALE (0.5f)
+#define MAXTOWARDSPEED (660*RC_TOWARD_SCALE)
+#define MAXLEFTRIGHTSPEED (660*RC_LEFTRIGHT_SCALE)
 
 /**
   * @brief 对遥控器解析结果进行反应
@@ -197,7 +199,30 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 	}
 	else if (GetRcMode()==RC_KEY_KEYBOARD)
 	{
-		
+		if(rc->key.v & KEY_W)//按下w键
+		{
+			ChassisGoToward = MAXTOWARDSPEED * RampCalculate(&RcKeyTowardRamp);
+		}
+		else if(rc->key.v & KEY_S)
+		{
+			ChassisGoToward = -MAXTOWARDSPEED * RampCalculate(&RcKeyTowardRamp);
+		}
+		else
+		{
+			RampReset(&RcKeyTowardRamp);
+		}
+		if(rc->key.v & KEY_A)
+		{
+			ChassisGoLeftRight = MAXLEFTRIGHTSPEED * RampCalculate(&RcKeyLeftRightRamp);
+		}
+		else if(rc->key.v & KEY_D)
+		{
+			ChassisGoLeftRight = -MAXLEFTRIGHTSPEED * RampCalculate(&RcKeyLeftRightRamp);
+		}
+		else
+		{
+			RampReset(&RcKeyLeftRightRamp);
+		}
 	}
 	else if (GetRcMode()==RC_KEY_STOP)
 	{
