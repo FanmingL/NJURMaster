@@ -1,8 +1,8 @@
 #include "main.h"
 
-_ramp_st RcKeyTowardRamp={1000,0};
-_ramp_st RcKeyLeftRightRamp={1000,0};
-_ramp_st RcKeyRotateRamp={1000,0};
+_ramp_st RcKeyTowardRamp={30,0};
+_ramp_st RcKeyLeftRightRamp={30,0};
+_ramp_st RcKeyRotateRamp={30,0};
 
 
 void RampReset(_ramp_st * ramp)
