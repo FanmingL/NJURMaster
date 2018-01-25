@@ -173,8 +173,15 @@ if(*(data_buf+2)==0X02)
 #define PITCH_MAX (10.0f)
 #define YAW_MAX   (0.1f)
 #define CHANNELMIDDLE	(1024)
+<<<<<<< HEAD
 #define RC_TOWARD_SCALE (20.0f)
 #define RC_LEFTRIGHT_SCALE (20.0f)
+=======
+#define RC_TOWARD_SCALE (0.5f)
+#define RC_LEFTRIGHT_SCALE (0.5f)
+#define MAXTOWARDSPEED (660*RC_TOWARD_SCALE)
+#define MAXLEFTRIGHTSPEED (660*RC_LEFTRIGHT_SCALE)
+>>>>>>> master
 
 /**
   * @brief 对遥控器解析结果进行反应
@@ -186,18 +193,41 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 	float __temp;
 	if (GetRcMode()==RC_KEY_RCMODE)
 	{
-		__temp=GimbalPitchPosRef+rc->rc.ch1;
+		__temp=GimbalPitchPosRef+rc->rc.ch1-CHANNELMIDDLE;
 		GimbalPitchPosRef=LIMIT(__temp,-PITCH_MAX,PITCH_MAX);
-		__temp=GimbalYawPosRef+rc->rc.ch0;
+		__temp=GimbalYawPosRef+rc->rc.ch0-CHANNELMIDDLE;
 		GimbalYawPosRef=LIMIT(__temp,-YAW_MAX+Yaw,YAW_MAX+Yaw);
 		
 		ChassisGoToward=(rc->rc.ch2-CHANNELMIDDLE)*RC_TOWARD_SCALE;
 		ChassisGoLeftRight=(rc->rc.ch3-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
 		
 	}
-	else if (GetRcMode()==RC_KEY_RCMODE)
+	else if (GetRcMode()==RC_KEY_KEYBOARD)
 	{
-		
+		if(rc->key.v & KEY_W)//按下w键
+		{
+			ChassisGoToward = MAXTOWARDSPEED * RampCalculate(&RcKeyTowardRamp);
+		}
+		else if(rc->key.v & KEY_S)
+		{
+			ChassisGoToward = -MAXTOWARDSPEED * RampCalculate(&RcKeyTowardRamp);
+		}
+		else
+		{
+			RampReset(&RcKeyTowardRamp);
+		}
+		if(rc->key.v & KEY_A)
+		{
+			ChassisGoLeftRight = MAXLEFTRIGHTSPEED * RampCalculate(&RcKeyLeftRightRamp);
+		}
+		else if(rc->key.v & KEY_D)
+		{
+			ChassisGoLeftRight = -MAXLEFTRIGHTSPEED * RampCalculate(&RcKeyLeftRightRamp);
+		}
+		else
+		{
+			RampReset(&RcKeyLeftRightRamp);
+		}
 	}
 	else if (GetRcMode()==RC_KEY_STOP)
 	{
