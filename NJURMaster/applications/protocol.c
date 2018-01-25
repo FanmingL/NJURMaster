@@ -171,13 +171,13 @@ if(*(data_buf+2)==0X02)
 }
 #define PITCH_MIN (-8.0f)
 #define PITCH_MAX (27.0f)
-#define YAW_MAX   (45.0f)
+#define YAW_MAX   (35.0f)
 #define CHANNELMIDDLE	(1024)
-#define RC_TOWARD_SCALE (20.0f)
-#define RC_LEFTRIGHT_SCALE (20.0f)
+#define RC_TOWARD_SCALE (30.0f)
+#define RC_LEFTRIGHT_SCALE (30.0f)
 
 #define RC_PITCHSCALE (0.04f)
-#define RC_YAWSCALE (0.013f)
+#define RC_YAWSCALE (0.003f)
 #define MAXTOWARDSPEED (660*RC_TOWARD_SCALE)
 #define MAXLEFTRIGHTSPEED (660*RC_LEFTRIGHT_SCALE)
 
@@ -196,7 +196,7 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 		__temp=GimbalYawPosRef-(rc->rc.ch0-CHANNELMIDDLE)*RC_YAWSCALE;
 		GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
 
-		ChassisGoToward=(rc->rc.ch2-CHANNELMIDDLE)*RC_TOWARD_SCALE;
+		ChassisGoToward=-(rc->rc.ch2-CHANNELMIDDLE)*RC_TOWARD_SCALE;
 		ChassisGoLeftRight=(rc->rc.ch3-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
 	}
 	else if (GetRcMode()==RC_KEY_KEYBOARD)
