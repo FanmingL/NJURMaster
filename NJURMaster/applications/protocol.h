@@ -47,6 +47,15 @@ typedef __packed struct
 extern RC_Ctrl_t RC_CtrlData;
 extern u8 checkdata_to_send,checksum_to_send,send_check;
 extern u8 send_pid1,send_pid2,send_pid3;
+
+enum
+{
+	WHEEL_ON = 0,
+	WHEEL_OFF
+};
+extern u8 WHEEL_STATE;
+
+
 #define KEY_W 0x01
 #define KEY_S 0x02
 #define KEY_A 0x04

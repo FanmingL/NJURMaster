@@ -177,7 +177,8 @@ if(*(data_buf+2)==0X02)
 #define RC_LEFTRIGHT_SCALE (20.0f)
 #define MAXTOWARDSPEED (660*RC_TOWARD_SCALE)
 #define MAXLEFTRIGHTSPEED (660*RC_LEFTRIGHT_SCALE)
-
+#define MOUSERESPONCERATE 1.0 //鼠标灵敏度
+u8 WHEEL_STATE = WHEEL_OFF;//摩擦轮状态
 /**
   * @brief 对遥控器解析结果进行反应
   * @param None
@@ -185,6 +186,7 @@ if(*(data_buf+2)==0X02)
   */
 void RcDataAnalysis(RC_Ctrl_t *rc)
 {
+	static u16 cancel_cnt = 0;//鼠标模式下右键计时超过1.5s关闭摩擦轮
 	float __temp;
 	if (GetRcMode()==RC_KEY_RCMODE)
 	{
@@ -195,6 +197,14 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 		
 		ChassisGoToward=(rc->rc.ch3-CHANNELMIDDLE)*RC_TOWARD_SCALE;
 		ChassisGoLeftRight=-(rc->rc.ch2-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
+		if(rc->rc.s1 == 3)
+		{
+			WHEEL_STATE = WHEEL_ON;
+		}
+		else
+		{
+			WHEEL_STATE = WHEEL_OFF;
+		}
 		
 	}
 	else if (GetRcMode()==RC_KEY_KEYBOARD)
@@ -225,11 +235,29 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 			RampReset(&RcKeyLeftRightRamp);
 			ChassisGoLeftRight = 0;
 		}
+		GimbalPitchPosRef = LIMIT((rc->mouse.x)*MOUSERESPONCERATE,-YAW_MAX+Yaw,YAW_MAX+Yaw); 
+		GimbalYawPosRef = LIMIT((rc->mouse.y)*MOUSERESPONCERATE,-PITCH_MAX,PITCH_MAX);
+		if(rc->mouse.press_r == 1)
+		{
+			cancel_cnt++;
+			if(WHEEL_STATE == WHEEL_OFF)
+			{
+				WHEEL_STATE = WHEEL_ON;
+			}
+			else if(cancel_cnt >= 200)
+			{
+				WHEEL_STATE = WHEEL_OFF;
+			}
+		}
+		else
+		{
+			cancel_cnt = 0;
+		}
+		
 	}
 	else if (GetRcMode()==RC_KEY_STOP)
 	{
-	
-	
+	   SysMode = SYS_STOPSTATE;	
 	}
 }
 

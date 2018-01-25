@@ -162,11 +162,13 @@ void GimbalControl(float _T)
   * @retval None
   * @details 根据给的遥控器或者其他信号控制摩擦轮和拨单电机的转速
   */
+
+
 void FireControl(float _T)
 {
 	if (SysMode!=SYS_CALISTATE&&SysMode!=SYS_STOPSTATE)
 	{
-		 if(RC_CtrlData.rc.s1 == 3)
+		 if(WHEEL_STATE == WHEEL_ON)
 		 { 
 			 SetFrictionWheelSpeed(1500);  
 		 }
