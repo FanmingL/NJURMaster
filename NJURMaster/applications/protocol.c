@@ -169,12 +169,18 @@ if(*(data_buf+2)==0X02)
 
 
 }
-
-#define PITCH_MAX (10.0f)
-#define YAW_MAX   (0.1f)
+#define PITCH_MIN (-8.0f)
+#define PITCH_MAX (27.0f)
+#define YAW_MAX   (45.0f)
 #define CHANNELMIDDLE	(1024)
 #define RC_TOWARD_SCALE (20.0f)
 #define RC_LEFTRIGHT_SCALE (20.0f)
+<<<<<<< HEAD
+=======
+
+#define RC_PITCHSCALE (0.04f)
+#define RC_YAWSCALE (0.013f)
+>>>>>>> feature-lfm
 #define MAXTOWARDSPEED (660*RC_TOWARD_SCALE)
 #define MAXLEFTRIGHTSPEED (660*RC_LEFTRIGHT_SCALE)
 
@@ -188,6 +194,7 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 	float __temp;
 	if (GetRcMode()==RC_KEY_RCMODE)
 	{
+<<<<<<< HEAD
 		__temp=GimbalPitchPosRef+rc->rc.ch1-CHANNELMIDDLE;
 		GimbalPitchPosRef=LIMIT(__temp,-PITCH_MAX,PITCH_MAX);
 		__temp=GimbalYawPosRef+rc->rc.ch0-CHANNELMIDDLE;
@@ -196,6 +203,15 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 		ChassisGoToward=(rc->rc.ch3-CHANNELMIDDLE)*RC_TOWARD_SCALE;
 		ChassisGoLeftRight=-(rc->rc.ch2-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
 		
+=======
+		__temp=GimbalPitchPosRef-(rc->rc.ch1-CHANNELMIDDLE)*RC_PITCHSCALE;
+		GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
+		__temp=GimbalYawPosRef-(rc->rc.ch0-CHANNELMIDDLE)*RC_YAWSCALE;
+		GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
+
+		ChassisGoToward=(rc->rc.ch2-CHANNELMIDDLE)*RC_TOWARD_SCALE;
+		ChassisGoLeftRight=(rc->rc.ch3-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
+>>>>>>> feature-lfm
 	}
 	else if (GetRcMode()==RC_KEY_KEYBOARD)
 	{
@@ -348,7 +364,7 @@ void CanProtocolAnalysis(CanRxMsg * msg)
 							CALIFLAG &=~ GIMBALYAWCALING;
 						}
 					}
-					if(((can_encoder_flag>>DEVICE_INDEX_MOTOR5) & 0x0001) == 0)
+					else if(((can_encoder_flag>>DEVICE_INDEX_MOTOR5) & 0x0001) == 0)
 					{
 				   GMYawEncoder.ecd_bias =AllDataUnion.AllData.GimbalYawOffset;
 					 can_encoder_flag |= (1<<DEVICE_INDEX_MOTOR5);
@@ -385,7 +401,7 @@ void CanProtocolAnalysis(CanRxMsg * msg)
 							CALIFLAG &=~ GIMBALPITCHCALING;
 						}
 					}
-					if(((can_encoder_flag>>DEVICE_INDEX_MOTOR6) & 0x0001) == 0)
+					else if(((can_encoder_flag>>DEVICE_INDEX_MOTOR6) & 0x0001) == 0)
 					{
 				   GMPitchEncoder.ecd_bias =AllDataUnion.AllData.GimbalPitchOffset;
 					 can_encoder_flag |= (1<<DEVICE_INDEX_MOTOR6);

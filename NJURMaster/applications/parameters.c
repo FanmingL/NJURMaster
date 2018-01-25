@@ -1,11 +1,11 @@
 #include "main.h"
 ////////////////////////////		kp		ki		kd		k_pre_d		inc_hz		k_inc_d_norm		k_ff
 #define CHASSIS_Rot_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
-#define CHASSIS_Vec_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
-#define GIMBALP_Pos_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
-#define GIMBALP_Vec_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
-#define GIMBALY_Pos_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
-#define GIMBALY_Vec_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define CHASSIS_Vec_PID_OFF 	{	3.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define GIMBALP_Pos_PID_OFF 	{	6.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define GIMBALP_Vec_PID_OFF 	{	20.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define GIMBALY_Pos_PID_OFF 	{	5.0f,	1.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define GIMBALY_Vec_PID_OFF 	{	20.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
 #define SLIBLIN_Pos_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
 #define SLIBLIN_Vec_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
 
@@ -99,6 +99,7 @@ void SensorsOffsetSave(void)
   */
 void IMU_GYRODataCali(void)
 {
+	SysMode=SYS_CALISTATE;
 	CALIFLAG |= IMU_GYROCALING;
 }
 
