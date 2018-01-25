@@ -240,13 +240,15 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 		if(rc->mouse.press_r == 1)
 		{
 			cancel_cnt++;
-			if(WHEEL_STATE == WHEEL_OFF)
+			if(WHEEL_STATE == WHEEL_OFF&&cancel_cnt==1)
 			{
 				WHEEL_STATE = WHEEL_ON;
+				LASER_ON();
 			}
-			else if(cancel_cnt >= 200)
+			else if(cancel_cnt >= 50)
 			{
 				WHEEL_STATE = WHEEL_OFF;
+				LASER_OFF(); 
 			}
 		}
 		else
