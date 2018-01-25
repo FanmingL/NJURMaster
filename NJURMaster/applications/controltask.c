@@ -57,7 +57,6 @@ void ChassisControl(float _T)
 		ChassisGoToward=0.0f;
 		ChassisGoLeftRight=0.0f;	
 	}
-
 	ChassisMotorSpeed1=ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
 	ChassisMotorSpeed2=ChassisGoToward*0.075f+ChassisGoLeftRight*0.075f+ChassisRotateOut;
 	ChassisMotorSpeed3=-ChassisGoToward*0.075f+ChassisGoLeftRight*0.075f+ChassisRotateOut;

@@ -55,6 +55,7 @@ void SensorOffsetInit(void)
 	if (AllDataUnion.AllData.savedflag==1)
 	{
 		IMUSensor_Offset = AllDataUnion.AllData.imu_offset;
+		
 		ParamSavedFlag = 1;
 //		for(i=0;i<PIDGROUPLEN;i++)
 //		{
