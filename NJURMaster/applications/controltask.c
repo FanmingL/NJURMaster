@@ -57,7 +57,8 @@ void ChassisControl(float _T)
 		ChassisGoToward=0.0f;
 		ChassisGoLeftRight=0.0f;	
 	}
-	ChassisMotorSpeed1=ChassisGoToward*0.075f- ChassisGoLeftRight*0.075f+ChassisRotateOut;
+
+	ChassisMotorSpeed1=ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
 	ChassisMotorSpeed2=ChassisGoToward*0.075f+ChassisGoLeftRight*0.075f+ChassisRotateOut;
 	ChassisMotorSpeed3=-ChassisGoToward*0.075f+ChassisGoLeftRight*0.075f+ChassisRotateOut;
 	ChassisMotorSpeed4=-ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
@@ -224,7 +225,7 @@ void FireControl(float _T)
 {
 	if (SysMode!=SYS_CALISTATE&&SysMode!=SYS_STOPSTATE)
 	{
-		 if(RC_CtrlData.rc.s1 == 3)
+		 if(WHEEL_STATE == WHEEL_ON)
 		 { 
 			 SetFrictionWheelSpeed(1500);  
 		 }
