@@ -117,12 +117,12 @@ void Usart6_Init(u32 br_num)
   */
 void USART6_IRQHandler(void)
 {
-	u8 com_data;
+//	u8 com_data;
 	static uint32_t this_time_rx_len = 0;
-	if(USART6->SR & USART_SR_ORE)
-	{
-		com_data = USART6->DR;
-	}
+//	if(USART6->SR & USART_SR_ORE)
+//	{
+//		com_data = USART6->DR;
+//	}
 	if(USART_GetITStatus(USART6,USART_IT_IDLE) != RESET)
 	{
 		USART_ClearITPendingBit(USART6,USART_IT_IDLE);
