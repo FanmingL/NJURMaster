@@ -1,5 +1,6 @@
 #include "main.h"
 u8 data_to_send[50];
+extern u32 SelfCheckErrorFlag;
 
 #define BYTE0(dwTemp)       ( *( (char *)(&dwTemp)		) )
 #define BYTE1(dwTemp)       ( *( (char *)(&dwTemp) + 1) )
@@ -37,6 +38,10 @@ void DatatransferTask(u32 sys_time)
 	else if((sys_time+2)%10==0)
 	{
 
+	}
+	else if((sys_time+3)%10==0)
+	{
+		Self_Check_Send_Status(SelfCheckErrorFlag);
 	}
 	else if ((sys_time+5)%10==0)
 	{
@@ -338,5 +343,24 @@ void ANO_DT_Send_Senser(s16 a_x,s16 a_y,s16 a_z,s16 g_x,s16 g_y,s16 g_z,s16 m_x,
 		sum += data_to_send[i];
 	data_to_send[_cnt++] = sum;
 	
+	Usart2_Send(data_to_send, _cnt);
+}
+
+void Self_Check_Send_Status(u32 Error_flag){
+	u8 _cnt=0;
+	u8 sum=0;
+	u8 i;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0x03;
+	data_to_send[_cnt++]=4;
+	data_to_send[_cnt++]=BYTE3(Error_flag);
+	data_to_send[_cnt++]=BYTE2(Error_flag);
+	data_to_send[_cnt++]=BYTE1(Error_flag);
+	data_to_send[_cnt++]=BYTE0(Error_flag);
+	
+	for(i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+	data_to_send[_cnt++] = sum;
 	Usart2_Send(data_to_send, _cnt);
 }
