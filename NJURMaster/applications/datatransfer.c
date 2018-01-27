@@ -322,7 +322,7 @@ void Usart6_DataPrepare(u8* pData)
 				RefereeSystemData.extGameRobotState.position.yaw = *((float*)&floatdata);				
 				index +=4;
 			// output the received data
-			#ifdef RS_DEBUG_INFO
+#ifdef RS_DEBUG_INFO
    			 	printf("Seq:\t%d\r\n",Seq);
 				printf("RobotState:\r\n");
 				printf("stageRemainTime:%d\r\n",RefereeSystemData.extGameRobotState.stageRemainTime);
@@ -335,7 +335,7 @@ void Usart6_DataPrepare(u8* pData)
 				printf("position Z:\t%f\r\n",RefereeSystemData.extGameRobotState.position.z);
 				printf("position Yaw:\t%f\r\n",RefereeSystemData.extGameRobotState.position.yaw);
     			printf("\r\n");
-			#endif
+#endif
 				break;
 			case ROBOTHURT:
 			// get armorType
@@ -343,13 +343,13 @@ void Usart6_DataPrepare(u8* pData)
 			// get hurtType
 				RefereeSystemData.extRobotHurt.hurtType = (pData[index + 1] & 0xf0)>>4;	
 				index +=1;
-			#ifdef RS_DEBUG_INFO
+#ifdef RS_DEBUG_INFO
 				printf("Seq:\t%d\r\n",Seq);
 				printf("RobotHurtData:\r\n");
 				printf("armorType:\t%d\r\n",RefereeSystemData.extRobotHurt.armorType);
 				printf("hurtType:\t%d\r\n",RefereeSystemData.extRobotHurt.hurtType);
 				printf("\r\n");
-			#endif	
+#endif	
 				break;
 			case SHOOTDATA:
 			// get the bullet type
@@ -362,7 +362,7 @@ void Usart6_DataPrepare(u8* pData)
 				index +=4;
 			// get the reserved data
 				/**/
-			#ifdef RS_DEBUG_INFO
+#ifdef RS_DEBUG_INFO
 				printf("Seq:\t%d\r\n",Seq);
 				printf("ShootData:\r\n");
 				if(RefereeSystemData.extShootData.bulletType == 1)
@@ -372,7 +372,7 @@ void Usart6_DataPrepare(u8* pData)
 				printf("bulletFreq: %d\tHz\r\n",RefereeSystemData.extShootData.bulletFreq);
 				printf("bulletSpeed: %f\tm/s\r\n",RefereeSystemData.extShootData.bulletSpeed);
 				printf("\r\n");
-			#endif
+#endif
 				break;
 			case POWERHEAT:
 			// get power data
@@ -393,7 +393,7 @@ void Usart6_DataPrepare(u8* pData)
 				index +=2;
 				RefereeSystemData.extPowerHeatData.shooterHeat1 = ((u16)pData[index + 1]) | ((u16)pData[index + 2])<<8;
 				index +=2;
-			#ifdef RS_DEBUG_INFO
+#ifdef RS_DEBUG_INFO
 				printf("Seq:\t%d\r\n",Seq);
 				printf("Power & Heat:\r\n");
 				printf("chassisVolt: %f\tV\r\n",RefereeSystemData.extPowerHeatData.chassisVolt);
@@ -403,22 +403,22 @@ void Usart6_DataPrepare(u8* pData)
 				printf("17 mm shooter's heat: %d\tJ\r\n",RefereeSystemData.extPowerHeatData.shooterHeat0);
 				printf("42 mm shooter's heat: %d\tJ\r\n",RefereeSystemData.extPowerHeatData.shooterHeat1);
 				printf("\r\n");
-			#endif
+#endif
 				break;
 			case RFIDDETECT:
 				RefereeSystemData.extRfidDetect.cardType = pData[++index];
 				RefereeSystemData.extRfidDetect.cardIndex = pData[++index];
-			#ifdef RS_DEBUG_INFO
+#ifdef RS_DEBUG_INFO
 				printf("Seq:\t%d\r\n",Seq);
 				printf("Rfid detect:\r\n");
 				printf("cardType: %d\r\n",RefereeSystemData.extRfidDetect.cardType);
 				printf("cardIndex: %d\r\n",RefereeSystemData.extRfidDetect.cardIndex);
 				printf("\r\n");
-			#endif
+#endif
 				break;
 			case GAMERESULT:
 				RefereeSystemData.extGameResult.winner = pData[++index];
-			#ifdef RS_DEBUG_INFO
+#ifdef RS_DEBUG_INFO
 				printf("Seq:\t%d\r\n",Seq);
 				printf("Game Result:\r\n");
 				switch(RefereeSystemData.extGameResult.winner)
@@ -432,21 +432,21 @@ void Usart6_DataPrepare(u8* pData)
 					default: break;
 				}
 				printf("\r\n");
-			#endif
+#endif
 				break;
 			case BUFF:
 				RefereeSystemData.extGetBuff.buffType = pData[++index];
 				RefereeSystemData.extGetBuff.buffAddition = pData[++index];
-			#ifdef RS_DEBUG_INFO
+#ifdef RS_DEBUG_INFO
 				printf("Seq:\t%d\r\n",Seq);
 				printf("Buff Type:\r\n");
 				printf("buffer type: %d\r\n",RefereeSystemData.extGetBuff.buffType);
 				printf("buffer addition: %d\r\n",RefereeSystemData.extGetBuff.buffAddition);
 				printf("\r\n");
-			#endif
+#endif
 				break;
 			case RESERVED:
-			#ifdef RS_DEBUG_INFO
+#ifdef RS_DEBUG_INFO
 				printf("Seq\t%d\r\n",Seq);
 				printf("UserData:\r\n");
 				floatdata = (u32)pData[index+1] | (u32)pData[index+2]<<8 | (u32)pData[index+3]<<16 | (u32)pData[index+4]<<24;                
@@ -460,7 +460,7 @@ void Usart6_DataPrepare(u8* pData)
 				index +=4;			
 				printf("mask: %d\r\n",pData[index+1]);
 				printf("\r\n");
-			#endif
+#endif
 				break;
 			default:	//error cmd
 				break;
