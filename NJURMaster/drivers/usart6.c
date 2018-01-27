@@ -58,7 +58,7 @@ void Usart6_Init(u32 br_num)
     NVIC_Init(&nvic);
 #ifdef USART6DMA_ENABLE
     //initialize dma to receive data 
-    DMA_DeInit(DMA2_Stream2);
+    DMA_DeInit(DMA2_Stream1);
     DMA_StructInit(&dma);
     dma.DMA_Channel = DMA_Channel_5;
     dma.DMA_PeripheralBaseAddr = (uint32_t)(&USART6->DR);
@@ -75,14 +75,14 @@ void Usart6_Init(u32 br_num)
     dma.DMA_FIFOThreshold = DMA_FIFOThreshold_1QuarterFull;
     dma.DMA_MemoryBurst = DMA_MemoryBurst_Single;
     dma.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
-    DMA_Init(DMA2_Stream2, &dma);
+    DMA_Init(DMA2_Stream1, &dma);
     
     USART_DMACmd(USART6, USART_DMAReq_Rx, ENABLE);
     //enable double buffer mode
-    DMA_DoubleBufferModeConfig(DMA2_Stream2, (uint32_t)&_USART6_DMA_RX_BUF[1][0], DMA_Memory_0);   //first used memory configuration
-    DMA_DoubleBufferModeCmd(DMA2_Stream2, ENABLE);
+    DMA_DoubleBufferModeConfig(DMA2_Stream1, (uint32_t)&_USART6_DMA_RX_BUF[1][0], DMA_Memory_0);   //first used memory configuration
+    DMA_DoubleBufferModeCmd(DMA2_Stream1, ENABLE);
     //enable dma stream2
-    DMA_Cmd(DMA2_Stream2, ENABLE);
+    DMA_Cmd(DMA2_Stream1, ENABLE);
 
     //initialize dma to send data
     DMA_DeInit(DMA2_Stream6);
@@ -125,16 +125,17 @@ void USART6_IRQHandler(void)
 //	}
 	if(USART_GetITStatus(USART6,USART_IT_IDLE) != RESET)
 	{
-		USART_ClearITPendingBit(USART6,USART_IT_IDLE);
-
+		//USART_ClearITPendingBit(USART6,USART_IT_IDLE);
+		(void)USART6->SR;
+		(void)USART6->DR;
     //Target is Memory0
-    if(DMA_GetCurrentMemoryTarget(DMA2_Stream2) == 0)
+    if(DMA_GetCurrentMemoryTarget(DMA2_Stream1) == 0)
     {
-      DMA_Cmd(DMA2_Stream2,DISABLE);
-      this_time_rx_len = BSP_USART6_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA2_Stream2);  //get the length of data that DMA has transferred
-      DMA2_Stream2->NDTR = (uint16_t)BSP_USART6_DMA_RX_BUF_LEN;                             //relocate the dma memory pointer to the beginning position
-      DMA2_Stream2->CR |= (uint32_t)(DMA_SxCR_CT);                                          //we select the memory1 to receive data
-      DMA_Cmd(DMA2_Stream2,ENABLE);
+      DMA_Cmd(DMA2_Stream1,DISABLE);
+      this_time_rx_len = BSP_USART6_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA2_Stream1);  //get the length of data that DMA has transferred
+      DMA2_Stream1->NDTR = (uint16_t)BSP_USART6_DMA_RX_BUF_LEN;                             //relocate the dma memory pointer to the beginning position
+      DMA2_Stream1->CR |= (uint32_t)(DMA_SxCR_CT);                                          //we select the memory1 to receive data
+      DMA_Cmd(DMA2_Stream1,ENABLE);
       if(this_time_rx_len <= RS_FRAME_LENGTH)       //
       {
 		      Usart6_DataPrepare(_USART6_DMA_RX_BUF[0]);
@@ -143,11 +144,11 @@ void USART6_IRQHandler(void)
     //Target is Memory1
     else
     {
-      DMA_Cmd(DMA2_Stream2,DISABLE);
-      this_time_rx_len = BSP_USART6_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA2_Stream2);  //get the length of data that DMA has transferred
-      DMA2_Stream2->NDTR = (uint16_t)BSP_USART6_DMA_RX_BUF_LEN;                             //relocate the dma memory pointer to the beginning position
-      DMA2_Stream2->CR &= ~(uint32_t)(DMA_SxCR_CT);                                         //we select the memory1 to receive data
-      DMA_Cmd(DMA2_Stream2,ENABLE);
+      DMA_Cmd(DMA2_Stream1,DISABLE);
+      this_time_rx_len = BSP_USART6_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA2_Stream1);  //get the length of data that DMA has transferred
+      DMA2_Stream1->NDTR = (uint16_t)BSP_USART6_DMA_RX_BUF_LEN;                             //relocate the dma memory pointer to the beginning position
+      DMA2_Stream1->CR &= ~(uint32_t)(DMA_SxCR_CT);                                         //we select the memory1 to receive data
+      DMA_Cmd(DMA2_Stream1,ENABLE);
       if(this_time_rx_len <= RS_FRAME_LENGTH)       //
       {  
 		      Usart6_DataPrepare(_USART6_DMA_RX_BUF[1]);
