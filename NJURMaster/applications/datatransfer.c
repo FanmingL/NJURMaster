@@ -70,6 +70,19 @@ u8 data_to_send[50];
 #define BYTE1(dwTemp)       ( *( (char *)(&dwTemp) + 1) )
 #define BYTE2(dwTemp)       ( *( (char *)(&dwTemp) + 2) )
 #define BYTE3(dwTemp)       ( *( (char *)(&dwTemp) + 3) )
+	
+static void Data_Send(u8 * _val, u8 _len)
+{
+#if 1
+	Usart2_Send(_val, _len);
+#else
+	Usart2_Send(_val, _len);
+	Usart3_Send(_val, _len);
+	
+#endif
+
+}
+
 /**
   * @brief 串口通讯task
   * @param 系统从开机到现在运行的毫秒数
@@ -493,7 +506,7 @@ void ANO_DT_Send_Check(u8 head, u8 check_sum)
 		sum += data_to_send[i];
 	data_to_send[6]=sum;
 
-	Usart2_Send(data_to_send, 7);
+	Data_Send(data_to_send, 7);
 }
 
 
@@ -540,7 +553,7 @@ void ANO_DT_Send_Status(float angle_rol, float angle_pit, float angle_yaw, s32 a
 		sum += data_to_send[i];
 	data_to_send[_cnt++]=sum;
 	
-	Usart2_Send(data_to_send, _cnt);
+	Data_Send(data_to_send, _cnt);
 }
 
 void ANO_DT_Send_Senser(s16 a_x,s16 a_y,s16 a_z,s16 g_x,s16 g_y,s16 g_z,s16 m_x,s16 m_y,s16 m_z)
@@ -595,7 +608,7 @@ void ANO_DT_Send_Senser(s16 a_x,s16 a_y,s16 a_z,s16 g_x,s16 g_y,s16 g_z,s16 m_x,
 		sum += data_to_send[i];
 	data_to_send[_cnt++] = sum;
 	
-	Usart2_Send(data_to_send, _cnt);
+	Data_Send(data_to_send, _cnt);
 }
 
 
@@ -642,7 +655,7 @@ void ANO_DT_Send_RCData(u16 ch0,u16 ch1,u16 ch2,u16 ch3,u16 aux1,u16 aux2,u16 au
 	
 	data_to_send[_cnt++]=sum;
 	
-	Usart2_Send(data_to_send, _cnt);
+	Data_Send(data_to_send, _cnt);
 }
 
 /**
@@ -698,7 +711,7 @@ void ANO_DT_Send_PID(u8 group,float p1_p,float p1_i,float p1_d,float p2_p,float 
 	
 	data_to_send[_cnt++]=sum;
 
-	Usart2_Send(data_to_send, _cnt);
+	Data_Send(data_to_send, _cnt);
 }
 /**
   * @brief 发送电机转速
@@ -740,7 +753,7 @@ void ANO_DT_Send_MotoPWM(u16 m_1,u16 m_2,u16 m_3,u16 m_4,u16 m_5,u16 m_6,u16 m_7
 	
 	data_to_send[_cnt++]=sum;
 	
-	Usart2_Send(data_to_send, _cnt);
+	Data_Send(data_to_send, _cnt);
 }
 
 
