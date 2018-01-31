@@ -1,4 +1,6 @@
 #include "main.h"
+#include "stdlib.h"
+#include "string.h"
 #define caliMaxTime 100
 uint16_t can_encoder_flag;
 u8 yaw_cali_count = 0;
@@ -11,7 +13,7 @@ volatile Encoder CM3Encoder = {0,0,0,0,0,0,0,0,0};
 volatile Encoder CM4Encoder = {0,0,0,0,0,0,0,0,0};
 volatile Encoder GMYawEncoder = {0,0,0,0,0,0,0,0,0};
 volatile Encoder GMPitchEncoder = {0,0,0,0,0,0,0,0,0};
-
+PC_control_t PC_control={0.0f,0.0f,0.0f,0.0f,0.0f};
 
 RC_Ctrl_t RC_CtrlData;   //remote control data
 u8 checkdata_to_send,checksum_to_send,send_check=0;
@@ -23,7 +25,7 @@ u8 send_pid1=0,send_pid2=0,send_pid3=0;
   * @retval None
   * @details 上层硬件发来的信号或是地面站发来的信号的解析函数
   */
-void BasicProtocolAnalysis(u8 *data_buf,int _len)
+void BasicProtocolAnalysis(u8 const *data_buf,int _len)
 {
 	u8 sum = 0;
 	u8 i;
@@ -69,6 +71,10 @@ void BasicProtocolAnalysis(u8 *data_buf,int _len)
 			if(*(data_buf+2)==0X21){
 			//NS=Stop;
 		}
+			if (*(data_buf+2)==0X25)	//PC_Control Info
+			{
+			memcpy((u8*)(&PC_control), (data_buf+4), sizeof(PC_control_t));
+			}
 if(*(data_buf+2)==0X02)
 	{
 		if(*(data_buf+4)==0X01)

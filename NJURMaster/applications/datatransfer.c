@@ -1,7 +1,7 @@
 #include "main.h"
 #include "usart6.h"
 #include "RefereeSystem.h"
-
+#include "string.h"
 #define RS_DEBUG_INFO 1
 
 RefereeSystem_t RefereeSystemData;
@@ -71,16 +71,37 @@ u8 data_to_send[50];
 #define BYTE2(dwTemp)       ( *( (char *)(&dwTemp) + 2) )
 #define BYTE3(dwTemp)       ( *( (char *)(&dwTemp) + 3) )
 	
+//change the define to select which usart used to communicate with
+//pc(mainfold or JesonTxone or JesonTxtwo)
+//these info will be sent to the pc
+//1.Euler Angle of Gimbal
+//2.Chassis Motor Speed
+//3.Rc Input
+//4.Odometer Info(Unimplemented)
+//5.
+//these Info will Get from PC
+//Chassis Control Data (mm/s)
+//Gimbal Control Data (Delta angle)
+
+#define USART3_PC_SEND
+
 static void Data_Send(u8 * _val, u8 _len)
 {
-#if 1
+#ifdef USART3_PC_SEND
 	Usart2_Send(_val, _len);
 #else
-	Usart2_Send(_val, _len);
 	Usart3_Send(_val, _len);
-	
 #endif
 
+}
+
+static void PC_Send( u8 *_val, u8 _len)
+{
+#ifdef USART3_PC_SEND
+	Usart3_Send(_val, _len);
+#else
+	Usart2_Send(_val, _len);
+#endif
 }
 
 /**
@@ -93,13 +114,14 @@ void DatatransferTask(u32 sys_time)
 {
 if (sys_time%10==0)
 	{
-		ANO_DT_Send_Status(Roll,Pitch,Yaw,0,0,0);//???????????
+		ANO_DT_Send_Status(Roll,Pitch,Yaw,SelfCheckErrorFlag,0,0);//???????????
 	}
 	else if((sys_time+1)%10==0)
 	{
 		ANO_DT_Send_Senser((vs16)MPU6500_Acc.x,(vs16)MPU6500_Acc.y,(vs16)MPU6500_Acc.z,
 												(vs16)MPU6500_Gyro.x,(vs16)MPU6500_Gyro.y,(vs16)MPU6500_Gyro.z,
 											(vs16)MagValue.x,(vs16)MagValue.y,(vs16)MagValue.z);
+		
 	}
 	else if((sys_time+2)%10==0)
 	{
@@ -117,14 +139,21 @@ if (sys_time%10==0)
 	{
 		RefereeSys_Send_Data(RefereeSystemData.userData);
 	}
+	else if((sys_time+4)%20==0)
+	{
+		PC_Send_IMU(Pitch,Roll,Yaw,SelfCheckErrorFlag);
+	}
 	if ((sys_time+5)%50==0)
 	{
 		ANO_DT_Send_RCData(RC_CtrlData.rc.ch0,RC_CtrlData.rc.ch1,RC_CtrlData.rc.ch2,RC_CtrlData.rc.ch3,RC_CtrlData.rc.s1*300+1000,RC_CtrlData.rc.s2*300+1000,RC_CtrlData.mouse.x+1000,RC_CtrlData.mouse.y+1000,RC_CtrlData.mouse.z+1000,RC_CtrlData.key.v);
+		PC_Send_RC();
 	}
 	else if((sys_time+6)%50==0)
 	{
 		ANO_DT_Send_MotoPWM(ABS(CM1Encoder.filter_rate),ABS(CM2Encoder.filter_rate),ABS(CM3Encoder.filter_rate),
 												ABS(CM4Encoder.filter_rate),ABS(GMPitchEncoder.filter_rate),ABS(GMYawEncoder.filter_rate),0,0);
+		PC_SendMotor(CM1Encoder.filter_rate,CM2Encoder.filter_rate,CM3Encoder.filter_rate,CM4Encoder.filter_rate,
+								GMPitchEncoder.filter_rate,GMYawEncoder.filter_rate,0,0);
 	}
 	if (send_check)
 	{
@@ -336,7 +365,7 @@ void Usart6_DataPrepare(u8* pData)
 				index +=4;
 			// output the received data
 #ifdef RS_DEBUG_INFO
-   			 	printf("Seq:\t%d\r\n",Seq);
+   			printf("Seq:\t%d\r\n",Seq);
 				printf("RobotState:\r\n");
 				printf("stageRemainTime:%d\r\n",RefereeSystemData.extGameRobotState.stageRemainTime);
 				printf("gameProcess:%d\r\n",RefereeSystemData.extGameRobotState.gameProcess);
@@ -347,7 +376,7 @@ void Usart6_DataPrepare(u8* pData)
 				printf("position Y:\t%f\r\n",RefereeSystemData.extGameRobotState.position.y);
 				printf("position Z:\t%f\r\n",RefereeSystemData.extGameRobotState.position.z);
 				printf("position Yaw:\t%f\r\n",RefereeSystemData.extGameRobotState.position.yaw);
-    			printf("\r\n");
+				printf("\r\n");
 #endif
 				break;
 			case ROBOTHURT:
@@ -515,7 +544,7 @@ void ANO_DT_Send_Check(u8 head, u8 check_sum)
   * @param Èý¸öÅ·À­½Ç£¬
   * @retval None
   */
-void ANO_DT_Send_Status(float angle_rol, float angle_pit, float angle_yaw, s32 alt, u8 fly_model, u8 armed)
+void ANO_DT_Send_Status(float angle_rol, float angle_pit, float angle_yaw, u32 alt, u8 fly_model, u8 armed)
 {
 	u8 _cnt=0;
 	vs16 _temp;
@@ -860,4 +889,63 @@ unsigned char Verify_CRC16_Check_Sum(uint8_t *pchMessage, uint32_t dwLength)
 	return ((wExpected & 0xff) == pchMessage[dwLength - 2] && ((wExpected >> 8) & 0xff) == pchMessage[dwLength - 1]);
 }
 
+void PC_Send_IMU(float pit, float rol, float yaw, u32 alt)
+{
+	PC_Send_IMU_t PC_IMU_Message;
+	PC_IMU_Message.Pitch=pit;
+	PC_IMU_Message.Roll=rol;
+	PC_IMU_Message.Yaw=yaw;
+	PC_IMU_Message.state=alt;
+
+	u8 i=0;
+	u8 sum = 0;
+	data_to_send[0]=0xAA;
+	data_to_send[1]=0xAA;
+	data_to_send[2]=0x01;
+	data_to_send[3]=sizeof(PC_IMU_Message);
+	memcpy(data_to_send+4,(u8*)&PC_IMU_Message,sizeof(PC_IMU_Message));
+	for(i=0;i<sizeof(PC_IMU_Message)+4;i++)
+		sum += data_to_send[i];
+	data_to_send[sizeof(PC_IMU_Message)+4]=sum;
+	PC_Send(data_to_send, sizeof(PC_IMU_Message)+5);
+}
+
+void PC_Send_RC(void)
+{
+	u8 i=0;
+	u8 sum = 0;
+	data_to_send[0]=0xAA;
+	data_to_send[1]=0xAA;
+	data_to_send[2]=0x02;
+	data_to_send[3]=sizeof(RC_CtrlData);
+	memcpy(data_to_send+4,(u8*)&RC_CtrlData,sizeof(RC_CtrlData));
+	for(i=0;i<sizeof(RC_CtrlData)+4;i++)
+		sum += data_to_send[i];
+	data_to_send[sizeof(RC_CtrlData)+4]=sum;
+	PC_Send(data_to_send, sizeof(RC_CtrlData)+5);
+}
+void PC_SendMotor(s16 m_1,s16 m_2,s16 m_3,s16 m_4,s16 m_5,s16 m_6,s16 m_7,s16 m_8)
+{
+	u8 i=0;
+	u8 sum = 0;
+	PC_Send_Motor_t	PC_Send_Motor;
+	PC_Send_Motor.motor1=m_1;
+	PC_Send_Motor.motor2=m_2;
+	PC_Send_Motor.motor3=m_3;
+	PC_Send_Motor.motor4=m_4;
+	PC_Send_Motor.motor5=m_5;
+	PC_Send_Motor.motor6=m_6;
+	PC_Send_Motor.motor7=m_7;
+	PC_Send_Motor.motor8=m_8;
+
+	data_to_send[0]=0xAA;
+	data_to_send[1]=0xAA;
+	data_to_send[2]=0x02;
+	data_to_send[3]=sizeof(PC_Send_Motor);
+	memcpy(data_to_send+4,(u8*)&PC_Send_Motor,sizeof(PC_Send_Motor));
+	for(i=0;i<sizeof(PC_Send_Motor)+4;i++)
+		sum += data_to_send[i];
+	data_to_send[sizeof(PC_Send_Motor)+4]=sum;
+	PC_Send(data_to_send, sizeof(PC_Send_Motor)+5);
+}
 
