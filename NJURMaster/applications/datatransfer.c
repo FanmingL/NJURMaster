@@ -940,7 +940,7 @@ void PC_SendMotor(s16 m_1,s16 m_2,s16 m_3,s16 m_4,s16 m_5,s16 m_6,s16 m_7,s16 m_
 
 	data_to_send[0]=0xAA;
 	data_to_send[1]=0xAA;
-	data_to_send[2]=0x02;
+	data_to_send[2]=0x03;
 	data_to_send[3]=sizeof(PC_Send_Motor);
 	memcpy(data_to_send+4,(u8*)&PC_Send_Motor,sizeof(PC_Send_Motor));
 	for(i=0;i<sizeof(PC_Send_Motor)+4;i++)
