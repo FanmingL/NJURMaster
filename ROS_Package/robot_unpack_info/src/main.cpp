@@ -19,6 +19,7 @@
 #include "robot_protocol_msgs/RobotGimbal.h"
 
 #include "main.h"
+
 ros::Publisher pub_Motor;
 ros::Publisher pub_Error;
 ros::Publisher pub_RC;
@@ -131,7 +132,6 @@ while (all.size()>0){
 		case 4:{
 			if (all.size()<frame_length+1) return;
 			else {
-//                std::cout<<"step1\n";
 				unsigned char *data_buf_tmp=(unsigned char *)malloc(frame_length+1 * sizeof(unsigned char));
 				for (int i=0;i<frame_length+1;i++)
 				{
@@ -147,10 +147,8 @@ while (all.size()>0){
 				{
 					_sum+=data_buf_tmp[i];
 				}
-  //              std::cout<<"step2\n";
                 if (_sum==data_buf_tmp[frame_length])
 				{
-                    //std::cout<<"step3\n";
 					switch(frame_type)
 					{
 						case 0x01:				//IMU
