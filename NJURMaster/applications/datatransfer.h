@@ -15,7 +15,7 @@ void ANO_DT_Send_PID(u8 group,float p1_p,float p1_i,float p1_d,float p2_p,float 
 void ANO_DT_Send_MotoPWM(u16 m_1,u16 m_2,u16 m_3,u16 m_4,u16 m_5,u16 m_6,u16 m_7,u16 m_8);
 void RefereeSys_Send_Data(extUserData_t userdata);
 void PC_SendMotor(s16 m_1,s16 m_2,s16 m_3,s16 m_4,s16 m_5,s16 m_6,s16 m_7,s16 m_8);
-void PC_Send_IMU(float pit, float rol, float yaw, u32 alt);
+void PC_Send_IMU(float pit, float rol, float yaw,float Gim_Pitch, float Gim_Yaw, u32 alt);
 void PC_Send_RC(void);
 typedef __packed struct 
 {
@@ -31,6 +31,8 @@ typedef __packed  struct
 	float Pitch;
 	float Roll;
 	float Yaw;
+	float Gimbal_Pitch;
+	float Gimbal_Yaw;
 	u32 	state;
 }PC_Send_IMU_t;
 

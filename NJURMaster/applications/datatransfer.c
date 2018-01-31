@@ -141,7 +141,7 @@ if (sys_time%10==0)
 	}
 	else if((sys_time+4)%20==0)
 	{
-		PC_Send_IMU(Pitch,Roll,Yaw,SelfCheckErrorFlag);
+		PC_Send_IMU(Pitch,Roll,Yaw,GMPitchEncoder.ecd_angle,GMYawEncoder.ecd_angle,SelfCheckErrorFlag);
 	}
 	if ((sys_time+5)%50==0)
 	{
@@ -889,14 +889,15 @@ unsigned char Verify_CRC16_Check_Sum(uint8_t *pchMessage, uint32_t dwLength)
 	return ((wExpected & 0xff) == pchMessage[dwLength - 2] && ((wExpected >> 8) & 0xff) == pchMessage[dwLength - 1]);
 }
 
-void PC_Send_IMU(float pit, float rol, float yaw, u32 alt)
+void PC_Send_IMU(float pit, float rol, float yaw,float Gim_Pitch, float Gim_Yaw, u32 alt)
 {
 	PC_Send_IMU_t PC_IMU_Message;
 	PC_IMU_Message.Pitch=pit;
 	PC_IMU_Message.Roll=rol;
 	PC_IMU_Message.Yaw=yaw;
 	PC_IMU_Message.state=alt;
-
+	PC_IMU_Message.Gimbal_Pitch=Gim_Pitch;
+	PC_IMU_Message.Gimbal_Yaw=Gim_Yaw;
 	u8 i=0;
 	u8 sum = 0;
 	data_to_send[0]=0xAA;

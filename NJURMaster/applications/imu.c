@@ -555,6 +555,6 @@ void AHRSUpdate(float dt,float ax,float ay,float az,float gx,float gy,float gz,f
 		*rol = atan2f(2.f * (q2*q3 + q0*q1), q0q0 - q1q1 - q2q2 + q3q3)*57.3f;	//! Roll
 		*pit = -asinf(2.f * (q1*q3 - q0*q2))*57.3f;	//! Pitch
 		*yaw = atan2f(2.f * (q1*q2 + q0*q3), q0q0 + q1q1 - q2q2 - q3q3)*57.3f;		//! Yaw
-
+		FeedDog(DEVICE_INDEX_IMU);
 }
 

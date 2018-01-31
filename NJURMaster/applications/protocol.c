@@ -74,6 +74,7 @@ void BasicProtocolAnalysis(u8 const *data_buf,int _len)
 			if (*(data_buf+2)==0X25)	//PC_Control Info
 			{
 			memcpy((u8*)(&PC_control), (data_buf+4), sizeof(PC_control_t));
+				FeedDog(DEVICE_INDEX_PC);
 			}
 if(*(data_buf+2)==0X02)
 	{

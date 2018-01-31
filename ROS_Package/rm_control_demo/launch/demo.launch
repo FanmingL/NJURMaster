@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+  <param name="portNumber" value="0" type="int" />
+  <node pkg="uart" type="uart" name="uart" output="screen"/>
+  <node pkg="robot_pack_info" type="pack_info" name="pack_info" />
+  <node pkg="robot_unpack_info" type="unpack_info" name="unpack_info" />
+  <node pkg="rm_control_demo" type="rm_control_demo" name="rm_control_demo" output="screen" />
+</launch>
+

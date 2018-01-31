@@ -17,16 +17,17 @@ void WorkStateFSM(u32 sys)
 			SysMode=SYS_STOPSTATE;
 			return;
 		}
-		if (sys<SYS_PREPARETIME)
-		{
-			SysMode=SYS_PREPARESTATE;
-			return;
-		}
 		if (ParamSavedFlag!=1)
 		{
 			SysMode=SYS_CALISTATE;
 			return;
 		}
+		if (sys<SYS_PREPARETIME)
+		{
+			SysMode=SYS_PREPARESTATE;
+			return;
+		}
+
 		SysMode=SYS_NORMALSTATE;
 	}
 	if (SysMode==SYS_STOPSTATE)
