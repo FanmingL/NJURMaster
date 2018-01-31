@@ -41,7 +41,7 @@ void DatatransferTask(u32 sys_time)
 	}
 	else if((sys_time+3)%10==0)
 	{
-		Self_Check_Send_Status(SelfCheckErrorFlag);
+		Self_Check_Send_Status(SelfCheckErrorFlag);//放在不同的时间段上传数据，以免串口冲突
 	}
 	else if ((sys_time+5)%10==0)
 	{
@@ -352,7 +352,7 @@ void Self_Check_Send_Status(u32 Error_flag){
 	u8 i;
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0xAA;
-	data_to_send[_cnt++]=0x03;
+	data_to_send[_cnt++]=0x03;//Frame Type
 	data_to_send[_cnt++]=4;
 	data_to_send[_cnt++]=BYTE3(Error_flag);
 	data_to_send[_cnt++]=BYTE2(Error_flag);
