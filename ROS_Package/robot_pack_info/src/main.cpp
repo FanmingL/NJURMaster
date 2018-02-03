@@ -18,7 +18,7 @@ ros::Subscriber sub,sub1,sub2,sub3,sub4;
 ros::ServiceServer service,service1,service2,service3;
 Robot_Control_t RM_Control={0.0f,0.0f,0.0f,0.0f,0.0f};
 std_msgs::UInt8MultiArray m;
-
+//callback function
 void RobotControl(const robot_protocol_msgs::RobotControl &msg){
 	unsigned char _tmp[sizeof(Robot_Control_t)+5]={0};
     m.layout.dim[0].label = "control";
@@ -39,7 +39,7 @@ void RobotControl(const robot_protocol_msgs::RobotControl &msg){
 
 int main(int argc,char **argv){
 
-	ros::init(argc, argv, "apdriver");
+	ros::init(argc, argv, "robot_pack_info");
     ros::NodeHandle n;
     m.layout.dim.push_back(std_msgs::MultiArrayDimension());
     m.layout.dim[0].stride = 1;
