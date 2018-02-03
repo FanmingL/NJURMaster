@@ -32,4 +32,5 @@
 #include "imu.h"
 #include "modeduty.h"
 #include "ramp.h"
+#include "sys_config.h"
 #endif 

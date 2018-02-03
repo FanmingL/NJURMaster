@@ -13,7 +13,7 @@ extern volatile Encoder CM3Encoder;
 extern volatile Encoder CM4Encoder;
 extern volatile Encoder GMYawEncoder;
 extern volatile Encoder GMPitchEncoder;
-
+extern volatile Encoder DialingEncoder;
 typedef __packed struct
 {
 	int16_t ch0;

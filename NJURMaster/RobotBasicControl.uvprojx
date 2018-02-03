@@ -438,6 +438,11 @@
               <FileType>5</FileType>
               <FilePath>.\users\main.h</FilePath>
             </File>
+            <File>
+              <FileName>sys_config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\users\sys_config.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -24,7 +24,21 @@ typedef __packed struct
 	float chassis_rotate_speed;
 	float Pitch_change;
 	float Yaw_change;
+	uint16_t Valid_flag;
 }PC_control_t;
+
+#define PC_CONTORL_CHASSIS_X_INDEX (0u)
+#define PC_CONTORL_CHASSIS_Y_INDEX (1u)
+#define PC_CONTORL_CHASSIS_R_INDEX (2u)
+#define PC_CONTORL_GIMBAL_PITCH_INDEX (3u)
+#define PC_CONTORL_GIMBAL_YAW_INDEX (4u)
+
+#define PC_CONTORL_CHASSIS_X_VALID (0x01)
+#define PC_CONTORL_CHASSIS_Y_VALID (0x02)
+#define PC_CONTORL_CHASSIS_R_VALID (0x04)
+#define PC_CONTORL_GIMBAL_PITCH_VALID (0x08)
+#define PC_CONTORL_GIMBAL_YAW_VALID (0x10)
+
 
 typedef __packed  struct
 {

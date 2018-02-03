@@ -14,7 +14,7 @@ float ChassisRotateOut=0.0f;
 float CMOutput1,CMOutput2,CMOutput3,CMOutput4;
 float GMYawOutput,GMPitchOutput;
 unsigned int test_fire_speed = 1500;
-
+int16_t exp_speed[4];
 /**
   * @brief 底盘控制程序
   * @param _T程序调用周期(s)
@@ -24,6 +24,7 @@ unsigned int test_fire_speed = 1500;
   */
 void ChassisControl(float _T)
 {	
+
 	if (SysMode!=SYS_CALISTATE&&SysMode!=SYS_STOPSTATE&&SysMode!=SYS_PREPARESTATE)
 	{
 		switch(ControlMode)
@@ -57,13 +58,14 @@ void ChassisControl(float _T)
 		ChassisGoToward=0.0f;
 		ChassisGoLeftRight=0.0f;	
 	}
-	ChassisMotorSpeed1=ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
-	ChassisMotorSpeed2=ChassisGoToward*0.075f+ChassisGoLeftRight*0.075f+ChassisRotateOut;
-	ChassisMotorSpeed3=-ChassisGoToward*0.075f+ChassisGoLeftRight*0.075f+ChassisRotateOut;
-	ChassisMotorSpeed4=-ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
+	mecanum_calc(ChassisGoToward, ChassisGoLeftRight, ChassisRotateOut, exp_speed);
+//	ChassisMotorSpeed1=ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
+//	ChassisMotorSpeed2=ChassisGoToward*0.075f+ChassisGoLeftRight*0.075f+ChassisRotateOut;
+//	ChassisMotorSpeed3=-ChassisGoToward*0.075f+ChassisGoLeftRight*0.075f+ChassisRotateOut;
+//	ChassisMotorSpeed4=-ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
 	CMOutput1=PID_calculate( 			_T,            //周期（单位：秒）
 																0,				//前馈值
-																ChassisMotorSpeed1,				//期望值（设定值）
+																exp_speed[0],				//期望值（设定值）
 																CM1Encoder.filter_rate,			//反馈值（）
 																&Chassis_Vec_PID_arg, //PID参数结构体
 																&Chassis_Vec_PID_val1,	//PID数据结构体
@@ -71,7 +73,7 @@ void ChassisControl(float _T)
 																 );
 	CMOutput2=PID_calculate( 			_T,            //周期（单位：秒）
 																0,				//前馈值
-																ChassisMotorSpeed2,				//期望值（设定值）
+																exp_speed[1],				//期望值（设定值）
 																CM2Encoder.filter_rate,			//反馈值（）
 																&Chassis_Vec_PID_arg, //PID参数结构体
 																&Chassis_Vec_PID_val2,	//PID数据结构体
@@ -79,7 +81,7 @@ void ChassisControl(float _T)
 																 );
 	CMOutput3=PID_calculate( 			_T,            //周期（单位：秒）
 																0,				//前馈值
-																ChassisMotorSpeed3,				//期望值（设定值）
+																exp_speed[2],				//期望值（设定值）
 																CM3Encoder.filter_rate,			//反馈值（）
 																&Chassis_Vec_PID_arg, //PID参数结构体
 																&Chassis_Vec_PID_val3,	//PID数据结构体
@@ -87,7 +89,7 @@ void ChassisControl(float _T)
 																 );
 	CMOutput4=PID_calculate( 			_T,            //周期（单位：秒）
 																0,				//前馈值
-																ChassisMotorSpeed4,				//期望值（设定值）
+																exp_speed[3],				//期望值（设定值）
 																CM4Encoder.filter_rate,			//反馈值（）
 																&Chassis_Vec_PID_arg, //PID参数结构体
 																&Chassis_Vec_PID_val4,	//PID数据结构体
@@ -102,7 +104,6 @@ void ChassisControl(float _T)
 	{
 		ChassisSpeedSet(CAN1,0,0,0,0);
 	}
-	//ChassisSpeedSet(CAN1,600,0,0,0);
 }
 	float yaw_speed=0,pitch_speed=0;
 /**
@@ -152,7 +153,8 @@ void GimbalControl(float _T)
 																		&GimbalPitch_Vec_PID_val,	//PID数据结构体
 																		0.2		//integration limit，积分限幅
 																		 );
-				 GimbalCurrentSet(CAN1,GMYawOutput,GMPitchOutput);
+																		 
+				 GimbalCurrentSet(CAN1,GMYawOutput,GMPitchOutput,0);
 				}
 				else if (ControlMode==MC_MODE1)
 				{
@@ -205,12 +207,12 @@ void GimbalControl(float _T)
 																	 );
 			GimbalYawPosRef=-Yaw;
 			GimbalPitchPosRef=0.0f;
-			 GimbalCurrentSet(CAN1,GMYawOutput,GMPitchOutput);
+			 GimbalCurrentSet(CAN1,GMYawOutput,GMPitchOutput,0);
 		 }
 	 }
 	 else
 	 {
-		 GimbalCurrentSet(CAN1,0,0);
+		 GimbalCurrentSet(CAN1,0,0,0);
 	 }
 }
 
