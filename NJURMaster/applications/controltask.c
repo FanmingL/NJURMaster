@@ -58,7 +58,7 @@ void ChassisControl(float _T)
 		ChassisGoToward=0.0f;
 		ChassisGoLeftRight=0.0f;	
 	}
-	mecanum_calc(ChassisGoToward, ChassisGoLeftRight, ChassisRotateOut, exp_speed);
+	mecanum_calc(ChassisGoToward, -ChassisGoLeftRight, ChassisRotateOut, exp_speed);
 //	ChassisMotorSpeed1=ChassisGoToward*0.075f-ChassisGoLeftRight*0.075f+ChassisRotateOut;
 //	ChassisMotorSpeed2=ChassisGoToward*0.075f+ChassisGoLeftRight*0.075f+ChassisRotateOut;
 //	ChassisMotorSpeed3=-ChassisGoToward*0.075f+ChassisGoLeftRight*0.075f+ChassisRotateOut;
@@ -99,6 +99,7 @@ void ChassisControl(float _T)
 	if (SysMode!=SYS_CALISTATE&&SysMode!=SYS_STOPSTATE)
 	{
 		ChassisSpeedSet(CAN1,CMOutput1,CMOutput2,CMOutput3,CMOutput4);
+		//ChassisSpeedSet(CAN1,0,0,0,0);
 	}
 	else
 	{

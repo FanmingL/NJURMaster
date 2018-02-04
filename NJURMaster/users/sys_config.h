@@ -73,10 +73,10 @@
 #define PITCH_MAX (27.0f)
 #define YAW_MAX   (35.0f)
 #define CHANNELMIDDLE	(1024)
-#define RC_TOWARD_SCALE (30.0f)
-#define RC_LEFTRIGHT_SCALE (30.0f)
+#define RC_TOWARD_SCALE (1.0f)
+#define RC_LEFTRIGHT_SCALE (1.0f)
 
-#define RC_PITCHSCALE (0.04f)
+#define RC_PITCHSCALE (0.02f)
 #define RC_YAWSCALE (0.003f)
 #define MAXTOWARDSPEED (660*RC_TOWARD_SCALE)
 #define MAXLEFTRIGHTSPEED (660*RC_LEFTRIGHT_SCALE)
@@ -87,11 +87,11 @@
 
 /******************************PID default parameter*****************/
 ////////////////////////////		kp		ki		kd		k_pre_d		inc_hz		k_inc_d_norm		k_ff
-#define CHASSIS_Rot_PID_OFF 	{	30.0f,	1.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
-#define CHASSIS_Vec_PID_OFF 	{	3.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define CHASSIS_Rot_PID_OFF 	{	1.8f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define CHASSIS_Vec_PID_OFF 	{	2.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
 #define GIMBALP_Pos_PID_OFF 	{	6.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
 #define GIMBALP_Vec_PID_OFF 	{	20.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
-#define GIMBALY_Pos_PID_OFF 	{	5.0f,	1.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
+#define GIMBALY_Pos_PID_OFF 	{	20.0f,	1.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
 #define GIMBALY_Vec_PID_OFF 	{	20.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
 #define SLIBLIN_Pos_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}
 #define SLIBLIN_Vec_PID_OFF 	{	1.0f,	0.0f,	0.0f,	0.0f,				0.0f,		0.0f,						0.0f	}

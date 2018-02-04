@@ -31,6 +31,7 @@ void RobotControl(const robot_protocol_msgs::RobotControl &msg){
     RM_Control.Chassis_speed_rotate=msg.Chassis_speed_rotate;
     RM_Control.Gimbal_delta_pitch=msg.Gimbal_delta_pitch;
     RM_Control.Gimbal_delta_yaw=msg.Gimbal_delta_yaw;
+	RM_Control.ControlValid = msg.ControlValid;
 	memcpy(_tmp+4,(unsigned char*)&(RM_Control),sizeof(RM_Control));
     for (int i=0;i<sizeof(Robot_Control_t)+4;i++)_tmp[sizeof(Robot_Control_t)+4]+=_tmp[i];
     for (int i=0;i<sizeof(Robot_Control_t)+5;i++)m.data[i]=_tmp[i];

@@ -16,7 +16,7 @@ void DogInit(void)
 		SelfCheckValue[i]=0;
 	}
 	SelfCheckErrorFlag=0x0000;
-}
+} 
 
 /**
   * @brief Î¹¹·
