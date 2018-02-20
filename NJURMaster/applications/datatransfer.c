@@ -353,7 +353,8 @@ void Self_Check_Send_Status(u32 Error_flag){
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0xAA;
 	data_to_send[_cnt++]=0x03;//Frame Type
-	data_to_send[_cnt++]=4;
+	data_to_send[_cnt++]=5;
+	data_to_send[_cnt++]=NET_ID;
 	data_to_send[_cnt++]=BYTE3(Error_flag);
 	data_to_send[_cnt++]=BYTE2(Error_flag);
 	data_to_send[_cnt++]=BYTE1(Error_flag);
@@ -364,3 +365,4 @@ void Self_Check_Send_Status(u32 Error_flag){
 	data_to_send[_cnt++] = sum;
 	Usart2_Send(data_to_send, _cnt);
 }
+

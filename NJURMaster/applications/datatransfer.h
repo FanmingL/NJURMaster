@@ -2,6 +2,8 @@
 #define _DATATRANSFER_H_
 #include "stm32f4xx.h"
 
+#define NET_ID 1//Net的0号节点是手持终端，此后按照战车编号
+
 void DatatransferTask(u32 _time_sys);
 void Usart2_DataPrepare(u8 data);
 void Usart3_DataPrepare(u8 data);
