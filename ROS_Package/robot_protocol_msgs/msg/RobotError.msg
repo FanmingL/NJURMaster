@@ -10,3 +10,4 @@ uint8 MOTOR6
 uint8 NOCALI
 uint8 TIMEOUT
 uint8 PC
+uint8 MOTOR7

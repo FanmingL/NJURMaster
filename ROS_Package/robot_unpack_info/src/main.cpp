@@ -61,6 +61,7 @@ void IMU_Data_Process(unsigned char * _data, unsigned char _len)
 	if (tmp&LOST_ERROR_NOCALI) {msg_Error.NOCALI=1;} else {msg_Error.NOCALI=0; }
 	if (tmp&LOST_ERROR_TIMEOUT) {msg_Error.TIMEOUT=1;} else {msg_Error.TIMEOUT=0; }	
 	if (tmp&LOST_ERROR_PC) {msg_Error.PC=1;} else {msg_Error.PC=0; }
+    if (tmp&LOST_ERROR_MOTOR7) {msg_Error.MOTOR7=1;} else {msg_Error.MOTOR7=0; }
     pub_Gimbal.publish(msg_Gimbal);	
 	pub_IMU.publish(msg_IMU);
 	pub_Error.publish(msg_Error);
