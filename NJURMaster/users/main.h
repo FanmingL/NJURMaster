@@ -2,6 +2,7 @@
 #define __MAIN_H__
 
 #include "stm32f4xx.h"
+#include "arm_math.h"
 #include "stdio.h"
 #include "can.h"
 #include "bsp_flash.h"

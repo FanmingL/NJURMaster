@@ -363,7 +363,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_STDPERIPH_DRIVER,STM32F427XXX</Define>
+              <Define>USE_STDPERIPH_DRIVER,STM32F427XXX,__FPU_PRESENT=1,__FPU_USED=1,ARM_MATH_CM4,__CC_ARM</Define>
               <Undefine></Undefine>
               <IncludePath>.\libraries\STLibraries;.\users;.\drivers;.\applications;.\math</IncludePath>
             </VariousControls>
@@ -769,6 +769,9 @@
               <FilePath>.\math\ramp.c</FilePath>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>New Group</GroupName>
         </Group>
       </Groups>
     </Target>
