@@ -1,8 +1,8 @@
 #include "main.h"
 u32 SelfCheckErrorFlag=0x0000;
 //selfcheck task is a 5ms task
-const u16 SelfCheckInitValue[SELF_CHECK_ITEM_NUM]={200u,200u,200u,200u,200u,200u,200u,200u,200u,200u,100u,100u};
-u16 SelfCheckValue[SELF_CHECK_ITEM_NUM]={200u,200u,200u,200u,200u,200u,200u,200u,200u,200u,100u,100u};
+const u16 SelfCheckInitValue[SELF_CHECK_ITEM_NUM]={200u,200u,200u,200u,200u,200u,200u,200u,200u,200u,100u,6u,100u};
+u16 SelfCheckValue[SELF_CHECK_ITEM_NUM]={200u,200u,200u,200u,200u,200u,200u,200u,200u,200u,100u,6u,100u};
 /**
   * @brief 看门狗初始化
   * @param None
@@ -16,7 +16,7 @@ void DogInit(void)
 		SelfCheckValue[i]=0;
 	}
 	SelfCheckErrorFlag=0x0000;
-}
+} 
 
 /**
   * @brief 喂狗

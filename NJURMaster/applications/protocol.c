@@ -13,11 +13,14 @@ volatile Encoder CM3Encoder = {0,0,0,0,0,0,0,0,0};
 volatile Encoder CM4Encoder = {0,0,0,0,0,0,0,0,0};
 volatile Encoder GMYawEncoder = {0,0,0,0,0,0,0,0,0};
 volatile Encoder GMPitchEncoder = {0,0,0,0,0,0,0,0,0};
+volatile Encoder DialingEncoder = {0,0,0,0,0,0,0,0,0};
 PC_control_t PC_control={0.0f,0.0f,0.0f,0.0f,0.0f};
 
 RC_Ctrl_t RC_CtrlData;   //remote control data
 u8 checkdata_to_send,checksum_to_send,send_check=0;
 u8 send_pid1=0,send_pid2=0,send_pid3=0;
+
+
 /**
   * @brief 基本串口通讯协议解析
   * @param data_buf	包含完整一帧数据的数组的指针
@@ -29,6 +32,7 @@ void BasicProtocolAnalysis(u8 const *data_buf,int _len)
 {
 	u8 sum = 0;
 	u8 i;
+	float __temp;
 	for(i=0;i<(_len-1);i++)														//求和校验
 		sum += *(data_buf+i);
 	if(!(sum==*(data_buf+_len-1)))		return;						//校验不成功则return
@@ -73,8 +77,27 @@ void BasicProtocolAnalysis(u8 const *data_buf,int _len)
 		}
 			if (*(data_buf+2)==0X25)	//PC_Control Info
 			{
-			memcpy((u8*)(&PC_control), (data_buf+4), sizeof(PC_control_t));
+				memcpy((u8*)(&PC_control), (data_buf+4), sizeof(PC_control_t));
 				FeedDog(DEVICE_INDEX_PC);
+				if (PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID)
+				{
+					ChassisGoToward=PC_control.chassis_x_speed;
+				}
+				if(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID)
+				{
+					ChassisGoLeftRight=PC_control.chassis_y_speed;
+				}
+				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID)
+				{
+					__temp=GMPitchEncoder.ecd_angle+PC_control.Pitch_change;
+					GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
+				}
+				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID)
+				{
+					__temp=Yaw+PC_control.Yaw_change;
+					GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
+				}
+				
 			}
 if(*(data_buf+2)==0X02)
 	{
@@ -176,19 +199,9 @@ if(*(data_buf+2)==0X02)
 
 
 }
-#define PITCH_MIN (-8.0f)
-#define PITCH_MAX (27.0f)
-#define YAW_MAX   (35.0f)
-#define CHANNELMIDDLE	(1024)
-#define RC_TOWARD_SCALE (30.0f)
-#define RC_LEFTRIGHT_SCALE (30.0f)
 
-#define RC_PITCHSCALE (0.04f)
-#define RC_YAWSCALE (0.003f)
-#define MAXTOWARDSPEED (660*RC_TOWARD_SCALE)
-#define MAXLEFTRIGHTSPEED (660*RC_LEFTRIGHT_SCALE)
 u8 WHEEL_STATE = WHEEL_OFF;//摩擦轮状态
-#define MOUSERESPONCERATE (0.1f) //鼠标灵敏度
+
 
 /**
   * @brief 对遥控器解析结果进行反应
@@ -199,77 +212,206 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 {
 	static u16 cancel_cnt = 0;//鼠标模式下右键计时超过1.5s关闭摩擦轮
 	float __temp;
-	if (GetRcMode()==RC_KEY_RCMODE)
+	if (IsDeviceLost(DEVICE_INDEX_PC))
 	{
-		__temp=GimbalPitchPosRef-(rc->rc.ch1-CHANNELMIDDLE)*RC_PITCHSCALE;
-		GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
-		__temp=GimbalYawPosRef-(rc->rc.ch0-CHANNELMIDDLE)*RC_YAWSCALE;
-		GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
+		if (GetRcMode()==RC_KEY_RCMODE)
+		{
+			__temp=GimbalPitchPosRef-(rc->rc.ch1-CHANNELMIDDLE)*RC_PITCHSCALE;
+			GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
+			__temp=GimbalYawPosRef-(rc->rc.ch0-CHANNELMIDDLE)*RC_YAWSCALE;
+			GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
 
-		ChassisGoToward=(rc->rc.ch3-CHANNELMIDDLE)*RC_TOWARD_SCALE;
-		ChassisGoLeftRight=(rc->rc.ch2-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
-		if(rc->rc.s1 == 3)
-		{
-			WHEEL_STATE = WHEEL_ON;
-		}
-		else
-		{
-			WHEEL_STATE = WHEEL_OFF;
-		}
-	}
-	else if (GetRcMode()==RC_KEY_KEYBOARD)
-	{
-		if(rc->key.v & KEY_W)//按下w键
-		{
-			ChassisGoToward = MAXTOWARDSPEED * RampCalculate(&RcKeyTowardRamp);
-		}
-		else if(rc->key.v & KEY_S)
-		{
-			ChassisGoToward = -MAXTOWARDSPEED * RampCalculate(&RcKeyTowardRamp);
-		}
-		else
-		{
-			RampReset(&RcKeyTowardRamp);
-			ChassisGoToward = 0;
-		}
-		if(rc->key.v & KEY_A)
-		{
-			ChassisGoLeftRight = MAXLEFTRIGHTSPEED * RampCalculate(&RcKeyLeftRightRamp);
-		}
-		else if(rc->key.v & KEY_D)
-		{
-			ChassisGoLeftRight = -MAXLEFTRIGHTSPEED * RampCalculate(&RcKeyLeftRightRamp);
-		}
-		else
-		{
-			RampReset(&RcKeyLeftRightRamp);
-			ChassisGoLeftRight = 0;
-		}
-		GimbalYawPosRef = LIMIT(GimbalYawPosRef-(rc->mouse.x)*MOUSERESPONCERATE,-YAW_MAX-Yaw,YAW_MAX-Yaw); 
-		GimbalPitchPosRef = LIMIT(GimbalPitchPosRef-(rc->mouse.y)*MOUSERESPONCERATE,PITCH_MIN,PITCH_MAX);
-		if(rc->mouse.press_r == 1)
-		{
-			cancel_cnt++;
-			if(WHEEL_STATE == WHEEL_OFF&&cancel_cnt==1)
+			ChassisGoToward=(rc->rc.ch3-CHANNELMIDDLE)*RC_TOWARD_SCALE;
+			ChassisGoLeftRight=(rc->rc.ch2-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
+			if(rc->rc.s1 == 3)
 			{
 				WHEEL_STATE = WHEEL_ON;
-				LASER_ON();
 			}
-			else if(cancel_cnt >= 50)
+			else
 			{
 				WHEEL_STATE = WHEEL_OFF;
-				LASER_OFF(); 
 			}
 		}
-		else
+		else if (GetRcMode()==RC_KEY_KEYBOARD)
 		{
-			cancel_cnt = 0;
+			if(rc->key.v & KEY_W)//按下w键
+			{
+				ChassisGoToward = MAXTOWARDSPEED * RampCalculate(&RcKeyTowardRamp);
+			}
+			else if(rc->key.v & KEY_S)
+			{
+				ChassisGoToward = -MAXTOWARDSPEED * RampCalculate(&RcKeyTowardRamp);
+			}
+			else
+			{
+				RampReset(&RcKeyTowardRamp);
+				ChassisGoToward = 0;
+			}
+			if(rc->key.v & KEY_A)
+			{
+				ChassisGoLeftRight = MAXLEFTRIGHTSPEED * RampCalculate(&RcKeyLeftRightRamp);
+			}
+			else if(rc->key.v & KEY_D)
+			{
+				ChassisGoLeftRight = -MAXLEFTRIGHTSPEED * RampCalculate(&RcKeyLeftRightRamp);
+			}
+			else
+			{
+				RampReset(&RcKeyLeftRightRamp);
+				ChassisGoLeftRight = 0;
+			}
+			GimbalYawPosRef = LIMIT(GimbalYawPosRef-(rc->mouse.x)*MOUSERESPONCERATE,-YAW_MAX-Yaw,YAW_MAX-Yaw); 
+			GimbalPitchPosRef = LIMIT(GimbalPitchPosRef-(rc->mouse.y)*MOUSERESPONCERATE,PITCH_MIN,PITCH_MAX);
+			if(rc->mouse.press_r == 1)
+			{
+				cancel_cnt++;
+				if(WHEEL_STATE == WHEEL_OFF&&cancel_cnt==1)
+				{
+					WHEEL_STATE = WHEEL_ON;
+					LASER_ON();
+				}
+				else if(cancel_cnt >= 50)
+				{
+					WHEEL_STATE = WHEEL_OFF;
+					LASER_OFF(); 
+				}
+			}
+			else
+			{
+				cancel_cnt = 0;
+			}
 		}
 	}
-	else if (GetRcMode()==RC_KEY_STOP)
+	else 
+	{
+				if (GetRcMode()==RC_KEY_RCMODE)
+				{
+					if (!(PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID))
+					{
+						ChassisGoToward=(rc->rc.ch3-CHANNELMIDDLE)*RC_TOWARD_SCALE;
+					}
+				
+					if(!(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID))
+					{
+						ChassisGoLeftRight=(rc->rc.ch2-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
+					}
+					if (!(PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID))
+					{
+						__temp=GimbalPitchPosRef-(rc->rc.ch1-CHANNELMIDDLE)*RC_PITCHSCALE;
+						GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
+					}
+					if (!(PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID))
+					{
+						__temp=GimbalYawPosRef-(rc->rc.ch0-CHANNELMIDDLE)*RC_YAWSCALE;
+						GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
+					}
+					if(rc->rc.s1 == 3)
+					{
+						WHEEL_STATE = WHEEL_ON;
+					}
+					else
+					{
+						WHEEL_STATE = WHEEL_OFF;
+					}
+				}
+		else if (GetRcMode()==RC_KEY_KEYBOARD)
+		{
+			if (PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID)
+				{
+					ChassisGoToward=PC_control.chassis_x_speed;
+				}
+				if(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID)
+				{
+					ChassisGoLeftRight=PC_control.chassis_y_speed;
+				}
+				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID)
+				{
+					__temp=GMPitchEncoder.ecd_angle+PC_control.Pitch_change;
+					GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
+				}
+				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID)
+				{
+					__temp=Yaw+PC_control.Yaw_change;
+					GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
+				}
+			
+			if (!(PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID))
+			{
+				if(rc->key.v & KEY_W)//按下w键
+				{
+					ChassisGoToward = MAXTOWARDSPEED * RampCalculate(&RcKeyTowardRamp);
+				}
+				else if(rc->key.v & KEY_S)
+				{
+					ChassisGoToward = -MAXTOWARDSPEED * RampCalculate(&RcKeyTowardRamp);
+				}
+				else
+				{
+					RampReset(&RcKeyTowardRamp);
+					ChassisGoToward = 0;
+				}
+			}
+			if (!(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID))
+			{
+				if(rc->key.v & KEY_A)
+				{
+					ChassisGoLeftRight = MAXLEFTRIGHTSPEED * RampCalculate(&RcKeyLeftRightRamp);
+				}
+				else if(rc->key.v & KEY_D)
+				{
+					ChassisGoLeftRight = -MAXLEFTRIGHTSPEED * RampCalculate(&RcKeyLeftRightRamp);
+				}
+				else
+				{
+					RampReset(&RcKeyLeftRightRamp);
+					ChassisGoLeftRight = 0;
+				}
+			}
+			if (!(PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID))
+			{
+				GimbalYawPosRef = LIMIT(GimbalYawPosRef-(rc->mouse.x)*MOUSERESPONCERATE,-YAW_MAX-Yaw,YAW_MAX-Yaw);
+			}
+			if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID)
+			{
+				GimbalPitchPosRef = LIMIT(GimbalPitchPosRef-(rc->mouse.y)*MOUSERESPONCERATE,PITCH_MIN,PITCH_MAX);
+			}
+				if(rc->mouse.press_r == 1)
+				{
+					cancel_cnt++;
+					if(WHEEL_STATE == WHEEL_OFF&&cancel_cnt==1)
+					{
+						WHEEL_STATE = WHEEL_ON;
+						LASER_ON();
+					}
+					else if(cancel_cnt >= 50)
+					{
+						WHEEL_STATE = WHEEL_OFF;
+						LASER_OFF(); 
+					}
+				}
+			else
+			{
+				cancel_cnt = 0;
+			}
+		}
+	
+	
+	
+	}
+//	else
+//	{
+//		__temp=GMYawEncoder.ecd_angle+PC_control.Pitch_change;
+//		GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
+//		__temp=Yaw+PC_control.Yaw_change;
+//		GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
+//		ChassisGoToward=(rc->rc.ch3-CHANNELMIDDLE)*RC_TOWARD_SCALE;
+//		ChassisGoLeftRight=(rc->rc.ch2-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
+//	}
+	if (GetRcMode()==RC_KEY_STOP)
 	{
 	   SysMode = SYS_STOPSTATE;	
 	}
+	
 }
 
 /**
@@ -369,6 +511,17 @@ void CanProtocolAnalysis(CanRxMsg * msg)
 					}
 					else
 					EncoderProcess(&CM4Encoder ,msg); 
+				}break;
+				case CAN_BUS2_MOTOR7_FEEDBACK_MSG_ID:
+				{
+					FeedDog(DEVICE_INDEX_DIALING);
+					if(((can_encoder_flag>>DEVICE_INDEX_DIALING) & 0x0001) == 0)
+					{
+				   GetEncoderBias(&DialingEncoder ,msg);
+					 can_encoder_flag |= (1<<DEVICE_INDEX_DIALING);
+					}
+					else
+					EncoderProcess(&DialingEncoder ,msg); 
 				}break;
 				case CAN_BUS2_MOTOR5_FEEDBACK_MSG_ID:
 				{

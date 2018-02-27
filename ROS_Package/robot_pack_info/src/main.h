@@ -7,5 +7,6 @@ typedef struct
     float Chassis_speed_rotate;
     float Gimbal_delta_pitch;
     float Gimbal_delta_yaw;
+	uint16_t ControlValid;
 } __attribute__ ((packed)) Robot_Control_t;
 #endif

@@ -930,12 +930,12 @@ void PC_SendMotor(s16 m_1,s16 m_2,s16 m_3,s16 m_4,s16 m_5,s16 m_6,s16 m_7,s16 m_
 	u8 i=0;
 	u8 sum = 0;
 	PC_Send_Motor_t	PC_Send_Motor;
-	PC_Send_Motor.motor1=m_1;
-	PC_Send_Motor.motor2=m_2;
-	PC_Send_Motor.motor3=m_3;
-	PC_Send_Motor.motor4=m_4;
-	PC_Send_Motor.motor5=m_5;
-	PC_Send_Motor.motor6=m_6;
+	PC_Send_Motor.motor1=m_1*CHASSIS_DECELE_RATIO;
+	PC_Send_Motor.motor2=m_2*CHASSIS_DECELE_RATIO;
+	PC_Send_Motor.motor3=m_3*CHASSIS_DECELE_RATIO;
+	PC_Send_Motor.motor4=m_4*CHASSIS_DECELE_RATIO;
+	PC_Send_Motor.motor5=m_5*PIT_DECELE_RATIO;
+	PC_Send_Motor.motor6=m_6*YAW_DECELE_RATIO;
 	PC_Send_Motor.motor7=m_7;
 	PC_Send_Motor.motor8=m_8;
 

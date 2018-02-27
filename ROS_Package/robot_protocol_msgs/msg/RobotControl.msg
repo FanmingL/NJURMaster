@@ -4,3 +4,4 @@ float32 Chassis_speed_y
 float32 Chassis_speed_rotate
 float32 Gimbal_delta_pitch
 float32 Gimbal_delta_yaw
+uint16 ControlValid

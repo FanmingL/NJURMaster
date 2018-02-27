@@ -92,6 +92,7 @@ int main(int argc,char** argv)
         Control_msg.Chassis_speed_rotate=300.0f;
         Control_msg.Gimbal_delta_pitch=400.0f;
         Control_msg.Gimbal_delta_yaw=500.0f;
+		Control_msg.ControlValid=0x01;
         Control_info_pub.publish(Control_msg);
         ros::spinOnce();
         loop_rate.sleep();
