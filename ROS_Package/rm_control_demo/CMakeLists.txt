@@ -11,12 +11,11 @@ find_package(catkin REQUIRED COMPONENTS
   robot_protocol_msgs
   dynamic_reconfigure
   geometry_msgs
-  message_generation
-  message_runtime
   roscpp
   sensor_msgs
   std_msgs
   std_srvs
+  
 )
 
 ## System dependencies are found with CMake's conventions

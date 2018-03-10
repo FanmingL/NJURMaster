@@ -7,11 +7,11 @@ project(uart)
 find_package(catkin REQUIRED COMPONENTS
   dynamic_reconfigure
   geometry_msgs
-  message_generation
   roscpp
   std_msgs 
   sensor_msgs
   std_srvs
+  robot_protocol_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -68,10 +68,10 @@ find_package(catkin REQUIRED COMPONENTS
 # ) 
 
 # Generate added messages and services with any dependencies listed here
- generate_messages(
-   DEPENDENCIES
-   std_msgs
- )
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -107,7 +107,7 @@ catkin_package(
 #  LIBRARIES uart
 #  CATKIN_DEPENDS dynamic_reconfigure geometry_msgs message_generation roscpp std_msgs
 #  DEPENDS system_lib
-CATKIN_DEPENDS message_runtime
+#CATKIN_DEPENDS message_runtime
 )
 
 ###########

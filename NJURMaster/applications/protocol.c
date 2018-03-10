@@ -79,24 +79,24 @@ void BasicProtocolAnalysis(u8 const *data_buf,int _len)
 			{
 				memcpy((u8*)(&PC_control), (data_buf+4), sizeof(PC_control_t));
 				FeedDog(DEVICE_INDEX_PC);
-				if (PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID)
-				{
-					ChassisGoToward=PC_control.chassis_x_speed;
-				}
-				if(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID)
-				{
-					ChassisGoLeftRight=PC_control.chassis_y_speed;
-				}
-				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID)
-				{
-					__temp=GMPitchEncoder.ecd_angle+PC_control.Pitch_change;
-					GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
-				}
-				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID)
-				{
-					__temp=Yaw+PC_control.Yaw_change;
-					GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
-				}
+//				if (PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID)
+//				{
+//					ChassisGoToward=PC_control.chassis_x_speed;
+//				}
+//				if(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID)
+//				{
+//					ChassisGoLeftRight=PC_control.chassis_y_speed;
+//				}
+//				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID)
+//				{
+//					__temp=GMPitchEncoder.ecd_angle+PC_control.Pitch_change;
+//					GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
+//				}
+//				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID)
+//				{
+//					__temp=Yaw+PC_control.Yaw_change;
+//					GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
+//				}
 				
 			}
 if(*(data_buf+2)==0X02)
@@ -284,6 +284,24 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 	}
 	else 
 	{
+				if (PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID)
+				{
+					ChassisGoToward=PC_control.chassis_x_speed;
+				}
+				if(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID)
+				{
+					ChassisGoLeftRight=PC_control.chassis_y_speed;
+				}
+				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID)
+				{
+					__temp=GMPitchEncoder.ecd_angle+PC_control.Pitch_change;
+					GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
+				}
+				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID)
+				{
+					__temp=Yaw+PC_control.Yaw_change;
+					GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
+				}
 				if (GetRcMode()==RC_KEY_RCMODE)
 				{
 					if (!(PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID))
@@ -316,24 +334,7 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 				}
 		else if (GetRcMode()==RC_KEY_KEYBOARD)
 		{
-			if (PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID)
-				{
-					ChassisGoToward=PC_control.chassis_x_speed;
-				}
-				if(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID)
-				{
-					ChassisGoLeftRight=PC_control.chassis_y_speed;
-				}
-				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID)
-				{
-					__temp=GMPitchEncoder.ecd_angle+PC_control.Pitch_change;
-					GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
-				}
-				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID)
-				{
-					__temp=Yaw+PC_control.Yaw_change;
-					GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
-				}
+			
 			
 			if (!(PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID))
 			{
@@ -367,11 +368,11 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 					ChassisGoLeftRight = 0;
 				}
 			}
-			if (!(PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID))
+			if (!(PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID))
 			{
 				GimbalYawPosRef = LIMIT(GimbalYawPosRef-(rc->mouse.x)*MOUSERESPONCERATE,-YAW_MAX-Yaw,YAW_MAX-Yaw);
 			}
-			if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID)
+			if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID)
 			{
 				GimbalPitchPosRef = LIMIT(GimbalPitchPosRef-(rc->mouse.y)*MOUSERESPONCERATE,PITCH_MIN,PITCH_MAX);
 			}

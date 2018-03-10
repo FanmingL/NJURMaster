@@ -7,7 +7,6 @@ project(robot_unpack_info)
 find_package(catkin REQUIRED COMPONENTS
   dynamic_reconfigure
   geometry_msgs
-  message_generation
   roscpp
   sensor_msgs
   std_msgs

@@ -1,5 +1,6 @@
 #ifndef _APDRIVER_H_
 #define _APDRIVER_H_
+#include "stdint.h"
 typedef struct
 {
     float Chassis_speed_x;

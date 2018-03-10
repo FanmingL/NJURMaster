@@ -9,6 +9,7 @@
 #include "robot_protocol_msgs/RobotMotor.h"
 #include "ros/ros.h"
 #include "key.h"
+#include "main.h"
 ros::Publisher Control_info_pub;
 ros::Subscriber IMU_sub,
                 Motor_sub,
@@ -87,12 +88,17 @@ int main(int argc,char** argv)
     Gimbal_sub  =   n.subscribe("RobotGimbal",1,&Gimbal_callback);
     while (ros::ok())
     {
+	Control_msg.ControlValid=0x00;
         Control_msg.Chassis_speed_x=100.0f;
+//	Control_msg.ControlValid|=CHASSIS_X_VALID;
         Control_msg.Chassis_speed_y=200.0f;
+//	Control_msg.ControlValid|=CHASSIS_Y_VALID;
         Control_msg.Chassis_speed_rotate=300.0f;
-        Control_msg.Gimbal_delta_pitch=400.0f;
-        Control_msg.Gimbal_delta_yaw=500.0f;
-		Control_msg.ControlValid=0x01;
+//	Control_msg.ControlValid|=CHASSIS_R_VALID;
+        Control_msg.Gimbal_delta_pitch=2.0f;
+	Control_msg.ControlValid|=GIMBAL_PITCH_VALID;
+        Control_msg.Gimbal_delta_yaw=1.0f;
+	Control_msg.ControlValid|=GIMBAL_YAW_VALID;
         Control_info_pub.publish(Control_msg);
         ros::spinOnce();
         loop_rate.sleep();

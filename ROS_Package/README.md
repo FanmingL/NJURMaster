@@ -15,5 +15,8 @@ Send messages to "/RobotControl" topic to control the Gimbal and the Chassis of 
 4.rads that Gimbal pitch angle should be adjusted (rads)
 5.rads that Gimbal yaw angle should be adjusted (rads)
 
+compile robot_protocol_msgs first, then compile rest
 
 Note: Please adjust the current time of mainfold before compiling.
+
+
