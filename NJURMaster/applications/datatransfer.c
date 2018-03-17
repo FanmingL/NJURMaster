@@ -1,5 +1,6 @@
 #include "main.h"
 u8 data_to_send[50];
+u8 error_data[4];
 extern u32 SelfCheckErrorFlag;
 
 #define BYTE0(dwTemp)       ( *( (char *)(&dwTemp)		) )
@@ -348,21 +349,43 @@ void ANO_DT_Send_Senser(s16 a_x,s16 a_y,s16 a_z,s16 g_x,s16 g_y,s16 g_z,s16 m_x,
 
 void Self_Check_Send_Status(u32 Error_flag){
 	u8 _cnt=0;
-	u8 sum=0;
-	u8 i;
-	data_to_send[_cnt++]=0xAA;
-	data_to_send[_cnt++]=0xAA;
-	data_to_send[_cnt++]=0x03;//Frame Type
-	data_to_send[_cnt++]=5;
-	data_to_send[_cnt++]=NET_ID;
-	data_to_send[_cnt++]=BYTE3(Error_flag);
-	data_to_send[_cnt++]=BYTE2(Error_flag);
-	data_to_send[_cnt++]=BYTE1(Error_flag);
-	data_to_send[_cnt++]=BYTE0(Error_flag);
+
+	error_data[_cnt++]=BYTE3(Error_flag);
+	error_data[_cnt++]=BYTE2(Error_flag);
+	error_data[_cnt++]=BYTE1(Error_flag);
+	error_data[_cnt++]=BYTE0(Error_flag);
 	
-	for(i=0;i<_cnt;i++)
-		sum += data_to_send[i];
-	data_to_send[_cnt++] = sum;
-	Usart2_Send(data_to_send, _cnt);
+	Zigbee_Send(0x02,error_data, 4);
 }
 
+/***********************************************
+Desc:用这个函数来进行战车间通信
+para:
+	target:信息接收方的地址(1-7)
+	data:要传送的数据
+	num:数据的长度
+************************************************/
+void Zigbee_Send(u32 target,u8 *data,u8 num){
+	u8 _cnt=0;
+	int i=0;
+	data_to_send[_cnt++]=0xFE;//frame start
+	data_to_send[_cnt++]=num+4;//length
+	
+	data_to_send[_cnt++]=0x91;//source port
+	data_to_send[_cnt++]=0x90;//target port
+	
+	data_to_send[_cnt++]=BYTE0(target);
+	data_to_send[_cnt++]=BYTE1(target);//data_to_send
+	
+	for(i=0;i<num;i++){
+		data_to_send[_cnt++]=data[i];
+		if(data_to_send[_cnt-1]==0xFF) {
+			data_to_send[_cnt-1]=0xFE;
+			data_to_send[_cnt++]=0xFD;
+		}
+		if(data_to_send[_cnt-1]==0xFE) 
+			data_to_send[_cnt++]=0xFC;
+	}
+	data_to_send[_cnt++] = 0xFF;
+	Usart2_Send(data_to_send, _cnt);
+}

@@ -12,4 +12,5 @@ void ANO_DT_Send_Check(u8 head, u8 check_sum);
 void ANO_DT_Send_Status(float angle_rol, float angle_pit, float angle_yaw, s32 alt, u8 fly_model, u8 armed);
 void ANO_DT_Send_Senser(s16 a_x,s16 a_y,s16 a_z,s16 g_x,s16 g_y,s16 g_z,s16 m_x,s16 m_y,s16 m_z);
 void Self_Check_Send_Status(u32 Error_flag);
+void Zigbee_Send(u32 target,u8 *data,u8 num);
 #endif
