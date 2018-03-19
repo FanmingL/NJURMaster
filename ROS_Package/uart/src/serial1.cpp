@@ -84,7 +84,7 @@ switch( nSpeed )
 
 int open_port(int fd,int comport)
 {
-    char *dev[]={"/dev/ttyTHS0","/dev/ttyTHS1","/dev/ttyTHS2"};
+//    char *dev[]={"/dev/ttyTHS0","/dev/ttyTHS1","/dev/ttyTHS2"};
     long  vdisable;
     if (comport==0)
     {    fd = open( "/dev/ttyTHS0", O_RDWR|O_NOCTTY|O_NDELAY);

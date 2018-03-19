@@ -190,7 +190,8 @@ include_directories(
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 add_executable(uart src/main.cpp src/serial1.cpp)  
-  
+add_dependencies(uart robot_protocol_msgs_generate_messages_cpp)
+#add_dependencies(uart robot_protocol_msgs_generate_services_cpp)
 target_link_libraries(uart
  ${catkin_LIBRARIES}  
 )  

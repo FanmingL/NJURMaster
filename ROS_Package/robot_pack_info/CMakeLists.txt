@@ -188,8 +188,11 @@ include_directories(
 #############
 ## Testing ##
 #############
+
 add_executable(pack_info src/main.cpp)  
   
+add_dependencies(pack_info robot_protocol_msgs_generate_messages_cpp)
+
 target_link_libraries(pack_info
  ${catkin_LIBRARIES}  
 )  

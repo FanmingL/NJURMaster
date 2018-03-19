@@ -67,10 +67,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
- generate_messages(
-   DEPENDENCIES
-   std_msgs
- )
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -176,7 +176,7 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 add_executable(unpack_info src/main.cpp )  
-  
+  add_dependencies(unpack_info robot_protocol_msgs_generate_messages_cpp)
 target_link_libraries(unpack_info
  ${catkin_LIBRARIES}  
 )  

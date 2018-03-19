@@ -194,6 +194,7 @@ include_directories(
 ## Testing ##
 #############
 add_executable(rm_control_demo src/main.cpp src/key.cpp)
+add_dependencies(rm_control_demo robot_protocol_msgs_generate_messages_cpp)
 target_link_libraries(rm_control_demo
 ${catkin_LIBRARIES}
 )
