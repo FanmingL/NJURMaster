@@ -355,7 +355,7 @@ void Self_Check_Send_Status(u32 Error_flag){
 	error_data[_cnt++]=BYTE1(Error_flag);
 	error_data[_cnt++]=BYTE0(Error_flag);
 	
-	Zigbee_Send(0x02,error_data, 4);
+	Zigbee_Send(0x06,error_data, 4);
 }
 
 /***********************************************
