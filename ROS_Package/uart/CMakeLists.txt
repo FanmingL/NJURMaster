@@ -5,7 +5,6 @@ project(uart)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  dynamic_reconfigure
   geometry_msgs
   roscpp
   std_msgs 
