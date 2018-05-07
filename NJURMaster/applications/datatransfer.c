@@ -2,7 +2,7 @@
 #include "usart6.h"
 #include "RefereeSystem.h"
 #include "string.h"
-#define RS_DEBUG_INFO 1
+//#define RS_DEBUG_INFO
 
 RefereeSystem_t RefereeSystemData;
 //CRC8, Ploynomial = X^8+X^5+X^4+1
@@ -155,6 +155,15 @@ if (sys_time%10==0)
 		PC_SendMotor(CM1Encoder.filter_rate,CM2Encoder.filter_rate,CM3Encoder.filter_rate,CM4Encoder.filter_rate,
 								GMPitchEncoder.filter_rate,GMYawEncoder.filter_rate,0,0);
 	}
+	else if((sys_time+7)%50==0)
+	{
+		ANO_DT_Send_Power((u16)RefereeSystemData.extPowerHeatData.chassisPower, (u16)RefereeSystemData.extPowerHeatData.chassisPowerBuffer);
+		//ANO_DT_Send_Power(123, 456);
+	}
+	else if((sys_time +8 )%50 ==0)
+	{
+		//ANO_DT_Send_Speed(123.0f, 456.0f, 789.0f);
+	}
 	if (send_check)
 	{
 		send_check = 0;
@@ -304,11 +313,13 @@ void Usart6_DataPrepare(u8* pData)
 {
 	u8 index = 0;
 	u16 _data_len = 0;
-	u8 Seq = 0;
+
   u32 floatdata = 0;
 	u16 CmdID = 0;	
+	u8 Seq = 0;
 	CRC8 = 0;
 	FrameTail = 0;
+	
 	
  
     
@@ -585,6 +596,34 @@ void ANO_DT_Send_Status(float angle_rol, float angle_pit, float angle_yaw, u32 a
 	Data_Send(data_to_send, _cnt);
 }
 
+void ANO_DT_Send_Power(u16 votage, u16 current)
+{
+	u8 _cnt=0;
+	u16 temp;
+	
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0x05;
+	data_to_send[_cnt++]=0;
+	
+	temp = votage;
+	data_to_send[_cnt++]=BYTE1(temp);
+	data_to_send[_cnt++]=BYTE0(temp);
+	temp = current;
+	data_to_send[_cnt++]=BYTE1(temp);
+	data_to_send[_cnt++]=BYTE0(temp);
+	
+	data_to_send[3] = _cnt-4;
+	
+	u8 sum = 0;
+	for(u8 i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+	
+	data_to_send[_cnt++]=sum;
+	
+	Data_Send(data_to_send, _cnt);
+}
+
 void ANO_DT_Send_Senser(s16 a_x,s16 a_y,s16 a_z,s16 g_x,s16 g_y,s16 g_z,s16 m_x,s16 m_y,s16 m_z)
 {
 	u8 _cnt=0;
@@ -783,6 +822,39 @@ void ANO_DT_Send_MotoPWM(u16 m_1,u16 m_2,u16 m_3,u16 m_4,u16 m_5,u16 m_6,u16 m_7
 	data_to_send[_cnt++]=sum;
 	
 	Data_Send(data_to_send, _cnt);
+}
+
+
+void ANO_DT_Send_Speed(float x_s,float y_s,float z_s)
+{
+	u8 _cnt=0;
+	vs16 _temp;
+	
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0x0B;
+	data_to_send[_cnt++]=0;
+	
+	_temp = (int)(0.1f *x_s);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = (int)(0.1f *y_s);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = (int)(0.1f *z_s);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	
+	data_to_send[3] = _cnt-4;
+	
+	u8 sum = 0;
+	for(u8 i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+	data_to_send[_cnt++]=sum;
+	
+	Data_Send(data_to_send, _cnt);
+
 }
 
 

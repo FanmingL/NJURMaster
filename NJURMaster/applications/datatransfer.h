@@ -17,6 +17,8 @@ void RefereeSys_Send_Data(extUserData_t userdata);
 void PC_SendMotor(s16 m_1,s16 m_2,s16 m_3,s16 m_4,s16 m_5,s16 m_6,s16 m_7,s16 m_8);
 void PC_Send_IMU(float pit, float rol, float yaw,float Gim_Pitch, float Gim_Yaw, u32 alt);
 void PC_Send_RC(void);
+void ANO_DT_Send_Power(u16 votage, u16 current);
+void ANO_DT_Send_Speed(float x_s,float y_s,float z_s);
 typedef __packed struct 
 {
 	float chassis_x_speed;
@@ -26,7 +28,7 @@ typedef __packed struct
 	float Yaw_change;
 	uint16_t Valid_flag;
 }PC_control_t;
-
+extern RefereeSystem_t RefereeSystemData;
 #define PC_CONTORL_CHASSIS_X_INDEX (0u)
 #define PC_CONTORL_CHASSIS_Y_INDEX (1u)
 #define PC_CONTORL_CHASSIS_R_INDEX (2u)
