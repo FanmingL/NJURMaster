@@ -41,7 +41,7 @@ void write_callback2(const std_msgs::String &msg)
     unsigned char *temp1=new unsigned char(len/2);
     
     for (int i=0;i<len/2;i++){
-        sscanf(temp.substr(0,2).c_str(),"%X",temp1+i);
+        sscanf(temp.substr(0,2).c_str(),"%X",(int *)(temp1+i));
         temp.erase(0,2);
     }
     write(fd,temp1,len/2);
@@ -85,7 +85,7 @@ bool uart_send_byte(robot_protocol_msgs::uart_srv::Request  &req,
     unsigned char *temp1=new unsigned char(len/2);
     
     for (int i=0;i<len/2;i++){
-        sscanf(temp.substr(0,2).c_str(),"%X",temp1+i);
+        sscanf(temp.substr(0,2).c_str(),"%X",(int *)(temp1+i));
         temp.erase(0,2);
     }
     
