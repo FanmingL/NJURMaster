@@ -2,7 +2,7 @@
 #include "usart6.h"
 #include "RefereeSystem.h"
 #include "string.h"
-#define RS_DEBUG_INFO 1
+#define RS_DEBUG_INFO 0
 
 RefereeSystem_t RefereeSystemData;
 //CRC8, Ploynomial = X^8+X^5+X^4+1
@@ -84,10 +84,11 @@ u8 data_to_send[50];
 //Gimbal Control Data (Delta angle)
 
 #define USART3_PC_SEND
+#define USART2_DATA_SEND
 
 static void Data_Send(u8 * _val, u8 _len)
 {
-#ifdef USART3_PC_SEND
+#ifdef USART2_DATA_SEND
 	Usart2_Send(_val, _len);
 #else
 	Usart3_Send(_val, _len);
@@ -114,7 +115,7 @@ void DatatransferTask(u32 sys_time)
 {
 if (sys_time%10==0)
 	{
-		ANO_DT_Send_Status(Roll,Pitch,Yaw,SelfCheckErrorFlag,0,0);//???????????
+		ANO_DT_Send_Status(Roll,Pitch,Yaw,SelfCheckErrorFlag,0,0);//Roll
 	}
 	else if((sys_time+1)%10==0)
 	{
@@ -137,7 +138,7 @@ if (sys_time%10==0)
 	}
 	if((sys_time+3)%20==0)
 	{
-		RefereeSys_Send_Data(RefereeSystemData.userData);
+	//	RefereeSys_Send_Data(RefereeSystemData.userData);
 	}
 	else if((sys_time+4)%20==0)
 	{
@@ -151,9 +152,9 @@ if (sys_time%10==0)
 	else if((sys_time+6)%50==0)
 	{
 		ANO_DT_Send_MotoPWM(ABS(CM1Encoder.filter_rate),ABS(CM2Encoder.filter_rate),ABS(CM3Encoder.filter_rate),
-												ABS(CM4Encoder.filter_rate),ABS(GMPitchEncoder.filter_rate),ABS(GMYawEncoder.filter_rate),0,0);
+                            ABS(CM4Encoder.filter_rate),ABS(GMPitchEncoder.filter_rate),ABS(GMYawEncoder.filter_rate),0,0);
 		PC_SendMotor(CM1Encoder.filter_rate,CM2Encoder.filter_rate,CM3Encoder.filter_rate,CM4Encoder.filter_rate,
-								GMPitchEncoder.filter_rate,GMYawEncoder.filter_rate,0,0);
+                     GMPitchEncoder.filter_rate,GMYawEncoder.filter_rate,0,0);
 	}
 	if (send_check)
 	{
@@ -163,24 +164,24 @@ if (sys_time%10==0)
 	if (send_pid1)
 	{
 		send_pid1=0;
-		ANO_DT_Send_PID(1,PID_arg[0].kp,PID_arg[0].ki,PID_arg[0].kd,
-											PID_arg[1].kp,PID_arg[1].ki,PID_arg[1].kd,
-											PID_arg[2].kp,PID_arg[2].ki,PID_arg[2].kd);
+		ANO_DT_Send_PID(1,PID_arg[0].kp,PID_arg[0].ki,PID_arg[0].kd,//CHASSIS_ROTATION
+                          PID_arg[1].kp,PID_arg[1].ki,PID_arg[1].kd,//CHASSIS_Vec
+                          PID_arg[2].kp,PID_arg[2].ki,PID_arg[2].kd);//Pitch position
 		
 	}
 	else if(send_pid2)
 	{
 		send_pid2=0;
-		ANO_DT_Send_PID(2,PID_arg[3].kp,PID_arg[3].ki,PID_arg[3].kd,
-											PID_arg[4].kp,PID_arg[4].ki,PID_arg[4].kd,
-											PID_arg[5].kp,PID_arg[5].ki,PID_arg[5].kd);
+		ANO_DT_Send_PID(2,PID_arg[3].kp,PID_arg[3].ki,PID_arg[3].kd,//Pitch velocity
+                          PID_arg[4].kp,PID_arg[4].ki,PID_arg[4].kd,//yaw position
+                          PID_arg[5].kp,PID_arg[5].ki,PID_arg[5].kd);//yaw velocity
 	}
 	else if (send_pid3)
 	{
 		send_pid3=0;
-				ANO_DT_Send_PID(3,PID_arg[6].kp,PID_arg[6].ki,PID_arg[6].kd,
-											PID_arg[7].kp,PID_arg[7].ki,PID_arg[7].kd,
-											0,0,0);
+				ANO_DT_Send_PID(3,0.01f*(GMPitchEncoder.raw_value+1000),0.01f*(GMPitchEncoder.ecd_angle+1000),0.01f*(AllDataUnion.AllData.GimbalPitchOffset+1000),
+                                  0.01f*(GMYawEncoder.raw_value+1000),0.01f*(GMYawEncoder.ecd_angle+1000),0.01f*(AllDataUnion.AllData.GimbalYawOffset+1000),//PID_arg[7].kd,
+                                  0.01f*(FireSpeed),0.01f*(CM4Encoder.ecd_angle+1000),0.01f*(CMOutput4+1000));//FireSpeed  CM4Encoder.ecd_angle CMOutput4
 	}
 
 }
@@ -292,32 +293,29 @@ void Usart3_DataPrepare(u8 data)
 
 }
 
-u8 CRC8 = 0;
-u16 FrameTail = 0;
+
 /**
   * @brief 串口6数据预解析
   * @param data	从DR寄存器中读取到的数据
   * @retval None
   * @details 若解析成功则跳转到BasicProtocolAnalysis进行处理
   */
+u8 CRC8 = 0;	u16 FrameTail = 0;
 void Usart6_DataPrepare(u8* pData)
 {
 	u8 index = 0;
 	u16 _data_len = 0;
 	u8 Seq = 0;
-  u32 floatdata = 0;
 	u16 CmdID = 0;	
-	CRC8 = 0;
-	FrameTail = 0;
-	
- 
+    
+    u32 floatdata = 0;
     
 	if(pData == NULL)
 		return;
 
 	while(index < BSP_USART6_DMA_RX_BUF_LEN && pData[index++] != 0xA5);	//is it the start of frame?
 
-	if(index > BSP_USART6_DMA_RX_BUF_LEN)
+	if(index >= BSP_USART6_DMA_RX_BUF_LEN)
 		return;
 	
 	if((index + 1) < BSP_USART6_DMA_RX_BUF_LEN)							// get the length of data
@@ -330,6 +328,8 @@ void Usart6_DataPrepare(u8* pData)
 	else{
 		Seq = pData[++index];
 		CRC8 = pData[++index];
+        if(!(Verify_CRC8_Check_Sum(pData,5,CRC8_INIT)))
+            return;
 		CmdID = pData[index + 1] | ((u16)pData[index + 2])<<8;
 		index +=2;
 		FrameTail = pData[7+_data_len] | (u16)(pData[8+_data_len]<<8);
@@ -364,8 +364,8 @@ void Usart6_DataPrepare(u8* pData)
 				RefereeSystemData.extGameRobotState.position.yaw = *((float*)&floatdata);				
 				index +=4;
 			// output the received data
-#ifdef RS_DEBUG_INFO
-   			printf("Seq:\t%d\r\n",Seq);
+			#ifdef RS_DEBUG_INFO
+   			 	printf("Seq:\t%d\r\n",Seq);
 				printf("RobotState:\r\n");
 				printf("stageRemainTime:%d\r\n",RefereeSystemData.extGameRobotState.stageRemainTime);
 				printf("gameProcess:%d\r\n",RefereeSystemData.extGameRobotState.gameProcess);
@@ -376,8 +376,8 @@ void Usart6_DataPrepare(u8* pData)
 				printf("position Y:\t%f\r\n",RefereeSystemData.extGameRobotState.position.y);
 				printf("position Z:\t%f\r\n",RefereeSystemData.extGameRobotState.position.z);
 				printf("position Yaw:\t%f\r\n",RefereeSystemData.extGameRobotState.position.yaw);
-				printf("\r\n");
-#endif
+    			printf("\r\n");
+			#endif
 				break;
 			case ROBOTHURT:
 			// get armorType
@@ -385,13 +385,13 @@ void Usart6_DataPrepare(u8* pData)
 			// get hurtType
 				RefereeSystemData.extRobotHurt.hurtType = (pData[index + 1] & 0xf0)>>4;	
 				index +=1;
-#ifdef RS_DEBUG_INFO
+			#ifdef RS_DEBUG_INFO
 				printf("Seq:\t%d\r\n",Seq);
 				printf("RobotHurtData:\r\n");
 				printf("armorType:\t%d\r\n",RefereeSystemData.extRobotHurt.armorType);
 				printf("hurtType:\t%d\r\n",RefereeSystemData.extRobotHurt.hurtType);
 				printf("\r\n");
-#endif	
+			#endif	
 				break;
 			case SHOOTDATA:
 			// get the bullet type
@@ -404,7 +404,7 @@ void Usart6_DataPrepare(u8* pData)
 				index +=4;
 			// get the reserved data
 				/**/
-#ifdef RS_DEBUG_INFO
+			#ifdef RS_DEBUG_INFO
 				printf("Seq:\t%d\r\n",Seq);
 				printf("ShootData:\r\n");
 				if(RefereeSystemData.extShootData.bulletType == 1)
@@ -414,7 +414,7 @@ void Usart6_DataPrepare(u8* pData)
 				printf("bulletFreq: %d\tHz\r\n",RefereeSystemData.extShootData.bulletFreq);
 				printf("bulletSpeed: %f\tm/s\r\n",RefereeSystemData.extShootData.bulletSpeed);
 				printf("\r\n");
-#endif
+			#endif
 				break;
 			case POWERHEAT:
 			// get power data
@@ -435,7 +435,7 @@ void Usart6_DataPrepare(u8* pData)
 				index +=2;
 				RefereeSystemData.extPowerHeatData.shooterHeat1 = ((u16)pData[index + 1]) | ((u16)pData[index + 2])<<8;
 				index +=2;
-#ifdef RS_DEBUG_INFO
+			#ifdef RS_DEBUG_INFO
 				printf("Seq:\t%d\r\n",Seq);
 				printf("Power & Heat:\r\n");
 				printf("chassisVolt: %f\tV\r\n",RefereeSystemData.extPowerHeatData.chassisVolt);
@@ -445,22 +445,22 @@ void Usart6_DataPrepare(u8* pData)
 				printf("17 mm shooter's heat: %d\tJ\r\n",RefereeSystemData.extPowerHeatData.shooterHeat0);
 				printf("42 mm shooter's heat: %d\tJ\r\n",RefereeSystemData.extPowerHeatData.shooterHeat1);
 				printf("\r\n");
-#endif
+			#endif
 				break;
 			case RFIDDETECT:
 				RefereeSystemData.extRfidDetect.cardType = pData[++index];
 				RefereeSystemData.extRfidDetect.cardIndex = pData[++index];
-#ifdef RS_DEBUG_INFO
+			#ifdef RS_DEBUG_INFO
 				printf("Seq:\t%d\r\n",Seq);
 				printf("Rfid detect:\r\n");
 				printf("cardType: %d\r\n",RefereeSystemData.extRfidDetect.cardType);
 				printf("cardIndex: %d\r\n",RefereeSystemData.extRfidDetect.cardIndex);
 				printf("\r\n");
-#endif
+			#endif
 				break;
 			case GAMERESULT:
 				RefereeSystemData.extGameResult.winner = pData[++index];
-#ifdef RS_DEBUG_INFO
+			#ifdef RS_DEBUG_INFO
 				printf("Seq:\t%d\r\n",Seq);
 				printf("Game Result:\r\n");
 				switch(RefereeSystemData.extGameResult.winner)
@@ -474,21 +474,21 @@ void Usart6_DataPrepare(u8* pData)
 					default: break;
 				}
 				printf("\r\n");
-#endif
+			#endif
 				break;
 			case BUFF:
 				RefereeSystemData.extGetBuff.buffType = pData[++index];
 				RefereeSystemData.extGetBuff.buffAddition = pData[++index];
-#ifdef RS_DEBUG_INFO
+			#ifdef RS_DEBUG_INFO
 				printf("Seq:\t%d\r\n",Seq);
 				printf("Buff Type:\r\n");
 				printf("buffer type: %d\r\n",RefereeSystemData.extGetBuff.buffType);
 				printf("buffer addition: %d\r\n",RefereeSystemData.extGetBuff.buffAddition);
 				printf("\r\n");
-#endif
+			#endif
 				break;
 			case RESERVED:
-#ifdef RS_DEBUG_INFO
+			#ifdef RS_DEBUG_INFO
 				printf("Seq\t%d\r\n",Seq);
 				printf("UserData:\r\n");
 				floatdata = (u32)pData[index+1] | (u32)pData[index+2]<<8 | (u32)pData[index+3]<<16 | (u32)pData[index+4]<<24;                
@@ -502,7 +502,7 @@ void Usart6_DataPrepare(u8* pData)
 				index +=4;			
 				printf("mask: %d\r\n",pData[index+1]);
 				printf("\r\n");
-#endif
+			#endif
 				break;
 			default:	//error cmd
 				break;
@@ -891,6 +891,8 @@ unsigned char Verify_CRC16_Check_Sum(uint8_t *pchMessage, uint32_t dwLength)
 
 void PC_Send_IMU(float pit, float rol, float yaw,float Gim_Pitch, float Gim_Yaw, u32 alt)
 {
+	u8 i=0;
+	u8 sum = 0;
 	PC_Send_IMU_t PC_IMU_Message;
 	PC_IMU_Message.Pitch=pit;
 	PC_IMU_Message.Roll=rol;
@@ -898,8 +900,7 @@ void PC_Send_IMU(float pit, float rol, float yaw,float Gim_Pitch, float Gim_Yaw,
 	PC_IMU_Message.state=alt;
 	PC_IMU_Message.Gimbal_Pitch=Gim_Pitch;
 	PC_IMU_Message.Gimbal_Yaw=Gim_Yaw;
-	u8 i=0;
-	u8 sum = 0;
+	
 	data_to_send[0]=0xAA;
 	data_to_send[1]=0xAA;
 	data_to_send[2]=0x01;

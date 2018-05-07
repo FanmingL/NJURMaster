@@ -32,7 +32,6 @@ void BasicProtocolAnalysis(u8 const *data_buf,int _len)
 {
 	u8 sum = 0;
 	u8 i;
-	float __temp;
 	for(i=0;i<(_len-1);i++)														//求和校验
 		sum += *(data_buf+i);
 	if(!(sum==*(data_buf+_len-1)))		return;						//校验不成功则return
@@ -79,25 +78,6 @@ void BasicProtocolAnalysis(u8 const *data_buf,int _len)
 			{
 				memcpy((u8*)(&PC_control), (data_buf+4), sizeof(PC_control_t));
 				FeedDog(DEVICE_INDEX_PC);
-//				if (PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID)
-//				{
-//					ChassisGoToward=PC_control.chassis_x_speed;
-//				}
-//				if(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID)
-//				{
-//					ChassisGoLeftRight=PC_control.chassis_y_speed;
-//				}
-//				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID)
-//				{
-//					__temp=GMPitchEncoder.ecd_angle+PC_control.Pitch_change;
-//					GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
-//				}
-//				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID)
-//				{
-//					__temp=Yaw+PC_control.Yaw_change;
-//					GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
-//				}
-				
 			}
 if(*(data_buf+2)==0X02)
 	{
@@ -208,6 +188,7 @@ u8 WHEEL_STATE = WHEEL_OFF;//摩擦轮状态
   * @param None
   * @retval None
   */
+
 void RcDataAnalysis(RC_Ctrl_t *rc)
 {
 	static u16 cancel_cnt = 0;//鼠标模式下右键计时超过1.5s关闭摩擦轮
@@ -216,9 +197,23 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 	{
 		if (GetRcMode()==RC_KEY_RCMODE)
 		{
-			__temp=GimbalPitchPosRef-(rc->rc.ch1-CHANNELMIDDLE)*RC_PITCHSCALE;
+			if(my_abs(rc->rc.ch1-CHANNELMIDDLE)>IDLE_RC_VALUE)
+			{
+				__temp=GimbalPitchPosRef-(rc->rc.ch1-CHANNELMIDDLE)*RC_PITCHSCALE;
+			}
+			else
+			{
+				__temp=GimbalPitchPosRef;
+			}
 			GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
-			__temp=GimbalYawPosRef-(rc->rc.ch0-CHANNELMIDDLE)*RC_YAWSCALE;
+			if(my_abs(rc->rc.ch0-CHANNELMIDDLE)>IDLE_RC_VALUE)
+			{
+				__temp=GimbalYawPosRef-(rc->rc.ch0-CHANNELMIDDLE)*RC_YAWSCALE;
+			}
+			else
+			{
+				__temp=GimbalYawPosRef;
+			}
 			GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
 
 			ChassisGoToward=(rc->rc.ch3-CHANNELMIDDLE)*RC_TOWARD_SCALE;
@@ -284,54 +279,68 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 	}
 	else 
 	{
-				if (PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID)
+		if (PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID)
+		{
+			ChassisGoToward=PC_control.chassis_x_speed;
+		}
+		if(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID)
+		{
+			ChassisGoLeftRight=PC_control.chassis_y_speed;
+		}
+		if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID)
+		{
+			__temp=GMPitchEncoder.ecd_angle+PC_control.Pitch_change;
+			GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
+		}
+		if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID)
+		{
+			__temp=Yaw+PC_control.Yaw_change;
+			GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
+		}
+		if (GetRcMode()==RC_KEY_RCMODE)
+		{
+			if (!(PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID))
+			{
+				ChassisGoToward=(rc->rc.ch3-CHANNELMIDDLE)*RC_TOWARD_SCALE;
+			}
+		
+			if(!(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID))
+			{
+				ChassisGoLeftRight=(rc->rc.ch2-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
+			}
+			if (!(PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID))
+			{
+				if(my_abs(rc->rc.ch1-CHANNELMIDDLE)>IDLE_RC_VALUE)
 				{
-					ChassisGoToward=PC_control.chassis_x_speed;
+					__temp=GimbalPitchPosRef-(rc->rc.ch1-CHANNELMIDDLE)*RC_PITCHSCALE;
 				}
-				if(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID)
+				else
 				{
-					ChassisGoLeftRight=PC_control.chassis_y_speed;
+					__temp=GimbalPitchPosRef;
 				}
-				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID)
+				GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
+			}
+			if (!(PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID))
+			{
+				if(my_abs(rc->rc.ch0-CHANNELMIDDLE)>IDLE_RC_VALUE)
 				{
-					__temp=GMPitchEncoder.ecd_angle+PC_control.Pitch_change;
-					GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
+					__temp=GimbalYawPosRef-(rc->rc.ch0-CHANNELMIDDLE)*RC_YAWSCALE;
 				}
-				if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID)
+				else
 				{
-					__temp=Yaw+PC_control.Yaw_change;
-					GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
+					__temp=GimbalYawPosRef;
 				}
-				if (GetRcMode()==RC_KEY_RCMODE)
-				{
-					if (!(PC_control.Valid_flag&PC_CONTORL_CHASSIS_X_VALID))
-					{
-						ChassisGoToward=(rc->rc.ch3-CHANNELMIDDLE)*RC_TOWARD_SCALE;
-					}
-				
-					if(!(PC_control.Valid_flag&PC_CONTORL_CHASSIS_Y_VALID))
-					{
-						ChassisGoLeftRight=(rc->rc.ch2-CHANNELMIDDLE)*RC_LEFTRIGHT_SCALE;
-					}
-					if (!(PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID))
-					{
-						__temp=GimbalPitchPosRef-(rc->rc.ch1-CHANNELMIDDLE)*RC_PITCHSCALE;
-						GimbalPitchPosRef=LIMIT(__temp,PITCH_MIN,PITCH_MAX);
-					}
-					if (!(PC_control.Valid_flag&PC_CONTORL_GIMBAL_YAW_VALID))
-					{
-						__temp=GimbalYawPosRef-(rc->rc.ch0-CHANNELMIDDLE)*RC_YAWSCALE;
-						GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
-					}
-					if(rc->rc.s1 == 3)
-					{
-						WHEEL_STATE = WHEEL_ON;
-					}
-					else
-					{
-						WHEEL_STATE = WHEEL_OFF;
-					}
-				}
+				GimbalYawPosRef=LIMIT(__temp,-YAW_MAX-Yaw,YAW_MAX-Yaw);
+			}
+			if(rc->rc.s1 == 3)
+			{
+				WHEEL_STATE = WHEEL_ON;
+			}
+			else
+			{
+				WHEEL_STATE = WHEEL_OFF;
+			}
+		}
 		else if (GetRcMode()==RC_KEY_KEYBOARD)
 		{
 			
@@ -372,7 +381,7 @@ void RcDataAnalysis(RC_Ctrl_t *rc)
 			{
 				GimbalYawPosRef = LIMIT(GimbalYawPosRef-(rc->mouse.x)*MOUSERESPONCERATE,-YAW_MAX-Yaw,YAW_MAX-Yaw);
 			}
-			if (PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID)
+			if (!(PC_control.Valid_flag&PC_CONTORL_GIMBAL_PITCH_VALID))
 			{
 				GimbalPitchPosRef = LIMIT(GimbalPitchPosRef-(rc->mouse.y)*MOUSERESPONCERATE,PITCH_MIN,PITCH_MAX);
 			}
