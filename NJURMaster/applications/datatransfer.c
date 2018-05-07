@@ -2,7 +2,7 @@
 #include "usart6.h"
 #include "RefereeSystem.h"
 #include "string.h"
-#define RS_DEBUG_INFO 0
+//#define RS_DEBUG_INFO
 
 RefereeSystem_t RefereeSystemData;
 //CRC8, Ploynomial = X^8+X^5+X^4+1
@@ -84,11 +84,10 @@ u8 data_to_send[50];
 //Gimbal Control Data (Delta angle)
 
 #define USART3_PC_SEND
-#define USART2_DATA_SEND
 
 static void Data_Send(u8 * _val, u8 _len)
 {
-#ifdef USART2_DATA_SEND
+#ifdef USART3_PC_SEND
 	Usart2_Send(_val, _len);
 #else
 	Usart3_Send(_val, _len);
@@ -106,16 +105,16 @@ static void PC_Send( u8 *_val, u8 _len)
 }
 
 /**
-  * @brief 串口通讯task
-  * @param 系统从开机到现在运行的毫秒数
+  * @brief ????task
+  * @param ??????????????
   * @retval None
-  * @details 在这里向上位机或者上层硬件发送当前机器人的状态或传感器的数据
+  * @details ??????????????????????????????
   */
 void DatatransferTask(u32 sys_time)
 {
 if (sys_time%10==0)
 	{
-		ANO_DT_Send_Status(Roll,Pitch,Yaw,SelfCheckErrorFlag,0,0);//Roll
+		ANO_DT_Send_Status(Roll,Pitch,Yaw,SelfCheckErrorFlag,0,0);//???????????
 	}
 	else if((sys_time+1)%10==0)
 	{
@@ -138,7 +137,7 @@ if (sys_time%10==0)
 	}
 	if((sys_time+3)%20==0)
 	{
-	//	RefereeSys_Send_Data(RefereeSystemData.userData);
+		RefereeSys_Send_Data(RefereeSystemData.userData);
 	}
 	else if((sys_time+4)%20==0)
 	{
@@ -152,9 +151,18 @@ if (sys_time%10==0)
 	else if((sys_time+6)%50==0)
 	{
 		ANO_DT_Send_MotoPWM(ABS(CM1Encoder.filter_rate),ABS(CM2Encoder.filter_rate),ABS(CM3Encoder.filter_rate),
-                            ABS(CM4Encoder.filter_rate),ABS(GMPitchEncoder.filter_rate),ABS(GMYawEncoder.filter_rate),0,0);
+												ABS(CM4Encoder.filter_rate),ABS(GMPitchEncoder.filter_rate),ABS(GMYawEncoder.filter_rate),0,0);
 		PC_SendMotor(CM1Encoder.filter_rate,CM2Encoder.filter_rate,CM3Encoder.filter_rate,CM4Encoder.filter_rate,
-                     GMPitchEncoder.filter_rate,GMYawEncoder.filter_rate,0,0);
+								GMPitchEncoder.filter_rate,GMYawEncoder.filter_rate,0,0);
+	}
+	else if((sys_time+7)%50==0)
+	{
+		ANO_DT_Send_Power((u16)RefereeSystemData.extPowerHeatData.chassisPower, (u16)RefereeSystemData.extPowerHeatData.chassisPowerBuffer);
+		//ANO_DT_Send_Power(123, 456);
+	}
+	else if((sys_time +8 )%50 ==0)
+	{
+		//ANO_DT_Send_Speed(123.0f, 456.0f, 789.0f);
 	}
 	if (send_check)
 	{
@@ -164,33 +172,33 @@ if (sys_time%10==0)
 	if (send_pid1)
 	{
 		send_pid1=0;
-		ANO_DT_Send_PID(1,PID_arg[0].kp,PID_arg[0].ki,PID_arg[0].kd,//CHASSIS_ROTATION
-                          PID_arg[1].kp,PID_arg[1].ki,PID_arg[1].kd,//CHASSIS_Vec
-                          PID_arg[2].kp,PID_arg[2].ki,PID_arg[2].kd);//Pitch position
+		ANO_DT_Send_PID(1,PID_arg[0].kp,PID_arg[0].ki,PID_arg[0].kd,
+											PID_arg[1].kp,PID_arg[1].ki,PID_arg[1].kd,
+											PID_arg[2].kp,PID_arg[2].ki,PID_arg[2].kd);
 		
 	}
 	else if(send_pid2)
 	{
 		send_pid2=0;
-		ANO_DT_Send_PID(2,PID_arg[3].kp,PID_arg[3].ki,PID_arg[3].kd,//Pitch velocity
-                          PID_arg[4].kp,PID_arg[4].ki,PID_arg[4].kd,//yaw position
-                          PID_arg[5].kp,PID_arg[5].ki,PID_arg[5].kd);//yaw velocity
+		ANO_DT_Send_PID(2,PID_arg[3].kp,PID_arg[3].ki,PID_arg[3].kd,
+											PID_arg[4].kp,PID_arg[4].ki,PID_arg[4].kd,
+											PID_arg[5].kp,PID_arg[5].ki,PID_arg[5].kd);
 	}
 	else if (send_pid3)
 	{
 		send_pid3=0;
-				ANO_DT_Send_PID(3,0.01f*(GMPitchEncoder.raw_value+1000),0.01f*(GMPitchEncoder.ecd_angle+1000),0.01f*(AllDataUnion.AllData.GimbalPitchOffset+1000),
-                                  0.01f*(GMYawEncoder.raw_value+1000),0.01f*(GMYawEncoder.ecd_angle+1000),0.01f*(AllDataUnion.AllData.GimbalYawOffset+1000),//PID_arg[7].kd,
-                                  0.01f*(FireSpeed),0.01f*(CM4Encoder.ecd_angle+1000),0.01f*(CMOutput4+1000));//FireSpeed  CM4Encoder.ecd_angle CMOutput4
+				ANO_DT_Send_PID(3,PID_arg[6].kp,PID_arg[6].ki,PID_arg[6].kd,
+											PID_arg[7].kp,PID_arg[7].ki,PID_arg[7].kd,
+											0,0,0);
 	}
 
 }
 
 /**
-  * @brief 串口2数据预解析
-  * @param data	从DR寄存器中读取到的数据
+  * @brief ??2?????
+  * @param data	?DR??????????
   * @retval None
-  * @details 若解析成功则跳转到BasicProtocolAnalysis进行处理
+  * @details ?????????BasicProtocolAnalysis????
   */
 void Usart2_DataPrepare(u8 data)
 {
@@ -198,36 +206,36 @@ void Usart2_DataPrepare(u8 data)
 	static u8 _data_len = 0,_data_cnt = 0;
 	static u8 state = 0;
 	
-	if(state==0&&data==0xAA)						//判断帧头
+	if(state==0&&data==0xAA)						//????
 	{
 		state=1;
 		RxBuffer[0]=data;
 	}
-	else if(state==1&&data==0xAF)			//帧头
+	else if(state==1&&data==0xAF)			//??
 	{
 		state=2;
 		RxBuffer[1]=data;
 	}
-	else if(state==2&&data<0XF1)			//帧类型
+	else if(state==2&&data<0XF1)			//???
 	{
 		state=3;
 		RxBuffer[2]=data;
 	}
-	else if(state==3&&data<50)				//帧长
+	else if(state==3&&data<50)				//??
 	{
 		state = 4;
 		RxBuffer[3]=data;
 		_data_len = data;
 		_data_cnt = 0;
 	}
-	else if(state==4&&_data_len>0)		//数据帧
+	else if(state==4&&_data_len>0)		//???
 	{
 		_data_len--;
 		RxBuffer[4+_data_cnt++]=data;
 		if(_data_len==0)
 			state = 5;
 	}
-	else if(state==5)								//校验帧
+	else if(state==5)								//???
 	{
 		state = 0;
 		RxBuffer[4+_data_cnt]=data;
@@ -240,10 +248,10 @@ void Usart2_DataPrepare(u8 data)
 }
 
 /**
-  * @brief 串口3数据预解析
-  * @param data	从DR寄存器中读取到的数据
+  * @brief ??3?????
+  * @param data	?DR??????????
   * @retval None
-  * @details 若解析成功则跳转到BasicProtocolAnalysis进行处理
+  * @details ?????????BasicProtocolAnalysis????
   */
 void Usart3_DataPrepare(u8 data)
 {
@@ -251,36 +259,36 @@ void Usart3_DataPrepare(u8 data)
 	static u8 _data_len = 0,_data_cnt = 0;
 	static u8 state = 0;
 	
-	if(state==0&&data==0xAA)						//判断帧头
+	if(state==0&&data==0xAA)						//????
 	{
 		state=1;
 		RxBuffer[0]=data;
 	}
-	else if(state==1&&data==0xAF)			//帧头
+	else if(state==1&&data==0xAF)			//??
 	{
 		state=2;
 		RxBuffer[1]=data;
 	}
-	else if(state==2&&data<0XF1)			//帧类型
+	else if(state==2&&data<0XF1)			//???
 	{
 		state=3;
 		RxBuffer[2]=data;
 	}
-	else if(state==3&&data<50)				//帧长
+	else if(state==3&&data<50)				//??
 	{
 		state = 4;
 		RxBuffer[3]=data;
 		_data_len = data;
 		_data_cnt = 0;
 	}
-	else if(state==4&&_data_len>0)		//数据帧
+	else if(state==4&&_data_len>0)		//???
 	{
 		_data_len--;
 		RxBuffer[4+_data_cnt++]=data;
 		if(_data_len==0)
 			state = 5;
 	}
-	else if(state==5)								//校验帧
+	else if(state==5)								//???
 	{
 		state = 0;
 		RxBuffer[4+_data_cnt]=data;
@@ -292,6 +300,7 @@ void Usart3_DataPrepare(u8 data)
 
 
 }
+
 
 
 /**
@@ -315,7 +324,7 @@ void Usart6_DataPrepare(u8* pData)
 
 	while(index < BSP_USART6_DMA_RX_BUF_LEN && pData[index++] != 0xA5);	//is it the start of frame?
 
-	if(index >= BSP_USART6_DMA_RX_BUF_LEN)
+	if(index > BSP_USART6_DMA_RX_BUF_LEN)
 		return;
 	
 	if((index + 1) < BSP_USART6_DMA_RX_BUF_LEN)							// get the length of data
@@ -585,6 +594,34 @@ void ANO_DT_Send_Status(float angle_rol, float angle_pit, float angle_yaw, u32 a
 	Data_Send(data_to_send, _cnt);
 }
 
+void ANO_DT_Send_Power(u16 votage, u16 current)
+{
+	u8 _cnt=0;
+	u16 temp;
+	
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0x05;
+	data_to_send[_cnt++]=0;
+	
+	temp = votage;
+	data_to_send[_cnt++]=BYTE1(temp);
+	data_to_send[_cnt++]=BYTE0(temp);
+	temp = current;
+	data_to_send[_cnt++]=BYTE1(temp);
+	data_to_send[_cnt++]=BYTE0(temp);
+	
+	data_to_send[3] = _cnt-4;
+	
+	u8 sum = 0;
+	for(u8 i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+	
+	data_to_send[_cnt++]=sum;
+	
+	Data_Send(data_to_send, _cnt);
+}
+
 void ANO_DT_Send_Senser(s16 a_x,s16 a_y,s16 a_z,s16 g_x,s16 g_y,s16 g_z,s16 m_x,s16 m_y,s16 m_z)
 {
 	u8 _cnt=0;
@@ -785,6 +822,38 @@ void ANO_DT_Send_MotoPWM(u16 m_1,u16 m_2,u16 m_3,u16 m_4,u16 m_5,u16 m_6,u16 m_7
 	Data_Send(data_to_send, _cnt);
 }
 
+
+void ANO_DT_Send_Speed(float x_s,float y_s,float z_s)
+{
+	u8 _cnt=0;
+	vs16 _temp;
+	
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0xAA;
+	data_to_send[_cnt++]=0x0B;
+	data_to_send[_cnt++]=0;
+	
+	_temp = (int)(0.1f *x_s);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = (int)(0.1f *y_s);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	_temp = (int)(0.1f *z_s);
+	data_to_send[_cnt++]=BYTE1(_temp);
+	data_to_send[_cnt++]=BYTE0(_temp);
+	
+	
+	data_to_send[3] = _cnt-4;
+	
+	u8 sum = 0;
+	for(u8 i=0;i<_cnt;i++)
+		sum += data_to_send[i];
+	data_to_send[_cnt++]=sum;
+	
+	Data_Send(data_to_send, _cnt);
+
+}
 
 void RefereeSys_Send_Data(extUserData_t userdata)
 {
