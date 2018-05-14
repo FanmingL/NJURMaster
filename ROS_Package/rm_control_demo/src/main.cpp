@@ -79,7 +79,7 @@ int main(int argc,char** argv)
 {
     ros::init(argc,argv,"robot_control_demo");
     ros::NodeHandle n;
-    ros::Rate loop_rate(20);
+    ros::Rate loop_rate(1);
     Control_info_pub = n.advertise<robot_protocol_msgs::RobotControl>("RobotControl",1);
     IMU_sub     =   n.subscribe("RobotIMU",1,&IMU_callback);
     Motor_sub   =   n.subscribe("RobotMotor",1,&Motor_callback);

@@ -19,6 +19,7 @@ typedef enum {
     GAME_INFO_ID = 0x0001,
     REAL_BLOOD_DATA_ID = 0x0002,
     REAL_SHOOT_DATA_ID = 0x0003,
+    REAL_POWER_DATA_ID = 0x0004,
     REAL_RFID_DATA_ID = 0x0005,
     GAME_RESULT_ID = 0x0006,
     GAIN_BUFF_ID = 0x0007,
@@ -167,6 +168,17 @@ typedef struct {
     uint16_t max_hp;
     Position position;
 } __attribute__((packed)) GameInfo;
+
+typedef struct
+{
+    float chassis_volt;
+    float chassis_current;
+    float chassis_power;
+    float chassis_pwr_buf;
+    uint16_t shooter1_heat;
+    uint16_t shooter2_heat;
+} __attribute__((packed)) RealPowerData;
+
 
 /**
  * @brief  real time blood volume change data(0x0002)

@@ -67,6 +67,7 @@ static constexpr unsigned char kCrcOctTable[256] = {
     0x89, 0x6b, 0x35
 };
 
+
 /**
  * @brief Fetch the CRC data (1 Byte) from message
  */

@@ -58,6 +58,7 @@ find_package(catkin REQUIRED COMPONENTS
     RobotMotor.msg
     RobotOdometer.msg
     RobotRC.msg
+    RmRc.msg
          )
 
 ## Generate services in the 'srv' folder
